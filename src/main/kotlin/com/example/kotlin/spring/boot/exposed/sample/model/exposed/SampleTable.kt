@@ -1,7 +1,6 @@
 package com.example.kotlin.spring.boot.exposed.sample.model.exposed
 
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.*
 import java.util.*
 
 object SampleTable : Table("sample") {

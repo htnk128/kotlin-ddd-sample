@@ -1,14 +1,8 @@
 package com.example.kotlin.spring.boot.exposed.sample.repository
 
-import com.example.kotlin.spring.boot.exposed.sample.model.exposed.SampleRecord
-import com.example.kotlin.spring.boot.exposed.sample.model.exposed.SampleTable
+import com.example.kotlin.spring.boot.exposed.sample.model.exposed.*
 import com.example.kotlin.spring.boot.exposed.sample.model.exposed.SampleTable.id
-import com.example.kotlin.spring.boot.exposed.sample.model.exposed.rowToSampleRecord
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
