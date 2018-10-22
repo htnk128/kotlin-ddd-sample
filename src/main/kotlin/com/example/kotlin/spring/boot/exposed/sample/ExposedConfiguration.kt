@@ -8,9 +8,9 @@ import javax.sql.DataSource
 
 @Configuration
 @EnableTransactionManagement
-class ExposedConfiguration(val dataSource: DataSource): TransactionManagementConfigurer {
+class ExposedConfiguration(val dataSource: DataSource) : TransactionManagementConfigurer {
 
-	@Bean
-	override fun annotationDrivenTransactionManager(): PlatformTransactionManager =
-		SpringTransactionManager(dataSource)
+    @Bean
+    override fun annotationDrivenTransactionManager(): PlatformTransactionManager =
+        SpringTransactionManager(dataSource)
 }
