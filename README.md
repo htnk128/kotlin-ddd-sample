@@ -1,1 +1,1 @@
-# kotlin-spring-boot-exposed-sample
+# kotlin-spring-boot-ddd-sample

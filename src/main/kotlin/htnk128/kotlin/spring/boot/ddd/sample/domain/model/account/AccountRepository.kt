@@ -1,4 +1,4 @@
-package com.example.kotlin.spring.boot.exposed.sample.domain.model.account
+package htnk128.kotlin.spring.boot.ddd.sample.domain.model.account
 
 interface AccountRepository {
 

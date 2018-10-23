@@ -1,4 +1,4 @@
-package com.example.kotlin.spring.boot.exposed.sample.domain.shared
+package htnk128.kotlin.spring.boot.ddd.sample.domain.shared
 
 interface Entity<T> {
 
