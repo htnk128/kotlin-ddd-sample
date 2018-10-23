@@ -1,8 +1,8 @@
-package com.example.kotlin.spring.boot.exposed.sample.application.service
+package htnk128.kotlin.spring.boot.ddd.sample.application.service
 
-import com.example.kotlin.spring.boot.exposed.sample.domain.model.account.Account
-import com.example.kotlin.spring.boot.exposed.sample.domain.model.account.AccountIdentity
-import com.example.kotlin.spring.boot.exposed.sample.domain.model.account.AccountRepository
+import htnk128.kotlin.spring.boot.ddd.sample.domain.model.account.Account
+import htnk128.kotlin.spring.boot.ddd.sample.domain.model.account.AccountIdentity
+import htnk128.kotlin.spring.boot.ddd.sample.domain.model.account.AccountRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

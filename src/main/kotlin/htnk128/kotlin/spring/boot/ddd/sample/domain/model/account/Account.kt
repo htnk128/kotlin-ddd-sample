@@ -1,11 +1,8 @@
-package com.example.kotlin.spring.boot.exposed.sample.domain.model.account
+package htnk128.kotlin.spring.boot.ddd.sample.domain.model.account
 
-import com.example.kotlin.spring.boot.exposed.sample.domain.shared.Entity
+import htnk128.kotlin.spring.boot.ddd.sample.domain.shared.Entity
 
-class Account(
-    val accountId: AccountIdentity,
-    val name: Name
-) : Entity<Account> {
+class Account(val accountId: AccountIdentity, val name: Name) : Entity<Account> {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

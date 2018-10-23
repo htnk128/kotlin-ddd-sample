@@ -1,4 +1,4 @@
-package com.example.kotlin.spring.boot.exposed.sample
+package htnk128.kotlin.spring.boot.ddd.sample
 
 import org.jetbrains.exposed.spring.SpringTransactionManager
 import org.springframework.context.annotation.*

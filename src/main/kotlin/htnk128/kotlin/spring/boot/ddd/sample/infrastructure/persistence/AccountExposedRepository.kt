@@ -1,9 +1,9 @@
-package com.example.kotlin.spring.boot.exposed.sample.infrastructure.persistence
+package htnk128.kotlin.spring.boot.ddd.sample.infrastructure.persistence
 
-import com.example.kotlin.spring.boot.exposed.sample.domain.model.account.Account
-import com.example.kotlin.spring.boot.exposed.sample.domain.model.account.AccountIdentity
-import com.example.kotlin.spring.boot.exposed.sample.domain.model.account.AccountRepository
-import com.example.kotlin.spring.boot.exposed.sample.domain.model.account.Name
+import htnk128.kotlin.spring.boot.ddd.sample.domain.model.account.Account
+import htnk128.kotlin.spring.boot.ddd.sample.domain.model.account.AccountIdentity
+import htnk128.kotlin.spring.boot.ddd.sample.domain.model.account.AccountRepository
+import htnk128.kotlin.spring.boot.ddd.sample.domain.model.account.Name
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
@@ -49,4 +49,5 @@ object AccountTable : Table("account") {
     )
 }
 
-private fun ResultRow.toAccountRecord() = AccountTable.rowToModel(this)
+private fun ResultRow.toAccountRecord() =
+    AccountTable.rowToModel(this)

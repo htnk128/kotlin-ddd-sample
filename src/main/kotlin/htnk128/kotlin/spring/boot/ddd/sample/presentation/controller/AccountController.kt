@@ -1,9 +1,9 @@
-package com.example.kotlin.spring.boot.exposed.sample.presentation.controller
+package htnk128.kotlin.spring.boot.ddd.sample.presentation.controller
 
-import com.example.kotlin.spring.boot.exposed.sample.application.service.AccountService
-import com.example.kotlin.spring.boot.exposed.sample.domain.model.account.Account
-import com.example.kotlin.spring.boot.exposed.sample.domain.model.account.AccountIdentity
-import com.example.kotlin.spring.boot.exposed.sample.domain.model.account.Name
+import htnk128.kotlin.spring.boot.ddd.sample.application.service.AccountService
+import htnk128.kotlin.spring.boot.ddd.sample.domain.model.account.Account
+import htnk128.kotlin.spring.boot.ddd.sample.domain.model.account.AccountIdentity
+import htnk128.kotlin.spring.boot.ddd.sample.domain.model.account.Name
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
