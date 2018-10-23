@@ -1,9 +1,15 @@
 package htnk128.kotlin.spring.boot.ddd.sample.domain.model.account
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonValue
 import htnk128.kotlin.spring.boot.ddd.sample.domain.model.Identity
 import java.util.UUID
 
-class AccountIdentity(override val value: String) : Identity<AccountIdentity, String> {
+class AccountIdentity(
+    @get:JsonValue
+    @get:JsonIgnore
+    override val value: String
+) : Identity<AccountIdentity, String> {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
