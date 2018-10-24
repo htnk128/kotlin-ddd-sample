@@ -19,7 +19,7 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
-group = 'com.example'
+group = 'htnk128'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 compileKotlin {
@@ -40,6 +40,9 @@ repositories {
 	maven {
 		url('https://dl.bintray.com/kotlin/exposed')
 	}
+	maven {
+		url 'http://oss.jfrog.org/artifactory/oss-snapshot-local/'
+	}
 }
 
 
@@ -48,7 +51,7 @@ dependencies {
 	compile("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	compile("org.jetbrains.kotlin:kotlin-reflect")
 	// spring
-	compile("org.springframework.boot:spring-boot-starter-web")
+	compile("org.springframework.boot:spring-boot-starter-webflux")
 	compile("org.springframework.boot:spring-boot-starter-jdbc")
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	runtime("org.springframework.boot:spring-boot-devtools")
@@ -65,8 +68,9 @@ dependencies {
 	compile('org.jetbrains.exposed:exposed:0.10.5')
 	compile('org.jetbrains.exposed:spring-transaction:0.10.5')
 	// Spring Fox/Swagger
-	compile("io.springfox:springfox-swagger2:2.9.2")
-	compile("io.springfox:springfox-swagger-ui:2.9.2")
+	compile("io.springfox:springfox-swagger2:3.0.0-SNAPSHOT")
+	compile("io.springfox:springfox-spring-webflux:3.0.0-SNAPSHOT")
+	compile("io.springfox:springfox-swagger-ui:3.0.0-SNAPSHOT")
 	runtime('com.h2database:h2')
 	// test
 	testCompile("org.junit.jupiter:junit-jupiter-api:5.2.0")

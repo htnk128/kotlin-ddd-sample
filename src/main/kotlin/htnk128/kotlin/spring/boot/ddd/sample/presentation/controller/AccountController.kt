@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import reactor.core.publisher.Flux
 
 @Api("アカウントを管理するAPI")
 @RestController
@@ -25,26 +26,27 @@ class AccountController(private val accountService: AccountService) {
 
     @ApiOperation("指定アカウントIDに該当するアカウントを取得する")
     @GetMapping("/{accountId}")
-    fun find(@PathVariable accountId: AccountIdentity): AccountResponse =
-        accountService.find(accountId).toAccountResponse()
+    fun find(@PathVariable accountId: AccountIdentity): Flux<AccountResponse> =
+        Flux.just(accountService.find(accountId).toAccountResponse())
 
     @ApiOperation("すべてのアカウント情報を取得する")
     @GetMapping("")
-    fun findAll(): List<AccountResponse> = accountService.findAll().map { it.toAccountResponse() }
+    fun findAll(): Flux<AccountResponse> =
+        Flux.fromIterable(accountService.findAll().map { it.toAccountResponse() })
 
     @ApiOperation("アカウントを作成する")
     @PostMapping("", consumes = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody request: AccountRequest): AccountResponse =
-        request.toAccount().also { accountService.create(it) }.toAccountResponse()
+    fun create(@RequestBody request: AccountRequest): Flux<AccountResponse> =
+        Flux.just(request.toAccount().also { accountService.create(it) }.toAccountResponse())
 
     @ApiOperation("アカウントを更新する")
     @PutMapping("/{accountId}", consumes = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     fun update(
         @PathVariable accountId: AccountIdentity,
         @RequestBody request: AccountRequest
-    ): AccountResponse =
-        request.toAccount(accountId).also { accountService.update(it) }.toAccountResponse()
+    ): Flux<AccountResponse> =
+        Flux.just(request.toAccount(accountId).also { accountService.update(it) }.toAccountResponse())
 }
 
 data class AccountRequest(
