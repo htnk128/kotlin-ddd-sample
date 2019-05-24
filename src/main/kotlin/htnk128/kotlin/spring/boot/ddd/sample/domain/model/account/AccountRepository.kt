@@ -9,4 +9,6 @@ interface AccountRepository {
     fun create(account: Account)
 
     fun update(account: Account): Int
+
+    fun nextAccountId(): AccountIdentity = AccountIdentity.generate()
 }
