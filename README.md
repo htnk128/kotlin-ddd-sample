@@ -9,3 +9,7 @@ Samples of DDD using kotlin
 ```
 $ gradle bootRun
 ```
+
+# API
+
+http://localhost:8080/swagger-ui.html
