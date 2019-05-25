@@ -1,8 +1,7 @@
 package htnk128.kotlin.spring.boot.ddd.sample.presentation.controller
 
-import htnk128.kotlin.spring.boot.ddd.sample.application.service.AccountResponse
 import htnk128.kotlin.spring.boot.ddd.sample.application.service.AccountService
-import htnk128.kotlin.spring.boot.ddd.sample.application.service.AccountsResponse
+import htnk128.kotlin.spring.boot.ddd.sample.application.service.dto.AccountDTO
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiModelProperty
 import io.swagger.annotations.ApiOperation
@@ -26,18 +25,18 @@ class AccountController(private val accountService: AccountService) {
     @ApiOperation("指定アカウントIDに該当するアカウントを取得する")
     @GetMapping("/{accountId}")
     fun find(@PathVariable accountId: String): Flux<AccountResponse> =
-        Flux.just(accountService.find(accountId))
+        Flux.just(accountService.find(accountId).toResponse())
 
     @ApiOperation("すべてのアカウント情報を取得する")
     @GetMapping("")
-    fun findAll(): Flux<AccountsResponse> =
-        Flux.just(accountService.findAll())
+    fun findAll(): Flux<AccountResponses> =
+        Flux.just(AccountResponses(accountService.findAll().map { it.toResponse() }))
 
     @ApiOperation("アカウントを作成する")
     @PostMapping("", consumes = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody request: AccountRequest): Flux<AccountResponse> =
-        Flux.just(accountService.create(request.name))
+        Flux.just(accountService.create(request.name).toResponse())
 
     @ApiOperation("アカウントを更新する")
     @PutMapping("/{accountId}", consumes = [MediaType.APPLICATION_JSON_UTF8_VALUE])
@@ -45,10 +44,23 @@ class AccountController(private val accountService: AccountService) {
         @PathVariable accountId: String,
         @RequestBody request: AccountRequest
     ): Flux<AccountResponse> =
-        Flux.just(accountService.update(accountId, request.name))
+        Flux.just(accountService.update(accountId, request.name).toResponse())
 }
 
 data class AccountRequest(
     @ApiModelProperty(value = "アカウント名", name = "name", example = "sample01", required = true, position = 1)
     val name: String
 )
+
+data class AccountResponse(
+    @ApiModelProperty(value = "アカウントID", name = "accountId", example = "accountId01", position = 1)
+    val accountId: String,
+    @ApiModelProperty(value = "アカウント名", name = "name", example = "sample01", position = 2)
+    val name: String
+)
+
+class AccountResponses(
+    val data: List<AccountResponse>
+)
+
+private fun AccountDTO.toResponse(): AccountResponse = AccountResponse(accountId, name)
