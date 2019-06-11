@@ -21,7 +21,6 @@ class SwaggerConfiguration {
             .build()
             .useDefaultResponseMessages(false)
             .apiInfo(apiInfo())
-
     }
 
     private fun apiInfo(): ApiInfo =
@@ -30,6 +29,4 @@ class SwaggerConfiguration {
             .description("サンプルのAPI仕様")
             .contact(Contact("htnk128", "", ""))
             .build()
-
-
 }
