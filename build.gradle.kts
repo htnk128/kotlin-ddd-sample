@@ -4,7 +4,7 @@ import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 plugins {
     kotlin("jvm") version embeddedKotlinVersion
     id("org.jlleitschuh.gradle.ktlint") version "8.0.0"
-    id("org.springframework.boot") version "2.1.5.RELEASE"
+    id("org.springframework.boot") version "2.0.6.RELEASE"
     kotlin("plugin.spring") version embeddedKotlinVersion
     id("org.flywaydb.flyway") version "5.2.4"
 }
