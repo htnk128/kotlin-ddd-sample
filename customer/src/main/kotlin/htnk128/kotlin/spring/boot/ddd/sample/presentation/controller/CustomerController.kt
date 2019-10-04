@@ -5,6 +5,7 @@ import htnk128.kotlin.spring.boot.ddd.sample.application.service.dto.CustomerDTO
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiModelProperty
 import io.swagger.annotations.ApiOperation
+import io.swagger.annotations.ApiParam
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,7 +25,10 @@ class CustomerController(private val customerService: CustomerService) {
 
     @ApiOperation("指定顧客IDに該当する顧客を取得する")
     @GetMapping("/{customerId}")
-    fun find(@PathVariable customerId: String): Flux<CustomerResponse> =
+    fun find(
+        @ApiParam(value = "顧客ID", required = true, example = "customer01")
+        @PathVariable customerId: String
+    ): Flux<CustomerResponse> =
         Flux.just(customerService.find(customerId).toResponse())
 
     @ApiOperation("すべての顧客情報を取得する")
@@ -41,6 +45,7 @@ class CustomerController(private val customerService: CustomerService) {
     @ApiOperation("顧客を更新する")
     @PutMapping("/{customerId}", consumes = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     fun update(
+        @ApiParam(value = "顧客ID", required = true, example = "customer01")
         @PathVariable customerId: String,
         @RequestBody request: CustomerRequest
     ): Flux<CustomerResponse> =
