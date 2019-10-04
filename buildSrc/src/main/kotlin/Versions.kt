@@ -12,7 +12,7 @@ object Versions {
 
     const val jackson: String = "2.9.9"
     const val swagger: String = "3.0.0-SNAPSHOT"
-    const val exposed: String = "0.13.6"
+    const val exposed: String = "0.14.1"
     const val flyway: String = "5.2.4"
 
     const val junit: String = "5.4.2"
