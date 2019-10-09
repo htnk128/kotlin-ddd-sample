@@ -10,6 +10,5 @@ interface CustomerRepository {
 
     fun update(customer: Customer): Int
 
-    fun nextCustomerId(): CustomerIdentity =
-        CustomerIdentity.generate()
+    fun nextCustomerId(): CustomerIdentity = CustomerIdentity.generate()
 }

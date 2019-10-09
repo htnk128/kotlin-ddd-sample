@@ -1,7 +1,6 @@
-package htnk128.kotlin.spring.boot.ddd.sample.customer.domain.model.customer
+package htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.contactdetails
 
-import htnk128.kotlin.spring.boot.ddd.sample.customer.domain.model.Identity
-import java.util.UUID
+import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.Identity
 
 class CustomerIdentity(override val value: String) : Identity<CustomerIdentity, String> {
 
@@ -19,8 +18,6 @@ class CustomerIdentity(override val value: String) : Identity<CustomerIdentity, 
     override fun sameValueAs(other: CustomerIdentity): Boolean = value == other.value
 
     companion object {
-
-        fun generate(): CustomerIdentity = CustomerIdentity(UUID.randomUUID().toString())
 
         private val LENGTH_RANGE = (1..64)
         private val PATTERN = "[\\p{Alnum}-_]*".toRegex()

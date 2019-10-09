@@ -1,4 +1,4 @@
-package htnk128.kotlin.spring.boot.ddd.sample.customer.domain.shared
+package htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.shared
 
 abstract class SingleValueObject<T : SingleValueObject<T, V>, V : Comparable<V>> : ValueObject<T> {
 

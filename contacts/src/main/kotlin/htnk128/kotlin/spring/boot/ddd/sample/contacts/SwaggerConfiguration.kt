@@ -1,4 +1,4 @@
-package htnk128.kotlin.spring.boot.ddd.sample.customer
+package htnk128.kotlin.spring.boot.ddd.sample.contacts
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -17,7 +17,7 @@ class SwaggerConfiguration {
     @Bean
     fun customDocket(): Docket {
         return Docket(DocumentationType.SWAGGER_2).select()
-            .apis(RequestHandlerSelectors.basePackage("htnk128.kotlin.spring.boot.ddd.sample.customer.presentation.controller"))
+            .apis(RequestHandlerSelectors.basePackage("htnk128.kotlin.spring.boot.ddd.sample.contacts.presentation.controller"))
             .build()
             .useDefaultResponseMessages(false)
             .apiInfo(apiInfo())

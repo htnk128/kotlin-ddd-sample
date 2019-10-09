@@ -41,7 +41,7 @@ class CustomerExposedRepository :
 
 object CustomerTable : Table("customer") {
 
-    val customerId: Column<String> = varchar("customer_id", length = 100).primaryKey()
+    val customerId: Column<String> = varchar("customer_id", length = 64).primaryKey()
     val name: Column<String> = varchar("name", length = 100)
 
     fun rowToModel(row: ResultRow): Customer =
