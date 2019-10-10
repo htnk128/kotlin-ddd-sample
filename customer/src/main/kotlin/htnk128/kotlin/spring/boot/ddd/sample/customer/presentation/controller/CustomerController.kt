@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import reactor.core.publisher.Flux
 
 @Api("顧客を管理するAPI", tags = ["Customers"])
 @RestController
@@ -28,22 +27,21 @@ class CustomerController(private val customerService: CustomerService) {
     fun find(
         @ApiParam(value = "顧客ID", required = true, example = "customer01")
         @PathVariable customerId: String
-    ): Flux<CustomerResponse> =
-        Flux.just(customerService.find(customerId).toResponse())
+    ): CustomerResponse =
+        customerService.find(customerId).toResponse()
 
     @ApiOperation("すべての顧客情報を取得する")
     @GetMapping("")
-    fun findAll(): Flux<CustomerResponses> =
-        Flux.just(
-            CustomerResponses(
-                customerService.findAll().map { it.toResponse() })
-        )
+    fun findAll(): CustomerResponses =
+        CustomerResponses(customerService.findAll().map { it.toResponse() })
 
     @ApiOperation("顧客を作成する")
     @PostMapping("", consumes = [MediaType.APPLICATION_JSON_UTF8_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
-    fun create(@RequestBody request: CustomerRequest): Flux<CustomerResponse> =
-        Flux.just(customerService.create(request.name).toResponse())
+    fun create(
+        @RequestBody request: CustomerRequest
+    ): CustomerResponse =
+        customerService.create(request.name).toResponse()
 
     @ApiOperation("顧客を更新する")
     @PutMapping("/{customerId}", consumes = [MediaType.APPLICATION_JSON_UTF8_VALUE])
@@ -51,8 +49,8 @@ class CustomerController(private val customerService: CustomerService) {
         @ApiParam(value = "顧客ID", required = true, example = "customer01")
         @PathVariable customerId: String,
         @RequestBody request: CustomerRequest
-    ): Flux<CustomerResponse> =
-        Flux.just(customerService.update(customerId, request.name).toResponse())
+    ): CustomerResponse =
+        customerService.update(customerId, request.name).toResponse()
 }
 
 data class CustomerRequest(

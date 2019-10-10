@@ -7,6 +7,11 @@ spring:
   flyway:
     enabled: true
     schemas: PUBLIC
+server:
+  port: 8081
+rest:
+  connect.timeout: 3000
+  read.timeout: 5000
 app:
   envName: test
 logging:

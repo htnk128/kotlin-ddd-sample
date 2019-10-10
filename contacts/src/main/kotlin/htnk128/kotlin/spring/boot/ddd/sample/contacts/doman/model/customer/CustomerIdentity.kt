@@ -1,6 +1,6 @@
-package htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.contactdetails
+package htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.customer
 
-import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.Identity
+import htnk128.kotlin.spring.boot.ddd.sample.core.domain.Identity
 
 class CustomerIdentity(override val value: String) : Identity<CustomerIdentity, String> {
 

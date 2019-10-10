@@ -1,6 +1,7 @@
 package htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.contactdetails
 
-import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.shared.Entity
+import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.customer.CustomerIdentity
+import htnk128.kotlin.spring.boot.ddd.sample.core.domain.Entity
 
 class ContactDetails(
     val contactDetailsId: ContactDetailsIdentity,

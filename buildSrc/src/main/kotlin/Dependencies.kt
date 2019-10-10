@@ -1,5 +1,6 @@
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.kotlin.dsl.kotlin
+import org.gradle.kotlin.dsl.project
 
 fun DependencyHandler.implementation(dependency: Any) {
     add("implementation", dependency)
@@ -58,4 +59,8 @@ fun DependencyHandler.swaggerDependencies() {
     implementation("io.springfox:springfox-swagger2:${Versions.swagger}")
     implementation("io.springfox:springfox-spring-webflux:${Versions.swagger}")
     implementation("io.springfox:springfox-swagger-ui:${Versions.swagger}")
+}
+
+fun DependencyHandler.coreDependency() {
+    implementation(project(":core"))
 }

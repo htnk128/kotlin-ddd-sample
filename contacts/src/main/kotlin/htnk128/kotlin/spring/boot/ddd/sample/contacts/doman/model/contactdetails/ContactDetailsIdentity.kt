@@ -1,6 +1,6 @@
 package htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.contactdetails
 
-import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.Identity
+import htnk128.kotlin.spring.boot.ddd.sample.core.domain.Identity
 import java.util.UUID
 
 class ContactDetailsIdentity(override val value: String) : Identity<ContactDetailsIdentity, String> {

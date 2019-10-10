@@ -9,6 +9,7 @@ apply {
 }
 
 dependencies {
+    coreDependency()
     springDependencies()
     jacksonDependencies()
     sqlDependencies()

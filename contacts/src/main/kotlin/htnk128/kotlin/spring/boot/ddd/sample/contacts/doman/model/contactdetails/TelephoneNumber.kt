@@ -1,6 +1,6 @@
 package htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.contactdetails
 
-import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.shared.SingleValueObject
+import htnk128.kotlin.spring.boot.ddd.sample.core.domain.SingleValueObject
 
 class TelephoneNumber(override val value: String) : SingleValueObject<TelephoneNumber, String>() {
 

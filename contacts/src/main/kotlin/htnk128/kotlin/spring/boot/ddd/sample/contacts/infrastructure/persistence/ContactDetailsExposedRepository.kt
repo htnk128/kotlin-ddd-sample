@@ -3,14 +3,14 @@ package htnk128.kotlin.spring.boot.ddd.sample.contacts.infrastructure.persistenc
 import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.contactdetails.ContactDetails
 import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.contactdetails.ContactDetailsIdentity
 import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.contactdetails.ContactDetailsRepository
-import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.contactdetails.CustomerIdentity
+import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.customer.CustomerIdentity
 import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.contactdetails.TelephoneNumber
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.update
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -24,7 +24,9 @@ class ContactDetailsExposedRepository : ContactDetailsRepository {
             .map { it.toContactDetailsRecord() }
             .firstOrNull()
 
-    override fun findAll(): List<ContactDetails> = ContactDetailsTable.selectAll().map { it.toContactDetailsRecord() }
+    override fun findAll(customerId: CustomerIdentity): List<ContactDetails> =
+        ContactDetailsTable.select { ContactDetailsTable.customerId eq customerId.value }
+            .map { it.toContactDetailsRecord() }
 
     override fun create(contactDetails: ContactDetails) {
         ContactDetailsTable.insert {

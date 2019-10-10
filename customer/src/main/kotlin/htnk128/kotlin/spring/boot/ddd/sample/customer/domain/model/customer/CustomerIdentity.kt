@@ -1,6 +1,6 @@
 package htnk128.kotlin.spring.boot.ddd.sample.customer.domain.model.customer
 
-import htnk128.kotlin.spring.boot.ddd.sample.customer.domain.model.Identity
+import htnk128.kotlin.spring.boot.ddd.sample.core.domain.Identity
 import java.util.UUID
 
 class CustomerIdentity(override val value: String) : Identity<CustomerIdentity, String> {
