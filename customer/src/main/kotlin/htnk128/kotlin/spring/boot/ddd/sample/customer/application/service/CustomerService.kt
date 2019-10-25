@@ -13,12 +13,14 @@ class CustomerService(private val customerRepository: CustomerRepository) {
 
     @Transactional(readOnly = true)
     fun find(aCustomerId: String): CustomerDTO =
-        customerRepository.find(CustomerIdentity.valueOf(aCustomerId))?.toDTO()
+        customerRepository.find(CustomerIdentity.valueOf(aCustomerId))
+            ?.toDTO()
             ?: throw RuntimeException("customer not found.")
 
     @Transactional(readOnly = true)
     fun findAll(): List<CustomerDTO> =
-        customerRepository.findAll().map { it.toDTO() }
+        customerRepository.findAll()
+            .map { it.toDTO() }
 
     @Transactional(timeout = 10, rollbackFor = [Exception::class])
     fun create(aName: String): CustomerDTO =

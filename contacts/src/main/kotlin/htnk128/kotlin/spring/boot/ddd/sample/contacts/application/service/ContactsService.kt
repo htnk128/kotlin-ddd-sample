@@ -22,18 +22,22 @@ class ContactsService(
             .map { it.toDTO() }
 
     @Transactional(timeout = 10, rollbackFor = [Exception::class])
-    fun create(aCustomerId: String, aTelephoneNumber: String): ContactsDTO =
-        customerRepository.find(CustomerIdentity.valueOf(aCustomerId))
+    fun create(aCustomerId: String, aTelephoneNumber: String): ContactsDTO {
+        val customerId = CustomerIdentity.valueOf(aCustomerId)
+        val telephoneNumber = TelephoneNumber.valueOf(aTelephoneNumber)
+
+        return customerRepository.find(customerId)
             ?.run {
                 ContactDetails(
                     contactDetailsRepository.nextContactDetailsId(),
                     customerId,
-                    TelephoneNumber.valueOf(aTelephoneNumber)
+                    telephoneNumber
                 )
                     .also(contactDetailsRepository::create)
                     .toDTO()
             }
             ?: throw RuntimeException("customer not found.")
+    }
 
     @Transactional(timeout = 10, rollbackFor = [Exception::class])
     fun update(aContactDetailsId: String, aTelephoneNumber: String): ContactsDTO {

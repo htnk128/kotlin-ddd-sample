@@ -16,7 +16,8 @@ class CustomerRESTRepository(
     private val customerClient: CustomerClient
 ) : CustomerRepository {
 
-    override fun find(customerId: CustomerIdentity): Customer? = customerClient.findCustomer(customerId)
+    override fun find(customerId: CustomerIdentity): Customer? =
+        customerClient.findCustomer(customerId)
 }
 
 @Component
@@ -33,7 +34,7 @@ class CustomerClient(
             .run { restTemplate.exchange(this, CustomerResponse::class.java) }
             .takeIf { it.statusCode.is2xxSuccessful }
             ?.body
-            ?.toCustomer()
+            ?.responseToModel()
             ?: error("customer response status is not OK.")
     }.getOrElse {
         throw RuntimeException("customer find request is failed. (customerId:$customerId)", it)
@@ -45,7 +46,7 @@ private data class CustomerResponse(
     val name: String
 ) {
 
-    fun toCustomer(): Customer =
+    fun responseToModel(): Customer =
         Customer(
             CustomerIdentity.valueOf(customerId),
             Name.valueOf(customerId)

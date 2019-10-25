@@ -21,10 +21,12 @@ class CustomerExposedRepository :
 
     override fun find(customerId: CustomerIdentity): Customer? =
         CustomerTable.select { CustomerTable.customerId eq customerId.value }
-            .map { it.toCustomerRecord() }
             .firstOrNull()
+            ?.rowToModel()
 
-    override fun findAll(): List<Customer> = CustomerTable.selectAll().map { it.toCustomerRecord() }
+    override fun findAll(): List<Customer> =
+        CustomerTable.selectAll()
+            .map { it.rowToModel() }
 
     override fun create(customer: Customer) {
         CustomerTable.insert {
@@ -43,13 +45,10 @@ object CustomerTable : Table("customer") {
 
     val customerId: Column<String> = varchar("customer_id", length = 64).primaryKey()
     val name: Column<String> = varchar("name", length = 100)
-
-    fun rowToModel(row: ResultRow): Customer =
-        Customer(
-            CustomerIdentity(row[customerId]),
-            Name(row[name])
-        )
 }
 
-private fun ResultRow.toCustomerRecord() =
-    CustomerTable.rowToModel(this)
+private fun ResultRow.rowToModel() =
+    Customer(
+        CustomerIdentity(this[CustomerTable.customerId]),
+        Name(this[CustomerTable.name])
+    )

@@ -46,8 +46,7 @@ fun DependencyHandler.jacksonDependencies() {
 }
 
 fun DependencyHandler.sqlDependencies() {
-    implementation("org.jetbrains.exposed:exposed:${Versions.exposed}")
-    implementation("org.jetbrains.exposed:spring-transaction:${Versions.exposed}")
+    implementation("org.jetbrains.exposed:exposed-spring-boot-starter:${Versions.exposed}")
     runtimeOnly("com.h2database:h2")
 }
 
