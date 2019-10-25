@@ -1,4 +1,4 @@
-package htnk128.kotlin.spring.boot.ddd.sample.contacts
+package htnk128.kotlin.spring.boot.ddd.sample.customer.configuration
 
 import org.jetbrains.exposed.spring.SpringTransactionManager
 import org.springframework.context.annotation.Bean

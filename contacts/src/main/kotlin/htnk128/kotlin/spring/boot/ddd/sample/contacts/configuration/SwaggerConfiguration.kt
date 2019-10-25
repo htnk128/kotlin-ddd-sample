@@ -1,4 +1,4 @@
-package htnk128.kotlin.spring.boot.ddd.sample.contacts
+package htnk128.kotlin.spring.boot.ddd.sample.contacts.configuration
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
