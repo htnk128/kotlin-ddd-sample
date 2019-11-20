@@ -20,13 +20,23 @@ allprojects {
     }
 
     ktlint {
-        version.set("0.32.0")
+        version.set(Versions.ktlintCore)
         debug.set(false)
         verbose.set(false)
         android.set(false)
         outputToConsole.set(true)
-        reporters.set(setOf(ReporterType.PLAIN, ReporterType.CHECKSTYLE))
         ignoreFailures.set(false)
+        reporters {
+            reporter(ReporterType.PLAIN)
+            reporter(ReporterType.CHECKSTYLE)
+
+            customReporters {
+                register("html") {
+                    fileExtension = "html"
+                    dependency = "me.cassiano:ktlint-html-reporter:0.2.3"
+                }
+            }
+        }
     }
 
     tasks {
