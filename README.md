@@ -4,23 +4,23 @@ Samples of DDD using kotlin
 
 - [Exposed](https://github.com/JetBrains/Exposed)
 
-# Run Application
+## Run Application
 
-## customer
-```
+### customer
+``` bash
 $ gradle customer:bootRun
 ```
 
-## contacts
-```
+### contacts
+``` bash
 $ gradle contacts:bootRun
 ```
 
 
-# API
+## API
 
-## customer
+### customer
 http://localhost:8080/swagger-ui.html
 
-## contacts
+### contacts
 http://localhost:8081/swagger-ui.html
