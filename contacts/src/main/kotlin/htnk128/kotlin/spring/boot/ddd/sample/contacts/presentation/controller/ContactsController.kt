@@ -32,7 +32,7 @@ class ContactsController(private val contactsService: ContactsService) {
         ContactsResponses(contactsService.findAll(customerId).map { it.toResponse() })
 
     @ApiOperation("連絡先を作成する")
-    @PostMapping("", consumes = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping("", consumes = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
         @RequestBody request: ContactsCreateRequest
@@ -40,7 +40,7 @@ class ContactsController(private val contactsService: ContactsService) {
         contactsService.create(request.customerId, request.telephoneNumber).toResponse()
 
     @ApiOperation("連絡先を更新する")
-    @PutMapping("/{contactDetailsId}", consumes = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PutMapping("/{contactDetailsId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun update(
         @ApiParam(value = "連絡先ID", required = true, example = "contactDetails01")
         @PathVariable contactDetailsId: String,

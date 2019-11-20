@@ -36,7 +36,7 @@ class CustomerController(private val customerService: CustomerService) {
         CustomerResponses(customerService.findAll().map { it.toResponse() })
 
     @ApiOperation("顧客を作成する")
-    @PostMapping("", consumes = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PostMapping("", consumes = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
         @RequestBody request: CustomerRequest
@@ -44,7 +44,7 @@ class CustomerController(private val customerService: CustomerService) {
         customerService.create(request.name).toResponse()
 
     @ApiOperation("顧客を更新する")
-    @PutMapping("/{customerId}", consumes = [MediaType.APPLICATION_JSON_UTF8_VALUE])
+    @PutMapping("/{customerId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun update(
         @ApiParam(value = "顧客ID", required = true, example = "customer01")
         @PathVariable customerId: String,
