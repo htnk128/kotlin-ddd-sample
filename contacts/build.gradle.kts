@@ -1,11 +1,9 @@
 plugins {
     springPlugins()
-    flywayPlugins()
 }
 
 apply {
     spring()
-    flyway()
 }
 
 dependencies {

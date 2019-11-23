@@ -9,7 +9,3 @@ fun ObjectConfigurationAction.allModule() {
 fun ObjectConfigurationAction.spring() {
     plugin("io.spring.dependency-management")
 }
-
-fun ObjectConfigurationAction.flyway() {
-    plugin("org.flywaydb.flyway")
-}

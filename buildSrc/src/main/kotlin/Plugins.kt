@@ -11,7 +11,3 @@ fun PluginDependenciesSpec.springPlugins() {
     id("org.springframework.boot") version Versions.springBoot
     kotlin("plugin.spring") version Versions.kotlin
 }
-
-fun PluginDependenciesSpec.flywayPlugins() {
-    id("org.flywaydb.flyway") version Versions.flyway
-}
