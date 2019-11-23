@@ -1,7 +1,7 @@
 package htnk128.kotlin.spring.boot.ddd.sample.contactdetails.domain.model.contactdetails
 
 import htnk128.kotlin.spring.boot.ddd.sample.contactdetails.domain.model.customer.CustomerIdentity
-import htnk128.kotlin.spring.boot.ddd.sample.core.domain.Entity
+import htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain.Entity
 
 class ContactDetails(
     val contactDetailsId: ContactDetailsIdentity,

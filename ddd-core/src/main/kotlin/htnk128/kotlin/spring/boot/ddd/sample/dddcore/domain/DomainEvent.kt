@@ -1,4 +1,4 @@
-package htnk128.kotlin.spring.boot.ddd.sample.core.domain
+package htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain
 
 interface DomainEvent<T : DomainEvent<T>> {
 

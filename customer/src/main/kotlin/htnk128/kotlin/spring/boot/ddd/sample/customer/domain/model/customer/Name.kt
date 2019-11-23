@@ -1,6 +1,6 @@
 package htnk128.kotlin.spring.boot.ddd.sample.customer.domain.model.customer
 
-import htnk128.kotlin.spring.boot.ddd.sample.core.domain.SingleValueObject
+import htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain.SingleValueObject
 
 class Name(override val value: String) : SingleValueObject<Name, String>() {
 

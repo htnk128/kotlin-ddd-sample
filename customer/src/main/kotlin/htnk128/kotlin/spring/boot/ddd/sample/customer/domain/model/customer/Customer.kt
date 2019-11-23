@@ -1,6 +1,6 @@
 package htnk128.kotlin.spring.boot.ddd.sample.customer.domain.model.customer
 
-import htnk128.kotlin.spring.boot.ddd.sample.core.domain.Entity
+import htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain.Entity
 
 class Customer(
     val customerId: CustomerIdentity,

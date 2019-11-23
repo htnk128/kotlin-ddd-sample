@@ -1,10 +1,11 @@
 package htnk128.kotlin.spring.boot.ddd.sample.customer.domain.model.customer
 
-import htnk128.kotlin.spring.boot.ddd.sample.core.domain.DomainEvent
-import htnk128.kotlin.spring.boot.ddd.sample.core.domain.ValueObject
+import htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain.DomainEvent
+import htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain.ValueObject
 import java.time.Instant
 
-sealed class CustomerEvent<T : CustomerEvent<T>> : DomainEvent<T> {
+sealed class CustomerEvent<T : CustomerEvent<T>> :
+    DomainEvent<T> {
 
     abstract val type: Type
 
@@ -30,7 +31,8 @@ sealed class CustomerEvent<T : CustomerEvent<T>> : DomainEvent<T> {
         return true
     }
 
-    enum class Type(private val value: String) : ValueObject<Type> {
+    enum class Type(private val value: String) :
+        ValueObject<Type> {
         CREATED("customer.created"),
         UPDATED("customer.updated"),
         ;

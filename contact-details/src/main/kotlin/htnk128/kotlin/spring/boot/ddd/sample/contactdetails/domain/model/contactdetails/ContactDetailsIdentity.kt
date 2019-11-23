@@ -1,9 +1,10 @@
 package htnk128.kotlin.spring.boot.ddd.sample.contactdetails.domain.model.contactdetails
 
-import htnk128.kotlin.spring.boot.ddd.sample.core.domain.Identity
+import htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain.Identity
 import java.util.UUID
 
-class ContactDetailsIdentity(override val value: String) : Identity<ContactDetailsIdentity, String> {
+class ContactDetailsIdentity(override val value: String) :
+    Identity<ContactDetailsIdentity, String> {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

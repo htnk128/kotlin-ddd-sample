@@ -1,6 +1,7 @@
-package htnk128.kotlin.spring.boot.ddd.sample.core.domain
+package htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain
 
-abstract class SingleValueObject<T : SingleValueObject<T, V>, V : Comparable<V>> : ValueObject<T> {
+abstract class SingleValueObject<T : SingleValueObject<T, V>, V : Comparable<V>> :
+    ValueObject<T> {
 
     abstract val value: V
 

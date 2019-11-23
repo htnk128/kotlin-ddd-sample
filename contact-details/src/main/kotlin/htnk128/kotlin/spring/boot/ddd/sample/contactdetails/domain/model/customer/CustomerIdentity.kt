@@ -1,8 +1,9 @@
 package htnk128.kotlin.spring.boot.ddd.sample.contactdetails.domain.model.customer
 
-import htnk128.kotlin.spring.boot.ddd.sample.core.domain.Identity
+import htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain.Identity
 
-class CustomerIdentity(override val value: String) : Identity<CustomerIdentity, String> {
+class CustomerIdentity(override val value: String) :
+    Identity<CustomerIdentity, String> {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

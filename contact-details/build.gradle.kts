@@ -7,7 +7,7 @@ apply {
 }
 
 dependencies {
-    coreDependency()
+    dddCoreDependency()
     springDependencies()
     jacksonDependencies()
     sqlDependencies()

@@ -60,6 +60,6 @@ fun DependencyHandler.swaggerDependencies() {
     implementation("io.springfox:springfox-swagger-ui:${Versions.swagger}")
 }
 
-fun DependencyHandler.coreDependency() {
-    implementation(project(":core"))
+fun DependencyHandler.dddCoreDependency() {
+    implementation(project(":ddd-core"))
 }
