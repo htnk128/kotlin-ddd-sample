@@ -1,15 +1,11 @@
-package htnk128.kotlin.spring.boot.ddd.sample.customer.domain.model.customer
+package htnk128.kotlin.spring.boot.ddd.sample.contactdetails.domain.model.customer
 
 import htnk128.kotlin.spring.boot.ddd.sample.core.domain.Entity
 
 class Customer(
     val customerId: CustomerIdentity,
-    val name: Name,
-    val events: List<CustomerEvent<*>> = emptyList()
+    val name: Name
 ) : Entity<Customer> {
-
-    fun update(name: Name): Customer =
-        Customer(customerId, name, events + CustomerUpdated())
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -21,10 +17,4 @@ class Customer(
     override fun hashCode(): Int = customerId.hashCode()
 
     override fun sameIdentityAs(other: Customer): Boolean = customerId == other.customerId
-
-    companion object {
-
-        fun create(customerId: CustomerIdentity, name: Name): Customer =
-            Customer(customerId, name, listOf(CustomerCreated()))
-    }
 }

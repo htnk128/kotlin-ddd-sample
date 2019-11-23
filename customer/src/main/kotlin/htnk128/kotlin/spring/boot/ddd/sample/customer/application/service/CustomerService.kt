@@ -24,10 +24,8 @@ class CustomerService(private val customerRepository: CustomerRepository) {
 
     @Transactional(timeout = 10, rollbackFor = [Exception::class])
     fun create(aName: String): CustomerDTO =
-        Customer(
-            customerRepository.nextCustomerId(),
-            Name.valueOf(aName)
-        )
+        Customer
+            .create(customerRepository.nextCustomerId(), Name.valueOf(aName))
             .also(customerRepository::create)
             .toDTO()
 
@@ -36,8 +34,9 @@ class CustomerService(private val customerRepository: CustomerRepository) {
         val customerId = CustomerIdentity.valueOf(aCustomerId)
         val name = Name.valueOf(aName)
 
-        return customerRepository.find(customerId)
-            ?.let { Customer(it.customerId, name) }
+        return customerRepository
+            .find(customerId)
+            ?.update(name)
             ?.also { customer ->
                 customerRepository.update(customer)
                     .takeIf { it > 0 }
