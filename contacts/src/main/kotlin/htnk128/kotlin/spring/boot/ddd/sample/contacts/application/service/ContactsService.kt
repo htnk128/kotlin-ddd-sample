@@ -1,6 +1,6 @@
 package htnk128.kotlin.spring.boot.ddd.sample.contacts.application.service
 
-import htnk128.kotlin.spring.boot.ddd.sample.contacts.application.service.dto.ContactsDTO
+import htnk128.kotlin.spring.boot.ddd.sample.contacts.application.dto.ContactsDTO
 import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.contactdetails.ContactDetails
 import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.contactdetails.ContactDetailsIdentity
 import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.contactdetails.ContactDetailsRepository

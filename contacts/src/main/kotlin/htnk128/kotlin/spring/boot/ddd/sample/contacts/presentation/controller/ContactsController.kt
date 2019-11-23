@@ -1,7 +1,7 @@
 package htnk128.kotlin.spring.boot.ddd.sample.contacts.presentation.controller
 
+import htnk128.kotlin.spring.boot.ddd.sample.contacts.application.dto.ContactsDTO
 import htnk128.kotlin.spring.boot.ddd.sample.contacts.application.service.ContactsService
-import htnk128.kotlin.spring.boot.ddd.sample.contacts.application.service.dto.ContactsDTO
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiModelProperty
 import io.swagger.annotations.ApiOperation

@@ -1,6 +1,6 @@
 package htnk128.kotlin.spring.boot.ddd.sample.customer.application.service
 
-import htnk128.kotlin.spring.boot.ddd.sample.customer.application.service.dto.CustomerDTO
+import htnk128.kotlin.spring.boot.ddd.sample.customer.application.dto.CustomerDTO
 import htnk128.kotlin.spring.boot.ddd.sample.customer.domain.model.customer.Customer
 import htnk128.kotlin.spring.boot.ddd.sample.customer.domain.model.customer.CustomerIdentity
 import htnk128.kotlin.spring.boot.ddd.sample.customer.domain.model.customer.CustomerRepository

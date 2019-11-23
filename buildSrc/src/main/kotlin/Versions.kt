@@ -6,7 +6,7 @@ object Versions {
     const val kotlin: String = "1.3.60"
 
     const val ktlint: String = "9.1.1"
-    const val ktlintCore: String = "0.33.0"
+    const val ktlintCore: String = "0.35.0"
 
     const val springBoot: String = "2.2.1.RELEASE"
 

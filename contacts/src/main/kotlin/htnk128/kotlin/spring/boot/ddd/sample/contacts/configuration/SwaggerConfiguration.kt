@@ -25,8 +25,8 @@ class SwaggerConfiguration {
 
     private fun apiInfo(): ApiInfo =
         ApiInfoBuilder()
-            .title("Sample APIs")
-            .description("サンプルのAPI仕様")
+            .title("Contacts APIs")
+            .description("API specifications for contacts")
             .contact(Contact("htnk128", "", ""))
             .build()
 }

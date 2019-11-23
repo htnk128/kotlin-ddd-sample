@@ -4,12 +4,12 @@ import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.customer.Custo
 import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.customer.CustomerIdentity
 import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.customer.CustomerRepository
 import htnk128.kotlin.spring.boot.ddd.sample.contacts.doman.model.customer.Name
+import java.net.URI
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.RequestEntity
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
 import org.springframework.web.client.RestTemplate
-import java.net.URI
 
 @Repository
 class CustomerRESTRepository(

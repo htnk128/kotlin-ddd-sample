@@ -1,7 +1,7 @@
 package htnk128.kotlin.spring.boot.ddd.sample.customer.presentation.controller
 
 import htnk128.kotlin.spring.boot.ddd.sample.customer.application.service.CustomerService
-import htnk128.kotlin.spring.boot.ddd.sample.customer.application.service.dto.CustomerDTO
+import htnk128.kotlin.spring.boot.ddd.sample.customer.application.dto.CustomerDTO
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiModelProperty
 import io.swagger.annotations.ApiOperation

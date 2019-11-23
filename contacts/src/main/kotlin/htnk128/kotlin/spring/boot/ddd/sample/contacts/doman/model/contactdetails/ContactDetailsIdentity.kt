@@ -29,7 +29,7 @@ class ContactDetailsIdentity(override val value: String) : Identity<ContactDetai
             return value
                 .takeIf { LENGTH_RANGE.contains(it.length) && PATTERN.matches(it) }
                 ?.let { ContactDetailsIdentity(it) }
-                ?: throw IllegalArgumentException("contactDetailsId must be 64 characters or less and alphanumeric.")
+                ?: throw IllegalArgumentException("contactDetailsIdentity must be 64 characters or less and alphanumeric.")
         }
     }
 }

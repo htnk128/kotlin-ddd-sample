@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 import org.jlleitschuh.gradle.ktlint.KtlintFormatTask
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     allModulePlugins()
