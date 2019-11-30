@@ -16,8 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 @Transactional
-class ContactDetailsExposedRepository :
-    ContactDetailsRepository {
+class ContactDetailsExposedRepository : ContactDetailsRepository {
 
     override fun find(contactDetailsId: ContactDetailsIdentity): ContactDetails? =
         ContactDetailsTable.select { ContactDetailsTable.contactDetailsId eq contactDetailsId.value }
