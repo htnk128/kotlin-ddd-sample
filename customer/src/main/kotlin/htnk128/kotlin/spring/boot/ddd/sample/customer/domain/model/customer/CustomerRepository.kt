@@ -1,14 +1,19 @@
 package htnk128.kotlin.spring.boot.ddd.sample.customer.domain.model.customer
 
+/**
+ * [Customer]を操作するためのリポジトリを表現する。
+ */
 interface CustomerRepository {
 
-    fun find(customerId: CustomerIdentity): Customer?
+    fun find(customerId: CustomerId): Customer?
 
     fun findAll(): List<Customer>
 
-    fun create(customer: Customer)
+    fun add(customer: Customer)
 
-    fun update(customer: Customer): Int
+    fun set(customer: Customer): Int
 
-    fun nextCustomerId(): CustomerIdentity = CustomerIdentity.generate()
+    fun remove(customer: Customer): Int
+
+    fun nextCustomerId(): CustomerId = CustomerId.generate()
 }

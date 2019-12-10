@@ -7,10 +7,12 @@ apply {
 }
 
 dependencies {
+    sharedDependency()
     dddCoreDependency()
     springDependencies()
     jacksonDependencies()
     sqlDependencies()
     flywayDependencies()
     swaggerDependencies()
+    loggingDependency()
 }
