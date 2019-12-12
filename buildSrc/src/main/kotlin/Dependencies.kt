@@ -60,6 +60,14 @@ fun DependencyHandler.swaggerDependencies() {
     implementation("io.springfox:springfox-swagger-ui:${Versions.swagger}")
 }
 
+fun DependencyHandler.loggingDependency() {
+    implementation("io.github.microutils:kotlin-logging:${Versions.kotlinLogging}")
+}
+
+fun DependencyHandler.sharedDependency() {
+    implementation(project(":shared"))
+}
+
 fun DependencyHandler.dddCoreDependency() {
     implementation(project(":ddd-core"))
 }

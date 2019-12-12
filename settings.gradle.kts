@@ -5,7 +5,8 @@ pluginManagement {
 }
 rootProject.name = "kotlin-spring-boot-ddd-sample"
 
+include(":shared")
 include(":ddd-core")
 
 include(":customer")
-include(":contact-details")
+include(":address")

@@ -4,10 +4,17 @@ import htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain.DomainEvent
 import htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain.ValueObject
 import java.time.Instant
 
+/**
+ * 顧客のイベントを表現する。
+ *
+ * @param T [CustomerEvent]
+ */
 sealed class CustomerEvent<T : CustomerEvent<T>> :
     DomainEvent<T> {
 
     abstract val type: Type
+
+    abstract val customer: Customer
 
     val occurredOn: Instant = Instant.now()
 
@@ -35,19 +42,33 @@ sealed class CustomerEvent<T : CustomerEvent<T>> :
         ValueObject<Type> {
         CREATED("customer.created"),
         UPDATED("customer.updated"),
-        ;
+        DELETED("customer.deleted");
 
         override fun sameValueAs(other: Type): Boolean =
             value == other.value
     }
 }
 
-class CustomerCreated() : CustomerEvent<CustomerCreated>() {
+/**
+ * 顧客の作成イベントを表現する。
+ */
+class CustomerCreated(override val customer: Customer) : CustomerEvent<CustomerCreated>() {
 
     override val type: Type = Type.CREATED
 }
 
-class CustomerUpdated() : CustomerEvent<CustomerUpdated>() {
+/**
+ * 顧客の更新イベントを表現する。
+ */
+class CustomerUpdated(override val customer: Customer) : CustomerEvent<CustomerUpdated>() {
 
     override val type: Type = Type.UPDATED
+}
+
+/**
+ * 顧客の削除イベントを表現する。
+ */
+class CustomerDeleted(override val customer: Customer) : CustomerEvent<CustomerDeleted>() {
+
+    override val type: Type = Type.DELETED
 }

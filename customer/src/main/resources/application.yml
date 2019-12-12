@@ -1,6 +1,6 @@
 spring:
   main:
-    lazy-initialization: true
+    lazy-initialization: false
   datasource:
     url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
@@ -11,9 +11,9 @@ spring:
     schemas: PUBLIC
   exposed:
     generate-ddl: false
-app:
-  envName: test
+server:
+  port: 8080
 logging:
   level:
-    htnk128.kotlin.spring.boot.ddd.sample: DEBUG
-    Exposed: DEBUG
+    htnk128.kotlin.spring.boot.ddd.sample.customer: INFO
+    Exposed: INFO
