@@ -1,20 +1,20 @@
-package htnk128.kotlin.spring.boot.ddd.sample.customer.domain.model.customer
+package htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.address
 
 import htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain.DomainEvent
 import htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain.ValueObject
 import java.time.Instant
 
 /**
- * [Customer]のイベントを表現する。
+ * [Address]のイベントを表現する。
  *
- * @param T [CustomerEvent]
+ * @param T [AddressEvent]
  */
-sealed class CustomerEvent<T : CustomerEvent<T>> :
+sealed class AddressEvent<T : AddressEvent<T>> :
     DomainEvent<T> {
 
     abstract val type: Type
 
-    abstract val customer: Customer
+    abstract val address: Address
 
     val occurredOn: Instant = Instant.now()
 
@@ -40,9 +40,9 @@ sealed class CustomerEvent<T : CustomerEvent<T>> :
 
     enum class Type(private val value: String) :
         ValueObject<Type> {
-        CREATED("customer.created"),
-        UPDATED("customer.updated"),
-        DELETED("customer.deleted");
+        CREATED("address.created"),
+        UPDATED("address.updated"),
+        DELETED("address.deleted");
 
         override fun sameValueAs(other: Type): Boolean =
             value == other.value
@@ -50,25 +50,25 @@ sealed class CustomerEvent<T : CustomerEvent<T>> :
 }
 
 /**
- * 顧客の作成イベントを表現する。
+ * 住所の作成イベントを表現する。
  */
-class CustomerCreated(override val customer: Customer) : CustomerEvent<CustomerCreated>() {
+class AddressCreated(override val address: Address) : AddressEvent<AddressCreated>() {
 
     override val type: Type = Type.CREATED
 }
 
 /**
- * 顧客の更新イベントを表現する。
+ * 住所の更新イベントを表現する。
  */
-class CustomerUpdated(override val customer: Customer) : CustomerEvent<CustomerUpdated>() {
+class AddressUpdated(override val address: Address) : AddressEvent<AddressUpdated>() {
 
     override val type: Type = Type.UPDATED
 }
 
 /**
- * 顧客の削除イベントを表現する。
+ * 住所の削除イベントを表現する。
  */
-class CustomerDeleted(override val customer: Customer) : CustomerEvent<CustomerDeleted>() {
+class AddressDeleted(override val address: Address) : AddressEvent<AddressDeleted>() {
 
     override val type: Type = Type.DELETED
 }

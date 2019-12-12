@@ -9,6 +9,6 @@ import htnk128.kotlin.spring.boot.ddd.sample.shared.application.exception.NotFou
  */
 class CustomerNotFoundException(
     customerId: CustomerId,
-    message: String = "customer not found. (customerId=$customerId)",
+    message: String = "Customer not found. (customerId=$customerId)",
     cause: Throwable? = null
 ) : NotFoundException(message = message, cause = cause)

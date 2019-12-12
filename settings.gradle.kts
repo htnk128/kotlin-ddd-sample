@@ -9,4 +9,5 @@ include(":shared")
 include(":ddd-core")
 
 include(":customer")
+include(":address")
 include(":contact-details")
