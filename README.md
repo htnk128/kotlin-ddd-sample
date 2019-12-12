@@ -1,4 +1,4 @@
-# kotlin-spring-boot-ddd-sample
+# kotlin-ddd-sample
 
 Samples of DDD using kotlin
 

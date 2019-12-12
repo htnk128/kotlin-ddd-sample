@@ -15,5 +15,5 @@ server:
   port: 8080
 logging:
   level:
-    htnk128.kotlin.spring.boot.ddd.sample.customer: INFO
+    htnk128.kotlin.ddd.sample.customer: INFO
     Exposed: INFO

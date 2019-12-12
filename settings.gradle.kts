@@ -3,7 +3,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-rootProject.name = "kotlin-spring-boot-ddd-sample"
+rootProject.name = "kotlin-ddd-sample"
 
 include(":shared")
 include(":ddd-core")
