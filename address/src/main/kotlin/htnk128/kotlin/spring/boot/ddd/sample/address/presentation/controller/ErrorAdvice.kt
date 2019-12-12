@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus
 @ControllerAdvice
 class ErrorAdvice {
 
-    @ExceptionHandler(Exception::class)
+    @ExceptionHandler(NotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
     fun handleNotFoundException(exception: NotFoundException): ErrorResponse {
@@ -22,7 +22,7 @@ class ErrorAdvice {
         return errorResponse(exception.type, exception.status, exception.message)
     }
 
-    @ExceptionHandler(Exception::class)
+    @ExceptionHandler(InvalidRequestException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     fun handleInvalidRequestException(exception: InvalidRequestException): ErrorResponse {
@@ -30,7 +30,7 @@ class ErrorAdvice {
         return errorResponse(exception.type, exception.status, exception.message)
     }
 
-    @ExceptionHandler(Exception::class)
+    @ExceptionHandler(UnexpectedException::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     fun handleUnexpectedException(exception: UnexpectedException): ErrorResponse {

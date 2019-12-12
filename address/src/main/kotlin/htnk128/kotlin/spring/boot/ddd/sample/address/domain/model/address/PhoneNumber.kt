@@ -8,7 +8,7 @@ import htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain.SingleValueObject
  *
  * 50桁までの文字列をもつ。
  */
-class PhoneNumber private constructor(override val value: Int) : SingleValueObject<PhoneNumber, Int>() {
+class PhoneNumber private constructor(override val value: String) : SingleValueObject<PhoneNumber, String>() {
 
     companion object {
 
@@ -26,14 +26,7 @@ class PhoneNumber private constructor(override val value: Int) : SingleValueObje
          */
         fun valueOf(value: String): PhoneNumber = value
             .takeIf { LENGTH_RANGE.contains(it.length) && PATTERN.matches(it) }
-            ?.let { valueOf(it) }
+            ?.let { PhoneNumber(it) }
             ?: throw AddressInvalidRequestException("Phone number must be 50 characters or less and numeric.")
-
-        /**
-         * [value]に指定された値を住所の電話番号に変換する。
-         *
-         * @return 指定された値を持つ住所の電話番号
-         */
-        fun valueOf(value: Int): PhoneNumber = PhoneNumber(value)
     }
 }

@@ -8,7 +8,7 @@ data class AddressDTO(
     val stateOrRegion: String,
     val line1: String,
     val line2: String?,
-    val phoneNumber: Int,
+    val phoneNumber: String,
     val createdAt: Long,
     val deletedAt: Long?,
     val updatedAt: Long

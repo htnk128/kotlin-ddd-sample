@@ -6,7 +6,6 @@ import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.customer.Custo
 import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.customer.Email
 import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.customer.Name
 import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.customer.NamePronunciation
-import htnk128.kotlin.spring.boot.ddd.sample.shared.UnexpectedException
 import java.net.URI
 import java.time.Instant
 import org.springframework.beans.factory.annotation.Value
@@ -20,8 +19,7 @@ class CustomerRestRepository(
     private val customerClient: CustomerClient
 ) : CustomerRepository {
 
-    override fun find(customerId: CustomerId): Customer? =
-        customerClient.findCustomer(customerId)
+    override fun find(customerId: CustomerId): Customer? = customerClient.findCustomer(customerId)
 }
 
 @Component
@@ -40,9 +38,7 @@ class CustomerClient(
             ?.body
             ?.toDomainModel()
             ?: error("customer response status is not OK.")
-    }.getOrElse {
-        throw UnexpectedException("Customer find request is failed. (customerId=$customerId)", it)
-    }
+    }.getOrNull()
 
     private data class CustomerResponse(
         val customerId: String,

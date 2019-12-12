@@ -2,6 +2,7 @@ package htnk128.kotlin.spring.boot.ddd.sample.address.application.service
 
 import htnk128.kotlin.spring.boot.ddd.sample.address.application.dto.AddressDTO
 import htnk128.kotlin.spring.boot.ddd.sample.address.application.exception.AddressNotFoundException
+import htnk128.kotlin.spring.boot.ddd.sample.address.application.exception.CustomerNotFoundException
 import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.address.Address
 import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.address.AddressId
 import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.address.AddressRepository
@@ -12,6 +13,7 @@ import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.address.PhoneN
 import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.address.StateOrRegion
 import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.address.ZipCode
 import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.customer.CustomerId
+import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.customer.CustomerRepository
 import htnk128.kotlin.spring.boot.ddd.sample.shared.UnexpectedException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,7 +22,10 @@ import org.springframework.transaction.annotation.Transactional
  * 住所([Address])ドメインの操作を提供するアプリケーションサービス。
  */
 @Service
-class AddressService(private val addressRepository: AddressRepository) {
+class AddressService(
+    private val addressRepository: AddressRepository,
+    private val customerRepository: CustomerRepository
+) {
 
     @Transactional(readOnly = true)
     fun find(aAddressId: String): AddressDTO {
@@ -49,19 +54,33 @@ class AddressService(private val addressRepository: AddressRepository) {
         aLine1: String,
         aLine2: String?,
         aPhoneNumber: String
-    ): AddressDTO = Address
-        .create(
-            addressRepository.nextAddressId(),
-            CustomerId.valueOf(aCustomerId),
-            FullName.valueOf(aFullName),
-            ZipCode.valueOf(aZipCode),
-            StateOrRegion.valueOf(aStateOrRegion),
-            Line1.valueOf(aLine1),
-            aLine2?.let { Line2.valueOf(it) },
-            PhoneNumber.valueOf(aPhoneNumber)
-        )
-        .also(addressRepository::add)
-        .toDTO()
+    ): AddressDTO {
+        val customerId = CustomerId.valueOf(aCustomerId)
+        val fullName = FullName.valueOf(aFullName)
+        val zipCode = ZipCode.valueOf(aZipCode)
+        val stateOrRegion = StateOrRegion.valueOf(aStateOrRegion)
+        val line1 = Line1.valueOf(aLine1)
+        val line2 = aLine2?.let { Line2.valueOf(it) }
+        val phoneNumber = PhoneNumber.valueOf(aPhoneNumber)
+
+        return with(
+            customerRepository.find(customerId) ?: throw CustomerNotFoundException(customerId)
+        ) {
+            Address
+                .create(
+                    addressRepository.nextAddressId(),
+                    customerId,
+                    fullName,
+                    zipCode,
+                    stateOrRegion,
+                    line1,
+                    line2,
+                    phoneNumber
+                )
+                .also(addressRepository::add)
+                .toDTO()
+        }
+    }
 
     @Transactional(timeout = 10, rollbackFor = [Exception::class])
     fun update(

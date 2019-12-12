@@ -27,7 +27,7 @@ data class AddressUpdateRequest(
     )
     val line2: String?,
     @ApiModelProperty(
-        value = "住所の電話番号", required = false, position = 6
+        value = "住所の電話番号", example = "00000000000", required = false, position = 6
     )
     val phoneNumber: String?
 )

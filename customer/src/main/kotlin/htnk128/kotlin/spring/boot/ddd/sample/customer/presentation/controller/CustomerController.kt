@@ -61,7 +61,9 @@ class CustomerController(private val customerService: CustomerService) {
     fun delete(
         @ApiParam(value = "顧客のID", required = true, example = "CUS_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable customerId: String
-    ) = customerService.delete(customerId)
+    ) {
+        customerService.delete(customerId)
+    }
 
     private fun CustomerDTO.toResponse() =
         CustomerResponse.from(this)

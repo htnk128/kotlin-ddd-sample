@@ -31,7 +31,7 @@ data class AddressCreateRequest(
     )
     val line2: String?,
     @ApiModelProperty(
-        value = "住所の電話番号", required = true, position = 7
+        value = "住所の電話番号", example = "00000000000", required = true, position = 7
     )
     val phoneNumber: String
 )

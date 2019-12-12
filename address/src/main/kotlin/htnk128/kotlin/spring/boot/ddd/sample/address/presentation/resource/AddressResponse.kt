@@ -36,9 +36,9 @@ data class AddressResponse(
     )
     val line2: String?,
     @ApiModelProperty(
-        value = "住所の電話番号", required = true, position = 8
+        value = "住所の電話番号", example = "00000000000", required = true, position = 8
     )
-    val phoneNumber: Int,
+    val phoneNumber: String,
     @ApiModelProperty(
         value = "住所の作成日時", example = "1576120910973", required = true, position = 9
     )
