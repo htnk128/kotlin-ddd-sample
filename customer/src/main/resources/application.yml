@@ -11,9 +11,9 @@ spring:
     schemas: PUBLIC
   exposed:
     generate-ddl: false
-app:
-  envName: test
+server:
+  port: 8080
 logging:
   level:
-    htnk128.kotlin.spring.boot.ddd.sample: DEBUG
-    Exposed: DEBUG
+    htnk128.kotlin.spring.boot.ddd.sample.customer: INFO
+    Exposed: INFO

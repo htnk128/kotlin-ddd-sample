@@ -72,6 +72,8 @@ class Customer(
 
     /**
      * 発生したイベントを返す。
+     *
+     * @return 発生したイベントのリスト
      */
     fun occurredEvents(): List<CustomerEvent<*>> = events.toList()
 

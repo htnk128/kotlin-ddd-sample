@@ -30,18 +30,21 @@ class CustomerId private constructor(override val value: String) : Identity<Cust
         private val PATTERN = "[\\p{Alnum}-_]*".toRegex()
 
         /**
-         * [UUID]を用いて顧客IDを生成する。
+         * [UUID]を用いて顧客のIDを生成する。
+         *
+         * @return 生成した値を持つ顧客のID
          */
         fun generate(): CustomerId = CustomerId("CUS_${UUID.randomUUID()}")
 
         /**
-         * [value]に指定された値を顧客IDに変換する。
+         * [value]に指定された値を顧客のIDに変換する。
          *
          * 値には、64桁までの一意な文字列を指定することが可能で、
          * 指定可能な値は、英数字、ハイフン、アンダースコアとなる。
          * この条件に違反した値を指定した場合には例外となる。
          *
          * @throws CustomerInvalidRequestException 条件に違反した値を指定した場合
+         * @return 指定された値を持つ顧客のID
          */
         fun valueOf(value: String): CustomerId = value
             .takeIf { LENGTH_RANGE.contains(it.length) && PATTERN.matches(it) }

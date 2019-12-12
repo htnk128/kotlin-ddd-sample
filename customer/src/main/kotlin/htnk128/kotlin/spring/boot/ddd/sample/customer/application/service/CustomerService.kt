@@ -12,6 +12,9 @@ import htnk128.kotlin.spring.boot.ddd.sample.shared.UnexpectedException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+/**
+ * 顧客([Customer])ドメインの操作を提供するアプリケーションサービス。
+ */
 @Service
 class CustomerService(private val customerRepository: CustomerRepository) {
 
@@ -32,7 +35,7 @@ class CustomerService(private val customerRepository: CustomerRepository) {
         .map { it.toDTO() }
         .toList()
 
-    @Transactional(timeout = 10, rollbackFor = [Exception::class])
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
     fun create(aName: String, aNamePronunciation: String, aEmail: String): CustomerDTO = Customer
         .create(
             customerRepository.nextCustomerId(),
@@ -43,7 +46,7 @@ class CustomerService(private val customerRepository: CustomerRepository) {
         .also(customerRepository::add)
         .toDTO()
 
-    @Transactional(timeout = 10, rollbackFor = [Exception::class])
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
     fun update(aCustomerId: String, aName: String?, aNamePronunciation: String?, aEmail: String?): CustomerDTO {
         val customerId = CustomerId.valueOf(aCustomerId)
         val name = aName?.let { Name.valueOf(it) }
@@ -56,22 +59,23 @@ class CustomerService(private val customerRepository: CustomerRepository) {
             ?.also { customer ->
                 customerRepository.set(customer)
                     .takeIf { it > 0 }
-                    ?: throw UnexpectedException("customer update failed.")
+                    ?: throw UnexpectedException("Customer update failed.")
             }
             ?.toDTO()
             ?: throw CustomerNotFoundException(customerId)
     }
 
-    @Transactional(timeout = 10, rollbackFor = [Exception::class])
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
     fun delete(aCustomerId: String) {
         val customerId = CustomerId.valueOf(aCustomerId)
+
         customerRepository
             .find(customerId)
             ?.delete()
             ?.also { customer ->
                 customerRepository.remove(customer)
                     .takeIf { it > 0 }
-                    ?: throw UnexpectedException("customer update failed.")
+                    ?: throw UnexpectedException("Customer update failed.")
             }
             ?: throw CustomerNotFoundException(customerId)
     }
@@ -86,4 +90,8 @@ class CustomerService(private val customerRepository: CustomerRepository) {
             deletedAt?.toEpochMilli(),
             updatedAt.toEpochMilli()
         )
+
+    private companion object {
+        const val TRANSACTIONAL_TIMEOUT: Int = 30
+    }
 }

@@ -10,6 +10,7 @@ import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.address.PhoneN
 import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.address.StateOrRegion
 import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.address.ZipCode
 import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.customer.CustomerId
+import java.time.Instant
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.Table
@@ -18,7 +19,6 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.update
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import java.time.Instant
 
 @Repository
 @Transactional
@@ -41,7 +41,7 @@ class AddressExposedRepository : AddressRepository {
             it[stateOrRegion] = address.stateOrRegion.value
             it[line1] = address.line1.value
             it[line2] = address.line2?.value
-            it[phoneNumber] = address.phoneNumber.value.toInt()
+            it[phoneNumber] = address.phoneNumber.value
             it[createdAt] = address.createdAt.toEpochMilli()
             it[deletedAt] = address.deletedAt?.toEpochMilli()
             it[updatedAt] = address.updatedAt.toEpochMilli()

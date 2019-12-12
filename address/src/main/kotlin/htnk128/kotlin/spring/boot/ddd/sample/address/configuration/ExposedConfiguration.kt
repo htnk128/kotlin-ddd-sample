@@ -14,9 +14,9 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 class ExposedConfiguration(val dataSource: DataSource) : TransactionManagementConfigurer {
 
     @Bean
-    override fun annotationDrivenTransactionManager(): PlatformTransactionManager =
-        SpringTransactionManager(dataSource)
+    override fun annotationDrivenTransactionManager(): PlatformTransactionManager = SpringTransactionManager(dataSource)
 
     @Bean
-    fun persistenceExceptionTranslationPostProcessor() = PersistenceExceptionTranslationPostProcessor()
+    fun persistenceExceptionTranslationPostProcessor(): PersistenceExceptionTranslationPostProcessor =
+        PersistenceExceptionTranslationPostProcessor()
 }

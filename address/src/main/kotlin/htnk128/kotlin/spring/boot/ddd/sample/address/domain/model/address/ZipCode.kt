@@ -22,6 +22,7 @@ class ZipCode private constructor(override val value: String) : SingleValueObjec
          * この条件に違反した値を指定した場合には例外となる。
          *
          * @throws AddressInvalidRequestException 条件に違反した値を指定した場合
+         * @return 指定された値を持つ住所の郵便番号
          */
         fun valueOf(value: String): ZipCode = value
             .takeIf { LENGTH_RANGE.contains(it.length) && PATTERN.matches(it) }

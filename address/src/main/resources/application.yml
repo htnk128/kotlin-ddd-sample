@@ -11,11 +11,11 @@ spring:
     schemas: PUBLIC
   exposed:
     generate-ddl: false
-app:
-  envName: test
+server:
+  port: 8081
 logging:
   level:
-    htnk128.kotlin.spring.boot.ddd.sample: DEBUG
+    htnk128.kotlin.spring.boot.ddd.sample.address: DEBUG
     Exposed: DEBUG
 rest:
   connect.timeout: 5000

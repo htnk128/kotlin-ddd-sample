@@ -18,5 +18,6 @@ class ExposedConfiguration(val dataSource: DataSource) : TransactionManagementCo
         SpringTransactionManager(dataSource)
 
     @Bean
-    fun persistenceExceptionTranslationPostProcessor() = PersistenceExceptionTranslationPostProcessor()
+    fun persistenceExceptionTranslationPostProcessor(): PersistenceExceptionTranslationPostProcessor =
+        PersistenceExceptionTranslationPostProcessor()
 }

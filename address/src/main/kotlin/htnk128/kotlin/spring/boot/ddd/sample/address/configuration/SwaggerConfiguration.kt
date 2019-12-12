@@ -15,18 +15,15 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux
 class SwaggerConfiguration {
 
     @Bean
-    fun customDocket(): Docket {
-        return Docket(DocumentationType.SWAGGER_2).select()
-            .apis(RequestHandlerSelectors.basePackage("htnk128.kotlin.spring.boot.ddd.sample.address.presentation.controller"))
-            .build()
-            .useDefaultResponseMessages(false)
-            .apiInfo(apiInfo())
-    }
+    fun customDocket(): Docket = Docket(DocumentationType.SWAGGER_2).select()
+        .apis(RequestHandlerSelectors.basePackage("htnk128.kotlin.spring.boot.ddd.sample.address.presentation.controller"))
+        .build()
+        .useDefaultResponseMessages(false)
+        .apiInfo(apiInfo())
 
-    private fun apiInfo(): ApiInfo =
-        ApiInfoBuilder()
-            .title("Address APIs")
-            .description("API specifications for address")
-            .contact(Contact("htnk128", "", ""))
-            .build()
+    private fun apiInfo(): ApiInfo = ApiInfoBuilder()
+        .title("Address APIs")
+        .description("API specifications for address")
+        .contact(Contact("htnk128", "", ""))
+        .build()
 }

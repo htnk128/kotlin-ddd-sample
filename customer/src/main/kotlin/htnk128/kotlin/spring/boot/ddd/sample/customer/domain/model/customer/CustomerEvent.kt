@@ -5,7 +5,7 @@ import htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain.ValueObject
 import java.time.Instant
 
 /**
- * [Customer]のイベントを表現する。
+ * 顧客のイベントを表現する。
  *
  * @param T [CustomerEvent]
  */

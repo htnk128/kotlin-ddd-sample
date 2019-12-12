@@ -5,7 +5,7 @@ import htnk128.kotlin.spring.boot.ddd.sample.dddcore.domain.ValueObject
 import java.time.Instant
 
 /**
- * [Address]のイベントを表現する。
+ * 住所のイベントを表現する。
  *
  * @param T [AddressEvent]
  */

@@ -1,7 +1,7 @@
 package htnk128.kotlin.spring.boot.ddd.sample.customer.domain.model.customer
 
 /**
- * [Customer]を操作するためのリポジトリを表現する。
+ * 顧客を操作するためのリポジトリを表現する。
  */
 interface CustomerRepository {
 

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
@@ -29,37 +30,56 @@ class AddressController(private val addressService: AddressService) {
     @ApiOperation("住所を取得する")
     @GetMapping("/{addressId}")
     fun find(
-        @ApiParam(value = "住所のID", required = true, example = "CUS_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
+        @ApiParam(value = "住所のID", required = true, example = "ADDR_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable addressId: String
     ): AddressResponse = addressService.find(addressId)
         .toResponse()
 
-    @ApiOperation("すべての住所を取得する")
+    @ApiOperation("顧客のIDに紐付いているすべての住所を取得する")
     @GetMapping("")
-    fun findAll(): AddressResponses = AddressResponses(addressService.findAll().map { it.toResponse() })
+    fun findAll(
+        @ApiParam(value = "顧客のID", required = true, example = "CUST_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
+        @RequestParam("customerId", required = true) customerId: String
+    ): AddressResponses = AddressResponses(addressService.findAll(customerId).map { it.toResponse() })
 
     @ApiOperation("住所を作成する")
     @PostMapping("", consumes = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
         @RequestBody request: AddressCreateRequest
-    ): AddressResponse = addressService.create(request.name, request.namePronunciation, request.email)
+    ): AddressResponse = addressService.create(
+        request.customerId,
+        request.fullName,
+        request.zipCode,
+        request.stateOrRegion,
+        request.line1,
+        request.line2,
+        request.phoneNumber
+    )
         .toResponse()
 
     @ApiOperation("住所を更新する")
     @PutMapping("/{addressId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
     fun update(
-        @ApiParam(value = "住所のID", required = true, example = "CUS_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
+        @ApiParam(value = "住所のID", required = true, example = "ADDR_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable addressId: String,
         @RequestBody request: AddressUpdateRequest
-    ): AddressResponse = addressService.update(addressId, request.name, request.namePronunciation, request.email)
+    ): AddressResponse = addressService.update(
+        addressId,
+        request.fullName,
+        request.zipCode,
+        request.stateOrRegion,
+        request.line1,
+        request.line2,
+        request.phoneNumber
+    )
         .toResponse()
 
     @ApiOperation("住所を削除する")
     @DeleteMapping("/{addressId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(
-        @ApiParam(value = "住所のID", required = true, example = "CUS_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
+        @ApiParam(value = "住所のID", required = true, example = "ADDR_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable addressId: String
     ) = addressService.delete(addressId)
 

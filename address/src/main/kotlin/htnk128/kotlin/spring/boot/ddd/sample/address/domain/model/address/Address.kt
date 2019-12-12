@@ -91,6 +91,8 @@ class Address(
 
     /**
      * 発生したイベントを返す。
+     *
+     * @return 発生したイベントのリスト
      */
     fun occurredEvents(): List<AddressEvent<*>> = events.toList()
 

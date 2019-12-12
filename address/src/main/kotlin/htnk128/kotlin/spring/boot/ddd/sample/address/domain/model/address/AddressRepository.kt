@@ -3,7 +3,7 @@ package htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.address
 import htnk128.kotlin.spring.boot.ddd.sample.address.domain.model.customer.CustomerId
 
 /**
- * [Address]を操作するためのリポジトリを表現する。
+ * 住所を操作するためのリポジトリを表現する。
  */
 interface AddressRepository {
 

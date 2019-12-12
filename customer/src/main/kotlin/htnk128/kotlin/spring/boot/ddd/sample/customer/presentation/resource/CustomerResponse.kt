@@ -12,7 +12,7 @@ data class CustomerResponse(
     )
     val customerId: String,
     @ApiModelProperty(
-        value = "顧客の名前", example = "あいうえお", required = true, position = 2
+        value = "顧客の氏名または会社名", example = "あいうえお", required = true, position = 2
     )
     val name: String,
     @ApiModelProperty(

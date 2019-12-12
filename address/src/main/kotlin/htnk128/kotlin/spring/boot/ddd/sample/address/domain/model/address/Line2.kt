@@ -20,6 +20,7 @@ class Line2 private constructor(override val value: String) : SingleValueObject<
          * 値には、100桁までの文字列を指定することが可能である。
          *
          * @throws AddressInvalidRequestException 条件に違反した値を指定した場合
+         * @return 指定された値を持つ住所の住所欄2
          */
         fun valueOf(value: String): Line2 = value
             .takeIf { LENGTH_RANGE.contains(it.length) }

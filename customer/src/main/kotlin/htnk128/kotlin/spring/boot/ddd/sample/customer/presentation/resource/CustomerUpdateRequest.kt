@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModelProperty
  */
 data class CustomerUpdateRequest(
     @ApiModelProperty(
-        value = "顧客の名前", example = "あいうえお", required = false, position = 1
+        value = "顧客の氏名または会社名", example = "あいうえお", required = false, position = 1
     )
     val name: String?,
     @ApiModelProperty(
