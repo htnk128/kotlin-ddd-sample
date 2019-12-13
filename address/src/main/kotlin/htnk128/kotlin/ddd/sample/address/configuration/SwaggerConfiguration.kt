@@ -15,7 +15,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux
 class SwaggerConfiguration {
 
     @Bean
-    fun customDocket(): Docket = Docket(DocumentationType.SWAGGER_2).select()
+    fun customDocket(): Docket = Docket(DocumentationType.SWAGGER_2)
+        .select()
         .apis(RequestHandlerSelectors.basePackage("htnk128.kotlin.ddd.sample.address.presentation.controller"))
         .build()
         .useDefaultResponseMessages(false)
@@ -24,6 +25,7 @@ class SwaggerConfiguration {
     private fun apiInfo(): ApiInfo = ApiInfoBuilder()
         .title("Address APIs")
         .description("API specifications for address")
-        .contact(Contact("htnk128", "", ""))
+        .contact(Contact("htnk128", "https://github.com/htnk128", "hiroaki.tanaka128@gmail.com"))
+        .version("1.0.0")
         .build()
 }

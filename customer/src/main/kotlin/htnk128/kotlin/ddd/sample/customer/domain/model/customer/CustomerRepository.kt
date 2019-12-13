@@ -5,7 +5,7 @@ package htnk128.kotlin.ddd.sample.customer.domain.model.customer
  */
 interface CustomerRepository {
 
-    fun find(customerId: CustomerId): Customer?
+    fun find(customerId: CustomerId, lock: Boolean = false): Customer?
 
     fun findAll(): List<Customer>
 

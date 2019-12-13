@@ -7,7 +7,7 @@ import htnk128.kotlin.ddd.sample.address.domain.model.customer.CustomerId
  */
 interface AddressRepository {
 
-    fun find(addressId: AddressId): Address?
+    fun find(addressId: AddressId, lock: Boolean = false): Address?
 
     fun findAll(customerId: CustomerId): List<Address>
 

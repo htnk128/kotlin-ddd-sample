@@ -37,6 +37,11 @@ class AddressService(
             ?: throw AddressNotFoundException(addressId)
     }
 
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
+    fun lock(addressId: AddressId): Address = addressRepository.find(addressId, lock = true)
+        ?.takeUnless { it.isDeleted }
+        ?: throw AddressNotFoundException(addressId)
+
     @Transactional(readOnly = true)
     fun findAll(aCustomerId: String): List<AddressDTO> = addressRepository
         .findAll(CustomerId.valueOf(aCustomerId))
@@ -45,7 +50,7 @@ class AddressService(
         .map { it.toDTO() }
         .toList()
 
-    @Transactional(timeout = 10, rollbackFor = [Exception::class])
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
     fun create(
         aCustomerId: String,
         aFullName: String,
@@ -80,7 +85,7 @@ class AddressService(
             .toDTO()
     }
 
-    @Transactional(timeout = 10, rollbackFor = [Exception::class])
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
     fun update(
         aAddressId: String,
         aFullName: String?,
@@ -98,31 +103,27 @@ class AddressService(
         val line2 = aLine2?.let { Line2.valueOf(it) }
         val phoneNumber = aPhoneNumber?.let { PhoneNumber.valueOf(it) }
 
-        return addressRepository
-            .find(addressId)
-            ?.update(fullName, zipCode, stateOrRegion, line1, line2, phoneNumber)
-            ?.also { address ->
+        return lock(addressId)
+            .update(fullName, zipCode, stateOrRegion, line1, line2, phoneNumber)
+            .also { address ->
                 addressRepository.set(address)
                     .takeIf { it > 0 }
                     ?: throw UnexpectedException("Address update failed.")
             }
-            ?.toDTO()
-            ?: throw AddressNotFoundException(addressId)
+            .toDTO()
     }
 
-    @Transactional(timeout = 10, rollbackFor = [Exception::class])
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
     fun delete(aAddressId: String) {
         val addressId = AddressId.valueOf(aAddressId)
 
-        addressRepository
-            .find(addressId)
-            ?.delete()
-            ?.also { address ->
+        lock(addressId)
+            .delete()
+            .also { address ->
                 addressRepository.remove(address)
                     .takeIf { it > 0 }
                     ?: throw UnexpectedException("Address update failed.")
             }
-            ?: throw AddressNotFoundException(addressId)
     }
 
     private fun Address.toDTO(): AddressDTO =
@@ -139,4 +140,9 @@ class AddressService(
             deletedAt?.toEpochMilli(),
             updatedAt.toEpochMilli()
         )
+
+    private companion object {
+
+        const val TRANSACTIONAL_TIMEOUT: Int = 30
+    }
 }

@@ -28,8 +28,14 @@ class CustomerService(private val customerRepository: CustomerRepository) {
             ?: throw CustomerNotFoundException(customerId)
     }
 
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
+    fun lock(customerId: CustomerId): Customer = customerRepository.find(customerId, lock = true)
+        ?.takeUnless { it.isDeleted }
+        ?: throw CustomerNotFoundException(customerId)
+
     @Transactional(readOnly = true)
-    fun findAll(): List<CustomerDTO> = customerRepository.findAll()
+    fun findAll(): List<CustomerDTO> = customerRepository
+        .findAll()
         .asSequence()
         .filterNot { it.isDeleted }
         .map { it.toDTO() }
@@ -53,31 +59,27 @@ class CustomerService(private val customerRepository: CustomerRepository) {
         val namePronunciation = aNamePronunciation?.let { NamePronunciation.valueOf(it) }
         val email = aEmail?.let { Email.valueOf(it) }
 
-        return customerRepository
-            .find(customerId)
-            ?.update(name, namePronunciation, email)
-            ?.also { customer ->
+        return lock(customerId)
+            .update(name, namePronunciation, email)
+            .also { customer ->
                 customerRepository.set(customer)
                     .takeIf { it > 0 }
                     ?: throw UnexpectedException("Customer update failed.")
             }
-            ?.toDTO()
-            ?: throw CustomerNotFoundException(customerId)
+            .toDTO()
     }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
     fun delete(aCustomerId: String) {
         val customerId = CustomerId.valueOf(aCustomerId)
 
-        customerRepository
-            .find(customerId)
-            ?.delete()
-            ?.also { customer ->
+        lock(customerId)
+            .delete()
+            .also { customer ->
                 customerRepository.remove(customer)
                     .takeIf { it > 0 }
                     ?: throw UnexpectedException("Customer update failed.")
             }
-            ?: throw CustomerNotFoundException(customerId)
     }
 
     private fun Customer.toDTO(): CustomerDTO =

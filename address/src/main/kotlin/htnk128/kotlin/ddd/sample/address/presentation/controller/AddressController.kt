@@ -82,7 +82,10 @@ class AddressController(private val addressService: AddressService) {
     fun delete(
         @ApiParam(value = "住所のID", required = true, example = "ADDR_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable addressId: String
-    ) = addressService.delete(addressId)
+    ): String {
+        addressService.delete(addressId)
+        return "" // TODO Unitにするとエラーになるので要確認
+    }
 
     private fun AddressDTO.toResponse() =
         AddressResponse.from(this)

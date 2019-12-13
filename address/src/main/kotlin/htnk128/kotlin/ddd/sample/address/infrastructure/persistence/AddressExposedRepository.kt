@@ -11,7 +11,6 @@ import htnk128.kotlin.ddd.sample.address.domain.model.address.StateOrRegion
 import htnk128.kotlin.ddd.sample.address.domain.model.address.ZipCode
 import htnk128.kotlin.ddd.sample.address.domain.model.customer.CustomerId
 import htnk128.kotlin.ddd.sample.shared.infrastructure.persistence.ExposedTable
-import java.time.Instant
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
@@ -19,13 +18,15 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.update
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 
 @Repository
 @Transactional
 class AddressExposedRepository : AddressRepository {
 
-    override fun find(addressId: AddressId): Address? =
+    override fun find(addressId: AddressId, lock: Boolean): Address? =
         AddressTable.select { AddressTable.addressId eq addressId.value }
+            .run { if (lock) this.forUpdate() else this }
             .firstOrNull()
             ?.rowToModel()
 
