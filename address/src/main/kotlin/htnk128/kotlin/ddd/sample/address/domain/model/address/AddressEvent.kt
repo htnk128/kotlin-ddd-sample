@@ -9,8 +9,7 @@ import java.time.Instant
  *
  * @param T [AddressEvent]
  */
-sealed class AddressEvent<T : AddressEvent<T>> :
-    DomainEvent<T> {
+sealed class AddressEvent<T : AddressEvent<T>> : DomainEvent<T> {
 
     abstract val type: Type
 
@@ -54,8 +53,7 @@ sealed class AddressEvent<T : AddressEvent<T>> :
  */
 class AddressCreated(override val address: Address) : AddressEvent<AddressCreated>() {
 
-    override val type: Type =
-        Type.CREATED
+    override val type: Type = Type.CREATED
 }
 
 /**
@@ -63,8 +61,7 @@ class AddressCreated(override val address: Address) : AddressEvent<AddressCreate
  */
 class AddressUpdated(override val address: Address) : AddressEvent<AddressUpdated>() {
 
-    override val type: Type =
-        Type.UPDATED
+    override val type: Type = Type.UPDATED
 }
 
 /**
@@ -72,6 +69,5 @@ class AddressUpdated(override val address: Address) : AddressEvent<AddressUpdate
  */
 class AddressDeleted(override val address: Address) : AddressEvent<AddressDeleted>() {
 
-    override val type: Type =
-        Type.DELETED
+    override val type: Type = Type.DELETED
 }

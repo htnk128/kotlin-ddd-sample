@@ -22,25 +22,16 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 @Transactional
-class AddressExposedRepository :
-    AddressRepository {
+class AddressExposedRepository : AddressRepository {
 
     override fun find(addressId: AddressId): Address? =
         AddressTable.select { AddressTable.addressId eq addressId.value }
             .firstOrNull()
-            ?.let {
-                AddressTable.toModel(
-                    it
-                )
-            }
+            ?.rowToModel()
 
     override fun findAll(customerId: CustomerId): List<Address> =
         AddressTable.select { AddressTable.customerId eq customerId.value }
-            .map {
-                AddressTable.toModel(
-                    it
-                )
-            }
+            .map { it.rowToModel() }
 
     override fun add(address: Address) {
         AddressTable.insert {
@@ -74,6 +65,21 @@ class AddressExposedRepository :
             it[deletedAt] = address.deletedAt
             it[updatedAt] = address.updatedAt
         }
+
+    private fun ResultRow.rowToModel() =
+        Address(
+            AddressId.valueOf(this[AddressTable.addressId]),
+            CustomerId.valueOf(this[AddressTable.customerId]),
+            FullName.valueOf(this[AddressTable.fullName]),
+            ZipCode.valueOf(this[AddressTable.zipCode]),
+            StateOrRegion.valueOf(this[AddressTable.stateOrRegion]),
+            Line1.valueOf(this[AddressTable.line1]),
+            this[AddressTable.line2]?.let { Line2.valueOf(it) },
+            PhoneNumber.valueOf(this[AddressTable.phoneNumber]),
+            this[AddressTable.createdAt],
+            this[AddressTable.deletedAt],
+            this[AddressTable.updatedAt]
+        )
 }
 
 private object AddressTable : ExposedTable<Address>("address") {
@@ -89,19 +95,4 @@ private object AddressTable : ExposedTable<Address>("address") {
     val createdAt: Column<Instant> = instant("created_at")
     val deletedAt: Column<Instant?> = instant("deleted_at").nullable()
     val updatedAt: Column<Instant> = instant("updated_at")
-
-    override fun toModel(row: ResultRow): Address =
-        Address(
-            AddressId.valueOf(row[addressId]),
-            CustomerId.valueOf(row[customerId]),
-            FullName.valueOf(row[fullName]),
-            ZipCode.valueOf(row[zipCode]),
-            StateOrRegion.valueOf(row[stateOrRegion]),
-            Line1.valueOf(row[line1]),
-            row[line2]?.let { Line2.valueOf(it) },
-            PhoneNumber.valueOf(row[phoneNumber]),
-            row[createdAt],
-            row[deletedAt],
-            row[updatedAt]
-        )
 }

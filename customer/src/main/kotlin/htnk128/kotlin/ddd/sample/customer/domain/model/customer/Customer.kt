@@ -80,15 +80,9 @@ class Customer(
     private fun addEvent(type: CustomerEvent.Type): Customer = this
         .also {
             events += when (type) {
-                CustomerEvent.Type.CREATED -> CustomerCreated(
-                    this
-                )
-                CustomerEvent.Type.UPDATED -> CustomerUpdated(
-                    this
-                )
-                CustomerEvent.Type.DELETED -> CustomerDeleted(
-                    this
-                )
+                CustomerEvent.Type.CREATED -> CustomerCreated(this)
+                CustomerEvent.Type.UPDATED -> CustomerUpdated(this)
+                CustomerEvent.Type.DELETED -> CustomerDeleted(this)
             }
         }
 

@@ -25,9 +25,7 @@ class CustomerService(private val customerRepository: CustomerRepository) {
         return customerRepository.find(customerId)
             ?.takeUnless { it.isDeleted }
             ?.toDTO()
-            ?: throw CustomerNotFoundException(
-                customerId
-            )
+            ?: throw CustomerNotFoundException(customerId)
     }
 
     @Transactional(readOnly = true)
@@ -64,9 +62,7 @@ class CustomerService(private val customerRepository: CustomerRepository) {
                     ?: throw UnexpectedException("Customer update failed.")
             }
             ?.toDTO()
-            ?: throw CustomerNotFoundException(
-                customerId
-            )
+            ?: throw CustomerNotFoundException(customerId)
     }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
@@ -81,9 +77,7 @@ class CustomerService(private val customerRepository: CustomerRepository) {
                     .takeIf { it > 0 }
                     ?: throw UnexpectedException("Customer update failed.")
             }
-            ?: throw CustomerNotFoundException(
-                customerId
-            )
+            ?: throw CustomerNotFoundException(customerId)
     }
 
     private fun Customer.toDTO(): CustomerDTO =
@@ -98,6 +92,7 @@ class CustomerService(private val customerRepository: CustomerRepository) {
         )
 
     private companion object {
+
         const val TRANSACTIONAL_TIMEOUT: Int = 30
     }
 }

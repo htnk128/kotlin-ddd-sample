@@ -15,8 +15,8 @@ server:
   port: 8081
 logging:
   level:
-    htnk128.kotlin.ddd.sample.address: DEBUG
-    Exposed: DEBUG
+    htnk128.kotlin.ddd.sample.address: INFO
+    Exposed: INFO
 rest:
   connect.timeout: 5000
   read.timeout: 5000

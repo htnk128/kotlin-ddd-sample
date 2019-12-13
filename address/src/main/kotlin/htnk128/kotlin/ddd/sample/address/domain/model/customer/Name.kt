@@ -25,8 +25,6 @@ class Name private constructor(override val value: String) : SingleValueObject<N
         fun valueOf(value: String): Name = value
             .takeIf { LENGTH_RANGE.contains(it.length) }
             ?.let { Name(it) }
-            ?: throw CustomerInvalidRequestException(
-                "Name must be 100 characters or less."
-            )
+            ?: throw CustomerInvalidRequestException("Name must be 100 characters or less.")
     }
 }

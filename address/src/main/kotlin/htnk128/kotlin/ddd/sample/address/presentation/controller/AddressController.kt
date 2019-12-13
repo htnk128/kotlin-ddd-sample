@@ -41,8 +41,7 @@ class AddressController(private val addressService: AddressService) {
         @ApiParam(value = "顧客のID", required = true, example = "CUST_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @RequestParam("customerId", required = true) customerId: String
     ): AddressResponses =
-        AddressResponses(
-            addressService.findAll(customerId).map { it.toResponse() })
+        AddressResponses(addressService.findAll(customerId).map { it.toResponse() })
 
     @ApiOperation("住所を作成する")
     @PostMapping("", consumes = [MediaType.APPLICATION_JSON_VALUE])

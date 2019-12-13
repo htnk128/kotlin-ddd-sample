@@ -25,8 +25,6 @@ class Email private constructor(override val value: String) : SingleValueObject<
         fun valueOf(value: String): Email = value
             .takeIf { LENGTH_RANGE.contains(it.length) }
             ?.let { Email(it) }
-            ?: throw CustomerInvalidRequestException(
-                "Email must be 100 characters or less."
-            )
+            ?: throw CustomerInvalidRequestException("Email must be 100 characters or less.")
     }
 }

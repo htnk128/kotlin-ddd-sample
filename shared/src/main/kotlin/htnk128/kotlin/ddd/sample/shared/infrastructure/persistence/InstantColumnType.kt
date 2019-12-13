@@ -21,7 +21,7 @@ class InstantColumnType(time: Boolean) : ColumnType() {
             else -> delegate.valueFromDB(value)
         }
         return when (fromDb) {
-            is DateTime -> java.time.Instant.ofEpochMilli(fromDb.millis)
+            is DateTime -> Instant.ofEpochMilli(fromDb.millis)
             else -> error("failed to convert value to Instant")
         }
     }

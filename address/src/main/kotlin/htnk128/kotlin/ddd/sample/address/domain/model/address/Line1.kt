@@ -25,8 +25,6 @@ class Line1 private constructor(override val value: String) : SingleValueObject<
         fun valueOf(value: String): Line1 = value
             .takeIf { LENGTH_RANGE.contains(it.length) }
             ?.let { Line1(it) }
-            ?: throw AddressInvalidRequestException(
-                "Line1 must be 100 characters or less."
-            )
+            ?: throw AddressInvalidRequestException("Line1 must be 100 characters or less.")
     }
 }

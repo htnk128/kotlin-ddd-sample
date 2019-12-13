@@ -17,6 +17,5 @@ interface AddressRepository {
 
     fun remove(address: Address): Int
 
-    fun nextAddressId(): AddressId =
-        AddressId.generate()
+    fun nextAddressId(): AddressId = AddressId.generate()
 }

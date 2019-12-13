@@ -25,8 +25,6 @@ class StateOrRegion private constructor(override val value: String) : SingleValu
         fun valueOf(value: String): StateOrRegion = value
             .takeIf { LENGTH_RANGE.contains(it.length) }
             ?.let { StateOrRegion(it) }
-            ?: throw AddressInvalidRequestException(
-                "State or region must be 100 characters or less."
-            )
+            ?: throw AddressInvalidRequestException("State or region must be 100 characters or less.")
     }
 }

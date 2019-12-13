@@ -19,25 +19,16 @@ import org.springframework.transaction.annotation.Transactional
 
 @Repository
 @Transactional
-class CustomerExposedRepository :
-    CustomerRepository {
+class CustomerExposedRepository : CustomerRepository {
 
     override fun find(customerId: CustomerId): Customer? =
         CustomerTable.select { CustomerTable.customerId eq customerId.value }
             .firstOrNull()
-            ?.let {
-                CustomerTable.toModel(
-                    it
-                )
-            }
+            ?.rowToModel()
 
     override fun findAll(): List<Customer> =
         CustomerTable.selectAll()
-            .map {
-                CustomerTable.toModel(
-                    it
-                )
-            }
+            .map { it.rowToModel() }
 
     override fun add(customer: Customer) {
         CustomerTable.insert {
@@ -64,6 +55,17 @@ class CustomerExposedRepository :
             it[deletedAt] = customer.deletedAt
             it[updatedAt] = customer.updatedAt
         }
+
+    private fun ResultRow.rowToModel(): Customer =
+        Customer(
+            CustomerId.valueOf(this[CustomerTable.customerId]),
+            Name.valueOf(this[CustomerTable.name]),
+            NamePronunciation.valueOf(this[CustomerTable.namePronunciation]),
+            Email.valueOf(this[CustomerTable.email]),
+            this[CustomerTable.createdAt],
+            this[CustomerTable.deletedAt],
+            this[CustomerTable.updatedAt]
+        )
 }
 
 private object CustomerTable : ExposedTable<Customer>("customer") {
@@ -75,15 +77,4 @@ private object CustomerTable : ExposedTable<Customer>("customer") {
     val createdAt: Column<Instant> = instant("created_at")
     val deletedAt: Column<Instant?> = instant("deleted_at").nullable()
     val updatedAt: Column<Instant> = instant("updated_at")
-
-    override fun toModel(row: ResultRow): Customer =
-        Customer(
-            CustomerId.valueOf(row[customerId]),
-            Name.valueOf(row[name]),
-            NamePronunciation.valueOf(row[namePronunciation]),
-            Email.valueOf(row[email]),
-            row[createdAt],
-            row[deletedAt],
-            row[updatedAt]
-        )
 }

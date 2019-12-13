@@ -25,8 +25,6 @@ class FullName private constructor(override val value: String) : SingleValueObje
         fun valueOf(value: String): FullName = value
             .takeIf { LENGTH_RANGE.contains(it.length) }
             ?.let { FullName(it) }
-            ?: throw AddressInvalidRequestException(
-                "Full name must be 100 characters or less."
-            )
+            ?: throw AddressInvalidRequestException("Full name must be 100 characters or less.")
     }
 }

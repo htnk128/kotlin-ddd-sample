@@ -36,7 +36,7 @@ class CustomerClient(
             .run { restTemplate.exchange(this, CustomerResponse::class.java) }
             .takeIf { it.statusCode.is2xxSuccessful }
             ?.body
-            ?.toDomainModel()
+            ?.responseToModel()
             ?: error("customer response status is not OK.")
     }.getOrNull()
 
@@ -49,7 +49,7 @@ class CustomerClient(
         val updatedAt: Long
     ) {
 
-        fun toDomainModel(): Customer =
+        fun responseToModel(): Customer =
             Customer(
                 CustomerId.valueOf(customerId),
                 Name.valueOf(name),

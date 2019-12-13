@@ -1,5 +1,10 @@
 package htnk128.kotlin.ddd.sample.address.application.dto
 
+import htnk128.kotlin.ddd.sample.address.domain.model.address.Address
+
+/**
+ * 住所([Address])のDTO。
+ */
 data class AddressDTO(
     val addressId: String,
     val customerId: String,

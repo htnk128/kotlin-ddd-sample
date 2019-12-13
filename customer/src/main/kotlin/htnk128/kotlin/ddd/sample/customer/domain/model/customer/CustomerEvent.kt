@@ -9,8 +9,7 @@ import java.time.Instant
  *
  * @param T [CustomerEvent]
  */
-sealed class CustomerEvent<T : CustomerEvent<T>> :
-    DomainEvent<T> {
+sealed class CustomerEvent<T : CustomerEvent<T>> : DomainEvent<T> {
 
     abstract val type: Type
 
@@ -44,8 +43,7 @@ sealed class CustomerEvent<T : CustomerEvent<T>> :
         UPDATED("customer.updated"),
         DELETED("customer.deleted");
 
-        override fun sameValueAs(other: Type): Boolean =
-            value == other.value
+        override fun sameValueAs(other: Type): Boolean = value == other.value
     }
 }
 
@@ -54,8 +52,7 @@ sealed class CustomerEvent<T : CustomerEvent<T>> :
  */
 class CustomerCreated(override val customer: Customer) : CustomerEvent<CustomerCreated>() {
 
-    override val type: Type =
-        Type.CREATED
+    override val type: Type = Type.CREATED
 }
 
 /**
@@ -63,8 +60,7 @@ class CustomerCreated(override val customer: Customer) : CustomerEvent<CustomerC
  */
 class CustomerUpdated(override val customer: Customer) : CustomerEvent<CustomerUpdated>() {
 
-    override val type: Type =
-        Type.UPDATED
+    override val type: Type = Type.UPDATED
 }
 
 /**
@@ -72,6 +68,5 @@ class CustomerUpdated(override val customer: Customer) : CustomerEvent<CustomerU
  */
 class CustomerDeleted(override val customer: Customer) : CustomerEvent<CustomerDeleted>() {
 
-    override val type: Type =
-        Type.DELETED
+    override val type: Type = Type.DELETED
 }

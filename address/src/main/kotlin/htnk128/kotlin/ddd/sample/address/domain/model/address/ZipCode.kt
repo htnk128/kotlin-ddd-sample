@@ -27,8 +27,6 @@ class ZipCode private constructor(override val value: String) : SingleValueObjec
         fun valueOf(value: String): ZipCode = value
             .takeIf { LENGTH_RANGE.contains(it.length) && PATTERN.matches(it) }
             ?.let { ZipCode(it) }
-            ?: throw AddressInvalidRequestException(
-                "Zip code must be 50 characters or less and alphanumeric."
-            )
+            ?: throw AddressInvalidRequestException("Zip code must be 50 characters or less and alphanumeric.")
     }
 }

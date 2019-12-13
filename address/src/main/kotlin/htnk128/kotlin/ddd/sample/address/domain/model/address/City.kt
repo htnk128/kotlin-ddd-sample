@@ -25,8 +25,6 @@ class City private constructor(override val value: String) : SingleValueObject<C
         fun valueOf(value: String): City = value
             .takeIf { LENGTH_RANGE.contains(it.length) }
             ?.let { City(it) }
-            ?: throw AddressInvalidRequestException(
-                "City must be 100 characters or less."
-            )
+            ?: throw AddressInvalidRequestException("City must be 100 characters or less.")
     }
 }

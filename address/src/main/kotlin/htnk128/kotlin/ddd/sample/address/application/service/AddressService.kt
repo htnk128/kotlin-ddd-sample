@@ -34,9 +34,7 @@ class AddressService(
         return addressRepository.find(addressId)
             ?.takeUnless { it.isDeleted }
             ?.toDTO()
-            ?: throw AddressNotFoundException(
-                addressId
-            )
+            ?: throw AddressNotFoundException(addressId)
     }
 
     @Transactional(readOnly = true)
@@ -65,25 +63,21 @@ class AddressService(
         val line2 = aLine2?.let { Line2.valueOf(it) }
         val phoneNumber = PhoneNumber.valueOf(aPhoneNumber)
 
-        return with(
-            customerRepository.find(customerId) ?: throw CustomerNotFoundException(
-                customerId
+        val customer = customerRepository.find(customerId) ?: throw CustomerNotFoundException(customerId)
+
+        return Address
+            .create(
+                addressRepository.nextAddressId(),
+                customer.customerId,
+                fullName,
+                zipCode,
+                stateOrRegion,
+                line1,
+                line2,
+                phoneNumber
             )
-        ) {
-            Address
-                .create(
-                    addressRepository.nextAddressId(),
-                    customerId,
-                    fullName,
-                    zipCode,
-                    stateOrRegion,
-                    line1,
-                    line2,
-                    phoneNumber
-                )
-                .also(addressRepository::add)
-                .toDTO()
-        }
+            .also(addressRepository::add)
+            .toDTO()
     }
 
     @Transactional(timeout = 10, rollbackFor = [Exception::class])
@@ -113,9 +107,7 @@ class AddressService(
                     ?: throw UnexpectedException("Address update failed.")
             }
             ?.toDTO()
-            ?: throw AddressNotFoundException(
-                addressId
-            )
+            ?: throw AddressNotFoundException(addressId)
     }
 
     @Transactional(timeout = 10, rollbackFor = [Exception::class])
@@ -130,9 +122,7 @@ class AddressService(
                     .takeIf { it > 0 }
                     ?: throw UnexpectedException("Address update failed.")
             }
-            ?: throw AddressNotFoundException(
-                addressId
-            )
+            ?: throw AddressNotFoundException(addressId)
     }
 
     private fun Address.toDTO(): AddressDTO =

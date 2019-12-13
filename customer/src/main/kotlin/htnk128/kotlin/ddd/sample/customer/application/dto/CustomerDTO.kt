@@ -1,5 +1,10 @@
 package htnk128.kotlin.ddd.sample.customer.application.dto
 
+import htnk128.kotlin.ddd.sample.customer.domain.model.customer.Customer
+
+/**
+ * 顧客([Customer])のDTO。
+ */
 data class CustomerDTO(
     val customerId: String,
     val name: String,

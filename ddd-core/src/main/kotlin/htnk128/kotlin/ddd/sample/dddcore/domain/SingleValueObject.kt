@@ -1,7 +1,12 @@
 package htnk128.kotlin.ddd.sample.dddcore.domain
 
-abstract class SingleValueObject<T : SingleValueObject<T, V>, V : Comparable<V>> :
-    ValueObject<T> {
+/**
+ * 何らかの型の値を1つ持つ値オブジェクトの概念。
+ *
+ * @param T 値オブジェクトの型
+ * @param V 値オブジェクトが持つ値の型
+ */
+abstract class SingleValueObject<T : SingleValueObject<T, V>, V : Comparable<V>> : ValueObject<T> {
 
     abstract val value: V
 

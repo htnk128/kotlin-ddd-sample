@@ -51,13 +51,7 @@ class ErrorAdvice {
     }
 
     private fun errorResponse(type: String, code: Int, message: String): ErrorResponse =
-        ErrorResponse(
-            ErrorResponse.Error(
-                type,
-                code,
-                message
-            )
-        )
+        ErrorResponse.from(type, code, message)
 
     companion object : KLogging()
 }

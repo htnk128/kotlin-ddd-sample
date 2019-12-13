@@ -24,4 +24,10 @@ data class ErrorResponse(
         val status: Int,
         val message: String
     )
+
+    companion object {
+
+        fun from(type: String, code: Int, message: String): ErrorResponse =
+            ErrorResponse(Error(type, code, message))
+    }
 }

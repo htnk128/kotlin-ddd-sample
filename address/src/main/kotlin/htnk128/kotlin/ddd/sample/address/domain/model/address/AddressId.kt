@@ -9,8 +9,7 @@ import java.util.UUID
  *
  * 64桁までの一意な文字列をもつ。
  */
-class AddressId private constructor(override val value: String) :
-    Identity<AddressId, String> {
+class AddressId private constructor(override val value: String) : Identity<AddressId, String> {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
