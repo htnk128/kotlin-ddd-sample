@@ -2,7 +2,9 @@
 
 Samples of DDD using kotlin
 
+- [spring-boot](https://github.com/spring-projects/spring-boot)
 - [Exposed](https://github.com/JetBrains/Exposed)
+- [h2database](https://github.com/h2database/h2database)
 
 ## Run Application
 
