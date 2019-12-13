@@ -7,6 +7,7 @@ import htnk128.kotlin.ddd.sample.customer.domain.model.customer.Email
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.Name
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.NamePronunciation
 import htnk128.kotlin.ddd.sample.shared.infrastructure.persistence.ExposedTable
+import java.time.Instant
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
@@ -15,7 +16,6 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.update
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
-import java.time.Instant
 
 @Repository
 @Transactional
