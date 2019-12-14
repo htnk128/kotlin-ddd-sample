@@ -8,12 +8,12 @@ Samples of DDD using kotlin
 
 ## Run Application
 
-### customer
+### Customer
 ``` bash
 $ gradle customer:bootRun
 ```
 
-### address
+### Address
 ``` bash
 $ gradle address:bootRun
 ```
@@ -21,8 +21,8 @@ $ gradle address:bootRun
 
 ## API
 
-### customer
+### Customer
 http://localhost:8080/swagger-ui.html
 
-### address
+### Address
 http://localhost:8081/swagger-ui.html
