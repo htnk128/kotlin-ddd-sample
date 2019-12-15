@@ -37,7 +37,7 @@ class AddressService(
             ?: throw AddressNotFoundException(addressId)
     }
 
-    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun lock(addressId: AddressId): Address = addressRepository.find(addressId, lock = true)
         ?.takeUnless { it.isDeleted }
         ?: throw AddressNotFoundException(addressId)
@@ -50,7 +50,7 @@ class AddressService(
         .map { it.toDTO() }
         .toList()
 
-    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun create(
         aCustomerId: String,
         aFullName: String,
@@ -85,7 +85,7 @@ class AddressService(
             .toDTO()
     }
 
-    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun update(
         aAddressId: String,
         aFullName: String?,
@@ -113,7 +113,7 @@ class AddressService(
             .toDTO()
     }
 
-    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun delete(aAddressId: String) {
         val addressId = AddressId.valueOf(aAddressId)
 
@@ -143,6 +143,6 @@ class AddressService(
 
     private companion object {
 
-        const val TRANSACTIONAL_TIMEOUT: Int = 30
+        const val TRANSACTIONAL_TIMEOUT_SECONDS: Int = 10
     }
 }
