@@ -18,5 +18,6 @@ object Versions {
     const val h2: String = "1.4.199"
 
     const val junit: String = "5.5.2"
+    const val kotlintest: String = "3.3.2"
     const val mockitoKotlin: String = "2.2.0"
 }

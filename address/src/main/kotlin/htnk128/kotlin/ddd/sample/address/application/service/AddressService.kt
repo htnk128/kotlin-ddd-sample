@@ -17,6 +17,8 @@ import htnk128.kotlin.ddd.sample.address.domain.model.customer.CustomerRepositor
 import htnk128.kotlin.ddd.sample.shared.UnexpectedException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 /**
  * 住所([Address])ドメインの操作を提供するアプリケーションサービス。
@@ -28,29 +30,37 @@ class AddressService(
 ) {
 
     @Transactional(readOnly = true)
-    fun find(aAddressId: String): AddressDTO {
+    fun find(aAddressId: String): Mono<AddressDTO> {
         val addressId = AddressId.valueOf(aAddressId)
 
-        return addressRepository.find(addressId)
-            ?.takeUnless { it.isDeleted }
-            ?.toDTO()
-            ?: throw AddressNotFoundException(addressId)
+        return Mono.just(
+            addressRepository.find(addressId)
+                ?.takeUnless { it.isDeleted }
+                ?.toDTO()
+                ?: throw AddressNotFoundException(addressId)
+        )
     }
 
-    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
-    fun lock(addressId: AddressId): Address = addressRepository.find(addressId, lock = true)
-        ?.takeUnless { it.isDeleted }
-        ?: throw AddressNotFoundException(addressId)
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
+    fun lock(addressId: AddressId): Mono<Address> =
+        Mono.just(
+            addressRepository.find(addressId, lock = true)
+                ?.takeUnless { it.isDeleted }
+                ?: throw AddressNotFoundException(addressId)
+        )
 
     @Transactional(readOnly = true)
-    fun findAll(aCustomerId: String): List<AddressDTO> = addressRepository
-        .findAll(CustomerId.valueOf(aCustomerId))
-        .asSequence()
-        .filterNot { it.isDeleted }
-        .map { it.toDTO() }
-        .toList()
+    fun findAll(aCustomerId: String): Flux<AddressDTO> =
+        Flux.fromIterable(
+            addressRepository
+                .findAll(CustomerId.valueOf(aCustomerId))
+                .asSequence()
+                .filterNot { it.isDeleted }
+                .map { it.toDTO() }
+                .toList()
+        )
 
-    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun create(
         aCustomerId: String,
         aFullName: String,
@@ -59,7 +69,7 @@ class AddressService(
         aLine1: String,
         aLine2: String?,
         aPhoneNumber: String
-    ): AddressDTO {
+    ): Mono<AddressDTO> {
         val customerId = CustomerId.valueOf(aCustomerId)
         val fullName = FullName.valueOf(aFullName)
         val zipCode = ZipCode.valueOf(aZipCode)
@@ -70,22 +80,24 @@ class AddressService(
 
         val customer = customerRepository.find(customerId) ?: throw CustomerNotFoundException(customerId)
 
-        return Address
-            .create(
-                addressRepository.nextAddressId(),
-                customer.customerId,
-                fullName,
-                zipCode,
-                stateOrRegion,
-                line1,
-                line2,
-                phoneNumber
-            )
-            .also(addressRepository::add)
-            .toDTO()
+        return Mono.just(
+            Address
+                .create(
+                    addressRepository.nextAddressId(),
+                    customer.customerId,
+                    fullName,
+                    zipCode,
+                    stateOrRegion,
+                    line1,
+                    line2,
+                    phoneNumber
+                )
+                .also(addressRepository::add)
+                .toDTO()
+        )
     }
 
-    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun update(
         aAddressId: String,
         aFullName: String?,
@@ -94,7 +106,7 @@ class AddressService(
         aLine1: String?,
         aLine2: String?,
         aPhoneNumber: String?
-    ): AddressDTO {
+    ): Mono<AddressDTO> {
         val addressId = AddressId.valueOf(aAddressId)
         val fullName = aFullName?.let { FullName.valueOf(it) }
         val zipCode = aZipCode?.let { ZipCode.valueOf(it) }
@@ -104,25 +116,30 @@ class AddressService(
         val phoneNumber = aPhoneNumber?.let { PhoneNumber.valueOf(it) }
 
         return lock(addressId)
-            .update(fullName, zipCode, stateOrRegion, line1, line2, phoneNumber)
-            .also { address ->
-                addressRepository.set(address)
-                    .takeIf { it > 0 }
-                    ?: throw UnexpectedException("Address update failed.")
+            .map { address ->
+                address.update(fullName, zipCode, stateOrRegion, line1, line2, phoneNumber)
+                    .also { updated ->
+                        addressRepository.set(updated)
+                            .takeIf { it > 0 }
+                            ?: throw UnexpectedException("Address update failed.")
+                    }
+                    .toDTO()
             }
-            .toDTO()
     }
 
-    @Transactional(timeout = TRANSACTIONAL_TIMEOUT, rollbackFor = [Exception::class])
-    fun delete(aAddressId: String) {
+    @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
+    fun delete(aAddressId: String): Mono<AddressDTO> {
         val addressId = AddressId.valueOf(aAddressId)
 
-        lock(addressId)
-            .delete()
-            .also { address ->
-                addressRepository.remove(address)
-                    .takeIf { it > 0 }
-                    ?: throw UnexpectedException("Address update failed.")
+        return lock(addressId)
+            .map { address ->
+                address.delete()
+                    .also { deleted ->
+                        addressRepository.remove(deleted)
+                            .takeIf { it > 0 }
+                            ?: throw UnexpectedException("Address update failed.")
+                    }
+                    .toDTO()
             }
     }
 
@@ -143,6 +160,6 @@ class AddressService(
 
     private companion object {
 
-        const val TRANSACTIONAL_TIMEOUT: Int = 30
+        const val TRANSACTIONAL_TIMEOUT_SECONDS: Int = 10
     }
 }

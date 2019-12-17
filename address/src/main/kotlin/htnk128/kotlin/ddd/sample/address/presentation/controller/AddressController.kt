@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
+import java.util.stream.Collectors
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -44,8 +45,8 @@ class AddressController(private val addressService: AddressService) {
     fun find(
         @ApiParam(value = "住所のID", required = true, example = "ADDR_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable addressId: String
-    ): AddressResponse = addressService.find(addressId)
-        .toResponse()
+    ): Mono<AddressResponse> = addressService.find(addressId)
+        .map { it.toResponse() }
 
     @ApiResponses(
         value = [
@@ -60,8 +61,11 @@ class AddressController(private val addressService: AddressService) {
     fun findAll(
         @ApiParam(value = "顧客のID", required = true, example = "CUST_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @RequestParam("customerId", required = true) customerId: String
-    ): AddressResponses =
-        AddressResponses(addressService.findAll(customerId).map { it.toResponse() })
+    ): Mono<AddressResponses> =
+        addressService.findAll(customerId)
+            .map { it.toResponse() }
+            .collect(Collectors.toList())
+            .map { AddressResponses(it) }
 
     @ApiResponses(
         value = [
@@ -76,7 +80,7 @@ class AddressController(private val addressService: AddressService) {
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
         @RequestBody request: AddressCreateRequest
-    ): AddressResponse = addressService.create(
+    ): Mono<AddressResponse> = addressService.create(
         request.customerId,
         request.fullName,
         request.zipCode,
@@ -85,7 +89,7 @@ class AddressController(private val addressService: AddressService) {
         request.line2,
         request.phoneNumber
     )
-        .toResponse()
+        .map { it.toResponse() }
 
     @ApiResponses(
         value = [
@@ -101,7 +105,7 @@ class AddressController(private val addressService: AddressService) {
         @ApiParam(value = "住所のID", required = true, example = "ADDR_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable addressId: String,
         @RequestBody request: AddressUpdateRequest
-    ): AddressResponse = addressService.update(
+    ): Mono<AddressResponse> = addressService.update(
         addressId,
         request.fullName,
         request.zipCode,
@@ -110,11 +114,11 @@ class AddressController(private val addressService: AddressService) {
         request.line2,
         request.phoneNumber
     )
-        .toResponse()
+        .map { it.toResponse() }
 
     @ApiResponses(
         value = [
-            (ApiResponse(code = 204, message = "No Content", response = Unit::class)),
+            (ApiResponse(code = 204, message = "No Content", response = Unit::class)), // TODO 暫定対応でUnitとする
             (ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse::class)),
             (ApiResponse(code = 404, message = "Not Found", response = ErrorResponse::class)),
             (ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse::class))
@@ -126,10 +130,9 @@ class AddressController(private val addressService: AddressService) {
     fun delete(
         @ApiParam(value = "住所のID", required = true, example = "ADDR_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable addressId: String
-    ): Mono<Void> {
+    ): Mono<AddressResponse> =
         addressService.delete(addressId)
-        return Mono.empty<Void>()
-    }
+            .map { it.toResponse() }
 
     private fun AddressDTO.toResponse() =
         AddressResponse.from(this)
