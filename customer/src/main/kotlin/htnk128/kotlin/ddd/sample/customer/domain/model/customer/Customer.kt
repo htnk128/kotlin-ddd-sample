@@ -47,7 +47,7 @@ class Customer(
         createdAt = this.createdAt,
         updatedAt = Instant.now()
     )
-        .addEvent(CustomerEvent.Type.UPDATED)
+        .addEvent(CustomerEvent.Type.UPDATED, events.toList())
 
     /**
      * 顧客を削除する。
@@ -68,6 +68,7 @@ class Customer(
             deletedAt = this,
             updatedAt = this
         )
+            .addEvent(CustomerEvent.Type.DELETED, events.toList())
     }
 
     /**
@@ -77,9 +78,10 @@ class Customer(
      */
     fun occurredEvents(): List<CustomerEvent<*>> = events.toList()
 
-    private fun addEvent(type: CustomerEvent.Type): Customer = this
+    private fun addEvent(type: CustomerEvent.Type, events: List<CustomerEvent<*>> = emptyList()): Customer = this
         .also {
-            events += when (type) {
+            this.events += events
+            this.events += when (type) {
                 CustomerEvent.Type.CREATED -> CustomerCreated(this)
                 CustomerEvent.Type.UPDATED -> CustomerUpdated(this)
                 CustomerEvent.Type.DELETED -> CustomerDeleted(this)
