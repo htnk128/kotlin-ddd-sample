@@ -24,6 +24,7 @@ fun DependencyHandler.allModuleDependencies() {
     implementation(kotlin("stdlib-jdk8"))
     // Test
     testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junit}")
+    testImplementation("io.kotlintest:kotlintest-runner-junit5:${Versions.kotlintest}")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockitoKotlin}")
 }
 
