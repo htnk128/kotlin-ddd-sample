@@ -43,9 +43,9 @@ class CustomerSpec : StringSpec({
 
     "顧客が更新されること" {
         val now = Instant.now()
-        val name2 = Name.valueOf("あいうえお")
-        val namePronunciation2 = NamePronunciation.valueOf("アイウエオ")
-        val email2 = Email.valueOf("example@example.com")
+        val name2 = Name.valueOf("あいうえおa")
+        val namePronunciation2 = NamePronunciation.valueOf("アイウエオb")
+        val email2 = Email.valueOf("example@example.comc")
 
         val created = Customer.create(
             CustomerId.generate(),

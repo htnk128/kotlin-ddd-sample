@@ -62,7 +62,7 @@ class Address(
         createdAt = this.createdAt,
         updatedAt = Instant.now()
     )
-        .addEvent(AddressEvent.Type.UPDATED)
+        .addEvent(AddressEvent.Type.UPDATED, events.toList())
 
     /**
      * 住所を削除する。
@@ -87,6 +87,7 @@ class Address(
             deletedAt = this,
             updatedAt = this
         )
+            .addEvent(AddressEvent.Type.DELETED, events.toList())
     }
 
     /**
@@ -96,18 +97,13 @@ class Address(
      */
     fun occurredEvents(): List<AddressEvent<*>> = events.toList()
 
-    private fun addEvent(type: AddressEvent.Type): Address = this
+    private fun addEvent(type: AddressEvent.Type, events: List<AddressEvent<*>> = emptyList()): Address = this
         .also {
-            events += when (type) {
-                AddressEvent.Type.CREATED -> AddressCreated(
-                    this
-                )
-                AddressEvent.Type.UPDATED -> AddressUpdated(
-                    this
-                )
-                AddressEvent.Type.DELETED -> AddressDeleted(
-                    this
-                )
+            this.events += events
+            this.events += when (type) {
+                AddressEvent.Type.CREATED -> AddressCreated(this)
+                AddressEvent.Type.UPDATED -> AddressUpdated(this)
+                AddressEvent.Type.DELETED -> AddressDeleted(this)
             }
         }
 
