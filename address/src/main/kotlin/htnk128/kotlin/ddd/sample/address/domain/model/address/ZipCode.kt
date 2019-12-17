@@ -13,7 +13,7 @@ class ZipCode private constructor(override val value: String) : SingleValueObjec
     companion object {
 
         private val LENGTH_RANGE = (1..50)
-        private val PATTERN = "[\\p{Alnum}:-]*".toRegex()
+        private val PATTERN = "[\\p{Alnum}]*".toRegex()
 
         /**
          * [value]に指定された値を住所の電話番号に変換する。
