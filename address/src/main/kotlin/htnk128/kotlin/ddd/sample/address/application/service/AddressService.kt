@@ -1,5 +1,10 @@
 package htnk128.kotlin.ddd.sample.address.application.service
 
+import htnk128.kotlin.ddd.sample.address.application.command.CreateAddressCommand
+import htnk128.kotlin.ddd.sample.address.application.command.DeleteAddressCommand
+import htnk128.kotlin.ddd.sample.address.application.command.FindAddressCommand
+import htnk128.kotlin.ddd.sample.address.application.command.FindAllAddressCommand
+import htnk128.kotlin.ddd.sample.address.application.command.UpdateAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.dto.AddressDTO
 import htnk128.kotlin.ddd.sample.address.application.exception.AddressNotFoundException
 import htnk128.kotlin.ddd.sample.address.application.exception.CustomerNotFoundException
@@ -30,12 +35,11 @@ class AddressService(
 ) {
 
     @Transactional(readOnly = true)
-    fun find(aAddressId: String): Mono<AddressDTO> {
-        val addressId = AddressId.valueOf(aAddressId)
+    fun find(command: FindAddressCommand): Mono<AddressDTO> {
+        val addressId = AddressId.valueOf(command.addressId)
 
         return Mono.just(
             addressRepository.find(addressId)
-                ?.takeUnless { it.isDeleted }
                 ?.toDTO()
                 ?: throw AddressNotFoundException(addressId)
         )
@@ -45,38 +49,26 @@ class AddressService(
     fun lock(addressId: AddressId): Mono<Address> =
         Mono.just(
             addressRepository.find(addressId, lock = true)
-                ?.takeUnless { it.isDeleted }
                 ?: throw AddressNotFoundException(addressId)
         )
 
     @Transactional(readOnly = true)
-    fun findAll(aCustomerId: String): Flux<AddressDTO> =
+    fun findAll(command: FindAllAddressCommand): Flux<AddressDTO> =
         Flux.fromIterable(
             addressRepository
-                .findAll(CustomerId.valueOf(aCustomerId))
-                .asSequence()
-                .filterNot { it.isDeleted }
+                .findAll(CustomerId.valueOf(command.customerId))
                 .map { it.toDTO() }
-                .toList()
         )
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun create(
-        aCustomerId: String,
-        aFullName: String,
-        aZipCode: String,
-        aStateOrRegion: String,
-        aLine1: String,
-        aLine2: String?,
-        aPhoneNumber: String
-    ): Mono<AddressDTO> {
-        val customerId = CustomerId.valueOf(aCustomerId)
-        val fullName = FullName.valueOf(aFullName)
-        val zipCode = ZipCode.valueOf(aZipCode)
-        val stateOrRegion = StateOrRegion.valueOf(aStateOrRegion)
-        val line1 = Line1.valueOf(aLine1)
-        val line2 = aLine2?.let { Line2.valueOf(it) }
-        val phoneNumber = PhoneNumber.valueOf(aPhoneNumber)
+    fun create(command: CreateAddressCommand): Mono<AddressDTO> {
+        val customerId = CustomerId.valueOf(command.customerId)
+        val fullName = FullName.valueOf(command.fullName)
+        val zipCode = ZipCode.valueOf(command.zipCode)
+        val stateOrRegion = StateOrRegion.valueOf(command.stateOrRegion)
+        val line1 = Line1.valueOf(command.line1)
+        val line2 = command.line2?.let { Line2.valueOf(it) }
+        val phoneNumber = PhoneNumber.valueOf(command.phoneNumber)
 
         val customer = customerRepository.find(customerId) ?: throw CustomerNotFoundException(customerId)
 
@@ -98,22 +90,14 @@ class AddressService(
     }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun update(
-        aAddressId: String,
-        aFullName: String?,
-        aZipCode: String?,
-        aStateOrRegion: String?,
-        aLine1: String?,
-        aLine2: String?,
-        aPhoneNumber: String?
-    ): Mono<AddressDTO> {
-        val addressId = AddressId.valueOf(aAddressId)
-        val fullName = aFullName?.let { FullName.valueOf(it) }
-        val zipCode = aZipCode?.let { ZipCode.valueOf(it) }
-        val stateOrRegion = aStateOrRegion?.let { StateOrRegion.valueOf(it) }
-        val line1 = aLine1?.let { Line1.valueOf(it) }
-        val line2 = aLine2?.let { Line2.valueOf(it) }
-        val phoneNumber = aPhoneNumber?.let { PhoneNumber.valueOf(it) }
+    fun update(command: UpdateAddressCommand): Mono<AddressDTO> {
+        val addressId = AddressId.valueOf(command.addressId)
+        val fullName = command.fullName?.let { FullName.valueOf(it) }
+        val zipCode = command.zipCode?.let { ZipCode.valueOf(it) }
+        val stateOrRegion = command.stateOrRegion?.let { StateOrRegion.valueOf(it) }
+        val line1 = command.line1?.let { Line1.valueOf(it) }
+        val line2 = command.line2?.let { Line2.valueOf(it) }
+        val phoneNumber = command.phoneNumber?.let { PhoneNumber.valueOf(it) }
 
         return lock(addressId)
             .map { address ->
@@ -128,8 +112,8 @@ class AddressService(
     }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun delete(aAddressId: String): Mono<AddressDTO> {
-        val addressId = AddressId.valueOf(aAddressId)
+    fun delete(command: DeleteAddressCommand): Mono<AddressDTO> {
+        val addressId = AddressId.valueOf(command.addressId)
 
         return lock(addressId)
             .map { address ->

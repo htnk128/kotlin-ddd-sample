@@ -12,6 +12,7 @@ class Customer(
     val namePronunciation: NamePronunciation,
     val email: Email,
     val createdAt: Instant,
+    val deletedAt: Instant?,
     val updatedAt: Instant
 ) : Entity<Customer> {
 

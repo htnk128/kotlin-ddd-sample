@@ -36,7 +36,7 @@ class Customer(
      * また、この顧客が削除されている場合には例外となる。
      *
      * @return 更新された顧客
-     * @throws
+     * @throws CustomerInvalidDataStateException
      */
     fun update(
         name: Name?,
@@ -66,19 +66,17 @@ class Customer(
      *
      *  @return 削除された顧客
      */
-    fun delete(): Customer = if (isDeleted) this else {
-        with(Instant.now()) {
-            Customer(
-                customerId,
-                name = name,
-                namePronunciation = namePronunciation,
-                email = email,
-                createdAt = createdAt,
-                deletedAt = this,
-                updatedAt = this
-            )
-                .addEvent(CustomerEvent.Type.DELETED, events.toList())
-        }
+    fun delete(): Customer = if (isDeleted) this else with(Instant.now()) {
+        Customer(
+            customerId,
+            name = name,
+            namePronunciation = namePronunciation,
+            email = email,
+            createdAt = createdAt,
+            deletedAt = this,
+            updatedAt = this
+        )
+            .addEvent(CustomerEvent.Type.DELETED, events.toList())
     }
 
     /**

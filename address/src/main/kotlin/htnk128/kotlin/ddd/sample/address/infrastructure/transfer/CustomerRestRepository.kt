@@ -46,6 +46,7 @@ class CustomerClient(
         val namePronunciation: String,
         val email: String,
         val createdAt: Long,
+        val deletedAt: Long?,
         val updatedAt: Long
     ) {
 
@@ -56,6 +57,7 @@ class CustomerClient(
                 NamePronunciation.valueOf(namePronunciation),
                 Email.valueOf(email),
                 Instant.ofEpochMilli(createdAt),
+                deletedAt?.let { Instant.ofEpochMilli(it) },
                 Instant.ofEpochMilli(updatedAt)
             )
     }

@@ -1,7 +1,9 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
+import htnk128.kotlin.ddd.sample.address.domain.exception.AddressInvalidDataStateException
 import htnk128.kotlin.ddd.sample.address.domain.model.customer.CustomerId
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec
 import java.time.Instant
 
@@ -161,6 +163,31 @@ class AddressSpec : StringSpec({
             }
     }
 
+    "この住所が削除されている場合には例外となること" {
+        val deleted = Address.create(
+            AddressId.generate(),
+            CustomerId.valueOf("customer01"),
+            FullName.valueOf("あいうえお"),
+            ZipCode.valueOf("1234567"),
+            StateOrRegion.valueOf("かきくけこ"),
+            Line1.valueOf("さしすせそ"),
+            Line2.valueOf("たちつてと"),
+            PhoneNumber.valueOf("11111111111")
+        )
+            .delete()
+
+        shouldThrow<AddressInvalidDataStateException> {
+            deleted.update(
+                FullName.valueOf("あいうえおa"),
+                ZipCode.valueOf("12345678"),
+                StateOrRegion.valueOf("かきくけこb"),
+                Line1.valueOf("さしすせそc"),
+                Line2.valueOf("たちつてとd"),
+                PhoneNumber.valueOf("111111111112")
+            )
+        }
+    }
+
     "住所が削除されること" {
         val now = Instant.now()
 
@@ -202,6 +229,34 @@ class AddressSpec : StringSpec({
                 (it.address.createdAt >= now) shouldBe true
                 (it.address.updatedAt >= now) shouldBe true
             }
+    }
+
+    "この住所が削除済みの場合にはそのままこの顧客が返却されること" {
+        val deleted = Address.create(
+            AddressId.generate(),
+            CustomerId.valueOf("customer01"),
+            FullName.valueOf("あいうえお"),
+            ZipCode.valueOf("1234567"),
+            StateOrRegion.valueOf("かきくけこ"),
+            Line1.valueOf("さしすせそ"),
+            Line2.valueOf("たちつてと"),
+            PhoneNumber.valueOf("11111111111")
+        )
+            .delete()
+
+        val deleted2 = deleted.delete()
+
+        deleted2.customerId shouldBe deleted.customerId
+        deleted2.fullName shouldBe deleted.fullName
+        deleted2.zipCode shouldBe deleted.zipCode
+        deleted2.stateOrRegion shouldBe deleted.stateOrRegion
+        deleted2.line1 shouldBe deleted.line1
+        deleted2.line2 shouldBe deleted.line2
+        deleted2.phoneNumber shouldBe deleted.phoneNumber
+        deleted2.createdAt shouldBe deleted.createdAt
+        deleted2.updatedAt shouldBe deleted.updatedAt
+        deleted2.isDeleted shouldBe true
+        deleted2.occurredEvents().size shouldBe 2
     }
 
     "属性が異なっても一意な識別子が一緒であれば等価となる" {
