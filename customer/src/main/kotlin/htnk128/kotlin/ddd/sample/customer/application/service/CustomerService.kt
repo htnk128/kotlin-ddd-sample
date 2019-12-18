@@ -8,6 +8,7 @@ import htnk128.kotlin.ddd.sample.customer.application.command.UpdateCustomerComm
 import htnk128.kotlin.ddd.sample.customer.application.dto.CustomerDTO
 import htnk128.kotlin.ddd.sample.customer.application.dto.PaginationCustomerDTO
 import htnk128.kotlin.ddd.sample.customer.application.exception.CustomerNotFoundException
+import htnk128.kotlin.ddd.sample.customer.domain.model.address.AddressRepository
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.Customer
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.CustomerId
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.CustomerRepository
@@ -25,7 +26,10 @@ import reactor.core.publisher.Mono
  * 顧客([Customer])ドメインの操作を提供するアプリケーションサービス。
  */
 @Service
-class CustomerService(private val customerRepository: CustomerRepository) {
+class CustomerService(
+    private val customerRepository: CustomerRepository,
+    private val addressRepository: AddressRepository
+) {
 
     @Transactional(readOnly = true)
     fun find(command: FindCustomerCommand): Mono<CustomerDTO> {
@@ -93,6 +97,9 @@ class CustomerService(private val customerRepository: CustomerRepository) {
 
         return lock(customerId)
             .map { customer ->
+                addressRepository.findAll(customerId)
+                    .forEach { addressRepository.remove(it) }
+
                 customer.delete()
                     .also { deleted ->
                         customerRepository.remove(deleted)
