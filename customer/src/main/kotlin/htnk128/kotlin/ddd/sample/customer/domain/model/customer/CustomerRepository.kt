@@ -7,7 +7,9 @@ interface CustomerRepository {
 
     fun find(customerId: CustomerId, lock: Boolean = false): Customer?
 
-    fun findAll(): List<Customer>
+    fun findAll(limit: Int, offset: Int): List<Customer>
+
+    fun count(): Int
 
     fun add(customer: Customer)
 

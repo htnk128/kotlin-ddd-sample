@@ -1,5 +1,10 @@
 package htnk128.kotlin.ddd.sample.customer.presentation.controller
 
+import htnk128.kotlin.ddd.sample.customer.application.command.CreateCustomerCommand
+import htnk128.kotlin.ddd.sample.customer.application.command.DeleteCustomerCommand
+import htnk128.kotlin.ddd.sample.customer.application.command.FindAllCustomerCommand
+import htnk128.kotlin.ddd.sample.customer.application.command.FindCustomerCommand
+import htnk128.kotlin.ddd.sample.customer.application.command.UpdateCustomerCommand
 import htnk128.kotlin.ddd.sample.customer.application.dto.CustomerDTO
 import htnk128.kotlin.ddd.sample.customer.application.service.CustomerService
 import htnk128.kotlin.ddd.sample.customer.presentation.resource.CustomerCreateRequest
@@ -12,7 +17,6 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
-import java.util.stream.Collectors
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
@@ -44,8 +49,11 @@ class CustomerController(private val customerService: CustomerService) {
     fun find(
         @ApiParam(value = "顧客のID", required = true, example = "CUS_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable customerId: String
-    ): Mono<CustomerResponse> = customerService.find(customerId)
-        .map { it.toResponse() }
+    ): Mono<CustomerResponse> =
+        customerService.find(
+            FindCustomerCommand(customerId)
+        )
+            .map { it.toResponse() }
 
     @ApiResponses(
         value = [
@@ -57,11 +65,25 @@ class CustomerController(private val customerService: CustomerService) {
     )
     @ApiOperation("すべての顧客を取得する")
     @GetMapping("")
-    fun findAll(): Mono<CustomerResponses> =
-        customerService.findAll()
-            .map { it.toResponse() }
-            .collect(Collectors.toList())
-            .map { CustomerResponses(it) }
+    fun findAll(
+        @ApiParam(value = "取得するデータ数の最大値", required = false, example = "10")
+        @RequestParam("limit", required = false) limit: Int = 10,
+        @ApiParam(value = "基準点からのデータ取得を行う開始位置", required = false, example = "0")
+        @RequestParam("offset", required = false) offset: Int = 0
+    ): Mono<CustomerResponses> =
+        customerService.findAll(
+            FindAllCustomerCommand(
+                limit,
+                offset
+            )
+        )
+            .map { dto ->
+                CustomerResponses(
+                    dto.count,
+                    dto.hasMore,
+                    dto.data.map { it.toResponse() }
+                )
+            }
 
     @ApiResponses(
         value = [
@@ -76,8 +98,15 @@ class CustomerController(private val customerService: CustomerService) {
     @ResponseStatus(HttpStatus.CREATED)
     fun create(
         @RequestBody request: CustomerCreateRequest
-    ): Mono<CustomerResponse> = customerService.create(request.name, request.namePronunciation, request.email)
-        .map { it.toResponse() }
+    ): Mono<CustomerResponse> =
+        customerService.create(
+            CreateCustomerCommand(
+                request.name,
+                request.namePronunciation,
+                request.email
+            )
+        )
+            .map { it.toResponse() }
 
     @ApiResponses(
         value = [
@@ -94,7 +123,14 @@ class CustomerController(private val customerService: CustomerService) {
         @PathVariable customerId: String,
         @RequestBody request: CustomerUpdateRequest
     ): Mono<CustomerResponse> =
-        customerService.update(customerId, request.name, request.namePronunciation, request.email)
+        customerService.update(
+            UpdateCustomerCommand(
+                customerId,
+                request.name,
+                request.namePronunciation,
+                request.email
+            )
+        )
             .map { it.toResponse() }
 
     @ApiResponses(
@@ -112,7 +148,9 @@ class CustomerController(private val customerService: CustomerService) {
         @ApiParam(value = "顧客のID", required = true, example = "CUS_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable customerId: String
     ): Mono<CustomerResponse> =
-        customerService.delete(customerId)
+        customerService.delete(
+            DeleteCustomerCommand(customerId)
+        )
             .map { it.toResponse() }
 
     private fun CustomerDTO.toResponse() =

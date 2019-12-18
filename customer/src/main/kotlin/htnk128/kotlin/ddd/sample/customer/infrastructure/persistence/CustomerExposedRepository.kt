@@ -10,9 +10,9 @@ import htnk128.kotlin.ddd.sample.shared.infrastructure.persistence.ExposedTable
 import java.time.Instant
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.update
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
@@ -22,14 +22,19 @@ import org.springframework.transaction.annotation.Transactional
 class CustomerExposedRepository : CustomerRepository {
 
     override fun find(customerId: CustomerId, lock: Boolean): Customer? =
-        CustomerTable.select { CustomerTable.customerId eq customerId.value }
+        CustomerTable.select { CustomerTable.customerId eq customerId.value and CustomerTable.deletedAt.isNull() }
             .run { if (lock) this.forUpdate() else this }
             .firstOrNull()
             ?.rowToModel()
 
-    override fun findAll(): List<Customer> =
-        CustomerTable.selectAll()
+    override fun findAll(limit: Int, offset: Int): List<Customer> =
+        CustomerTable.select { CustomerTable.deletedAt.isNull() }
+            .limit(limit, offset)
             .map { it.rowToModel() }
+
+    override fun count(): Int =
+        CustomerTable.select { CustomerTable.deletedAt.isNull() }
+            .count()
 
     override fun add(customer: Customer) {
         CustomerTable.insert {
@@ -44,7 +49,7 @@ class CustomerExposedRepository : CustomerRepository {
     }
 
     override fun set(customer: Customer): Int =
-        CustomerTable.update({ CustomerTable.customerId eq customer.customerId.value }) {
+        CustomerTable.update({ CustomerTable.customerId eq customer.customerId.value and CustomerTable.deletedAt.isNull() }) {
             it[name] = customer.name.value
             it[namePronunciation] = customer.namePronunciation.value
             it[email] = customer.email.value
@@ -52,7 +57,7 @@ class CustomerExposedRepository : CustomerRepository {
         }
 
     override fun remove(customer: Customer): Int =
-        CustomerTable.update({ CustomerTable.customerId eq customer.customerId.value }) {
+        CustomerTable.update({ CustomerTable.customerId eq customer.customerId.value and CustomerTable.deletedAt.isNull() }) {
             it[deletedAt] = customer.deletedAt
             it[updatedAt] = customer.updatedAt
         }
