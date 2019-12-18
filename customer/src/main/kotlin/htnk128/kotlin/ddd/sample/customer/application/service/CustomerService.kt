@@ -52,14 +52,7 @@ class CustomerService(private val customerRepository: CustomerRepository) {
                 .map { it.toDTO() }
         )
             .collect(Collectors.toList())
-            .map {
-                val count = customerRepository.count()
-                PaginationCustomerDTO(
-                    count,
-                    (count > (command.limit + command.offset)),
-                    it
-                )
-            }
+            .map { PaginationCustomerDTO(customerRepository.count(), command.limit, command.offset, it) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun create(command: CreateCustomerCommand): Mono<CustomerDTO> =

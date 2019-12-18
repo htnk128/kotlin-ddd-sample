@@ -8,6 +8,7 @@ import htnk128.kotlin.ddd.sample.customer.application.command.UpdateCustomerComm
 import htnk128.kotlin.ddd.sample.customer.application.dto.CustomerDTO
 import htnk128.kotlin.ddd.sample.customer.application.service.CustomerService
 import htnk128.kotlin.ddd.sample.customer.presentation.resource.CustomerCreateRequest
+import htnk128.kotlin.ddd.sample.customer.presentation.resource.CustomerFindAllRequest
 import htnk128.kotlin.ddd.sample.customer.presentation.resource.CustomerResponse
 import htnk128.kotlin.ddd.sample.customer.presentation.resource.CustomerResponses
 import htnk128.kotlin.ddd.sample.customer.presentation.resource.CustomerUpdateRequest
@@ -21,12 +22,12 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Mono
@@ -66,15 +67,12 @@ class CustomerController(private val customerService: CustomerService) {
     @ApiOperation("すべての顧客を取得する")
     @GetMapping("")
     fun findAll(
-        @ApiParam(value = "取得するデータ数の最大値", required = false, example = "10")
-        @RequestParam("limit", required = false) limit: Int = 10,
-        @ApiParam(value = "基準点からのデータ取得を行う開始位置", required = false, example = "0")
-        @RequestParam("offset", required = false) offset: Int = 0
+        @ModelAttribute request: CustomerFindAllRequest
     ): Mono<CustomerResponses> =
         customerService.findAll(
             FindAllCustomerCommand(
-                limit,
-                offset
+                request.limit,
+                request.offset
             )
         )
             .map { dto ->
@@ -113,6 +111,7 @@ class CustomerController(private val customerService: CustomerService) {
             (ApiResponse(code = 200, message = "OK", response = CustomerResponse::class)),
             (ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse::class)),
             (ApiResponse(code = 404, message = "Not Found", response = ErrorResponse::class)),
+            (ApiResponse(code = 409, message = "Conflict", response = ErrorResponse::class)),
             (ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse::class))
         ]
     )

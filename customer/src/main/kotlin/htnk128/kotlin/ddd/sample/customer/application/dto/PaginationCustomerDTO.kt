@@ -7,6 +7,9 @@ import htnk128.kotlin.ddd.sample.customer.domain.model.customer.Customer
  */
 data class PaginationCustomerDTO(
     val count: Int,
-    val hasMore: Boolean,
+    val limit: Int,
+    val offset: Int,
     val data: List<CustomerDTO>
-)
+) {
+    val hasMore = (count > limit + (limit * offset))
+}
