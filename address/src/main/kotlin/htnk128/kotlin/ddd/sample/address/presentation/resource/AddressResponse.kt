@@ -44,7 +44,11 @@ data class AddressResponse(
     )
     val createdAt: Long,
     @ApiModelProperty(
-        value = "住所の更新日時", example = "1576120910973", required = true, position = 10
+        value = "住所の削除日時", example = "1576120910973", required = false, position = 10
+    )
+    val deletedAt: Long?,
+    @ApiModelProperty(
+        value = "住所の更新日時", example = "1576120910973", required = true, position = 11
     )
     val updatedAt: Long
 ) {
@@ -62,6 +66,7 @@ data class AddressResponse(
                 dto.line2,
                 dto.phoneNumber,
                 dto.createdAt,
+                dto.deletedAt,
                 dto.updatedAt
             )
     }

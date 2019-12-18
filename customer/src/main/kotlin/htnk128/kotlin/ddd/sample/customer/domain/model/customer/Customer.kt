@@ -1,5 +1,6 @@
 package htnk128.kotlin.ddd.sample.customer.domain.model.customer
 
+import htnk128.kotlin.ddd.sample.customer.domain.exception.CustomerInvalidDataStateException
 import htnk128.kotlin.ddd.sample.dddcore.domain.Entity
 import java.time.Instant
 
@@ -30,35 +31,42 @@ class Customer(
      * 顧客を更新する。
      *
      * 氏名または会社名、発音、メールアドレスを更新可能で、すべて任意指定が可能であり指定しなかった場合は現在の値のままとなる。
+     * 更新後にイベント([CustomerUpdated])を生成する。
      *
-     * また、更新後にイベント([CustomerUpdated])を生成する。
+     * また、この顧客が削除されている場合には例外となる。
      *
      * @return 更新された顧客
+     * @throws CustomerInvalidDataStateException
      */
     fun update(
         name: Name?,
         namePronunciation: NamePronunciation?,
         email: Email?
-    ): Customer = Customer(
-        customerId,
-        name = name ?: this.name,
-        namePronunciation = namePronunciation ?: this.namePronunciation,
-        email = email ?: this.email,
-        createdAt = this.createdAt,
-        updatedAt = Instant.now()
-    )
-        .addEvent(CustomerEvent.Type.UPDATED, events.toList())
+    ): Customer {
+        if (isDeleted) throw CustomerInvalidDataStateException("Customer has been deleted.")
+
+        return Customer(
+            customerId,
+            name = name ?: this.name,
+            namePronunciation = namePronunciation ?: this.namePronunciation,
+            email = email ?: this.email,
+            createdAt = this.createdAt,
+            updatedAt = Instant.now()
+        )
+            .addEvent(CustomerEvent.Type.UPDATED, events.toList())
+    }
 
     /**
      * 顧客を削除する。
      *
      * 削除日時([deletedAt])に現在日付が設定されことによって論理削除状態となる。
+     * 更新後にイベント([CustomerDeleted])を生成する。
      *
-     * また、更新後にイベント([CustomerDeleted])を生成する。
+     * また、この顧客が削除済みの場合にはそのままこの顧客が返却される。
      *
-     * @return 削除された顧客
+     *  @return 削除された顧客
      */
-    fun delete(): Customer = with(Instant.now()) {
+    fun delete(): Customer = if (isDeleted) this else with(Instant.now()) {
         Customer(
             customerId,
             name = name,

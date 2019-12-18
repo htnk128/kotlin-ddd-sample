@@ -27,9 +27,15 @@ class CustomerExposedRepository : CustomerRepository {
             .firstOrNull()
             ?.rowToModel()
 
-    override fun findAll(): List<Customer> =
+    override fun findAll(limit: Int, offset: Int): List<Customer> =
         CustomerTable.selectAll()
+            .orderBy(CustomerTable.createdAt)
+            .limit(limit, offset = offset * limit)
             .map { it.rowToModel() }
+
+    override fun count(): Int =
+        CustomerTable.selectAll()
+            .count()
 
     override fun add(customer: Customer) {
         CustomerTable.insert {

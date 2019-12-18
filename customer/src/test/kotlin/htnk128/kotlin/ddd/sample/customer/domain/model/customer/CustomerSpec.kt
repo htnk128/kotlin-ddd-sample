@@ -1,6 +1,8 @@
 package htnk128.kotlin.ddd.sample.customer.domain.model.customer
 
+import htnk128.kotlin.ddd.sample.customer.domain.exception.CustomerInvalidDataStateException
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec
 import java.time.Instant
 
@@ -118,6 +120,24 @@ class CustomerSpec : StringSpec({
             }
     }
 
+    "この顧客が削除されている場合には例外となること" {
+        val deleted = Customer.create(
+            CustomerId.generate(),
+            Name.valueOf("あいうえお"),
+            NamePronunciation.valueOf("アイウエオ"),
+            Email.valueOf("example@example.com")
+        )
+            .delete()
+
+        shouldThrow<CustomerInvalidDataStateException> {
+            deleted.update(
+                Name.valueOf("あいうえおa"),
+                NamePronunciation.valueOf("アイウエオb"),
+                Email.valueOf("example@example.comc")
+            )
+        }
+    }
+
     "顧客が削除されること" {
         val now = Instant.now()
 
@@ -150,6 +170,27 @@ class CustomerSpec : StringSpec({
                 (it.customer.createdAt >= now) shouldBe true
                 (it.customer.updatedAt >= now) shouldBe true
             }
+    }
+
+    "この顧客が削除済みの場合にはそのままこの顧客が返却されること" {
+        val deleted = Customer.create(
+            CustomerId.generate(),
+            Name.valueOf("あいうえお"),
+            NamePronunciation.valueOf("アイウエオ"),
+            Email.valueOf("example@example.com")
+        )
+            .delete()
+
+        val deleted2 = deleted.delete()
+
+        deleted2.customerId shouldBe deleted.customerId
+        deleted2.name shouldBe deleted.name
+        deleted2.namePronunciation shouldBe deleted.namePronunciation
+        deleted2.email shouldBe deleted.email
+        deleted2.createdAt shouldBe deleted.createdAt
+        deleted2.updatedAt shouldBe deleted.updatedAt
+        deleted2.isDeleted shouldBe true
+        deleted2.occurredEvents().size shouldBe 2
     }
 
     "属性が異なっても一意な識別子が一緒であれば等価となる" {

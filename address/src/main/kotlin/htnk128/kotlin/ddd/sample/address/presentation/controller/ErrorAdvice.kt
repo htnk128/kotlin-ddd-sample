@@ -2,6 +2,7 @@ package htnk128.kotlin.ddd.sample.address.presentation.controller
 
 import htnk128.kotlin.ddd.sample.shared.UnexpectedException
 import htnk128.kotlin.ddd.sample.shared.application.exception.NotFoundException
+import htnk128.kotlin.ddd.sample.shared.domain.exception.InvalidDataStateException
 import htnk128.kotlin.ddd.sample.shared.domain.exception.InvalidRequestException
 import htnk128.kotlin.ddd.sample.shared.presentation.resource.ErrorResponse
 import mu.KLogging
@@ -26,6 +27,14 @@ class ErrorAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     fun handleInvalidRequestException(exception: InvalidRequestException): ErrorResponse {
+        logger.warn(exception) { "type=${exception.type}, status=${exception.status}, message=${exception.message}" }
+        return errorResponse(exception.type, exception.status, exception.message)
+    }
+
+    @ExceptionHandler(InvalidDataStateException::class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseBody
+    fun handleInvalidDataStateException(exception: InvalidDataStateException): ErrorResponse {
         logger.warn(exception) { "type=${exception.type}, status=${exception.status}, message=${exception.message}" }
         return errorResponse(exception.type, exception.status, exception.message)
     }

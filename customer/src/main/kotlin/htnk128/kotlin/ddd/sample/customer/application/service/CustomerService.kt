@@ -1,6 +1,12 @@
 package htnk128.kotlin.ddd.sample.customer.application.service
 
+import htnk128.kotlin.ddd.sample.customer.application.command.CreateCustomerCommand
+import htnk128.kotlin.ddd.sample.customer.application.command.DeleteCustomerCommand
+import htnk128.kotlin.ddd.sample.customer.application.command.FindAllCustomerCommand
+import htnk128.kotlin.ddd.sample.customer.application.command.FindCustomerCommand
+import htnk128.kotlin.ddd.sample.customer.application.command.UpdateCustomerCommand
 import htnk128.kotlin.ddd.sample.customer.application.dto.CustomerDTO
+import htnk128.kotlin.ddd.sample.customer.application.dto.PaginationCustomerDTO
 import htnk128.kotlin.ddd.sample.customer.application.exception.CustomerNotFoundException
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.Customer
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.CustomerId
@@ -9,6 +15,7 @@ import htnk128.kotlin.ddd.sample.customer.domain.model.customer.Email
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.Name
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.NamePronunciation
 import htnk128.kotlin.ddd.sample.shared.UnexpectedException
+import java.util.stream.Collectors
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
@@ -21,12 +28,11 @@ import reactor.core.publisher.Mono
 class CustomerService(private val customerRepository: CustomerRepository) {
 
     @Transactional(readOnly = true)
-    fun find(aCustomerId: String): Mono<CustomerDTO> {
-        val customerId = CustomerId.valueOf(aCustomerId)
+    fun find(command: FindCustomerCommand): Mono<CustomerDTO> {
+        val customerId = CustomerId.valueOf(command.customerId)
 
         return Mono.just(
             customerRepository.find(customerId)
-                ?.takeUnless { it.isDeleted }
                 ?.toDTO()
                 ?: throw CustomerNotFoundException(customerId)
         )
@@ -36,40 +42,38 @@ class CustomerService(private val customerRepository: CustomerRepository) {
     fun lock(customerId: CustomerId): Mono<Customer> =
         Mono.just(
             customerRepository.find(customerId, lock = true)
-                ?.takeUnless { it.isDeleted }
                 ?: throw CustomerNotFoundException(customerId)
         )
 
     @Transactional(readOnly = true)
-    fun findAll(): Flux<CustomerDTO> =
+    fun findAll(command: FindAllCustomerCommand): Mono<PaginationCustomerDTO> =
         Flux.fromIterable(
-            customerRepository.findAll()
-                .asSequence()
-                .filterNot { it.isDeleted }
+            customerRepository.findAll(command.limit, command.offset)
                 .map { it.toDTO() }
-                .toList()
         )
+            .collect(Collectors.toList())
+            .map { PaginationCustomerDTO(customerRepository.count(), command.limit, command.offset, it) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun create(aName: String, aNamePronunciation: String, aEmail: String): Mono<CustomerDTO> =
+    fun create(command: CreateCustomerCommand): Mono<CustomerDTO> =
         Mono.just(
             Customer
                 .create(
                     customerRepository.nextCustomerId(),
-                    Name.valueOf(aName),
-                    NamePronunciation.valueOf(aNamePronunciation),
-                    Email.valueOf(aEmail)
+                    Name.valueOf(command.name),
+                    NamePronunciation.valueOf(command.namePronunciation),
+                    Email.valueOf(command.email)
                 )
                 .also(customerRepository::add)
                 .toDTO()
         )
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun update(aCustomerId: String, aName: String?, aNamePronunciation: String?, aEmail: String?): Mono<CustomerDTO> {
-        val customerId = CustomerId.valueOf(aCustomerId)
-        val name = aName?.let { Name.valueOf(it) }
-        val namePronunciation = aNamePronunciation?.let { NamePronunciation.valueOf(it) }
-        val email = aEmail?.let { Email.valueOf(it) }
+    fun update(command: UpdateCustomerCommand): Mono<CustomerDTO> {
+        val customerId = CustomerId.valueOf(command.customerId)
+        val name = command.name?.let { Name.valueOf(it) }
+        val namePronunciation = command.namePronunciation?.let { NamePronunciation.valueOf(it) }
+        val email = command.email?.let { Email.valueOf(it) }
 
         return lock(customerId)
             .map { customer ->
@@ -84,8 +88,8 @@ class CustomerService(private val customerRepository: CustomerRepository) {
     }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun delete(aCustomerId: String): Mono<CustomerDTO> {
-        val customerId = CustomerId.valueOf(aCustomerId)
+    fun delete(command: DeleteCustomerCommand): Mono<CustomerDTO> {
+        val customerId = CustomerId.valueOf(command.customerId)
 
         return lock(customerId)
             .map { customer ->

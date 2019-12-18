@@ -1,5 +1,6 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
+import htnk128.kotlin.ddd.sample.address.domain.exception.AddressInvalidDataStateException
 import htnk128.kotlin.ddd.sample.address.domain.model.customer.CustomerId
 import htnk128.kotlin.ddd.sample.dddcore.domain.Entity
 import java.time.Instant
@@ -38,10 +39,12 @@ class Address(
      *
      * 氏名または会社名、郵便番号、都道府県、住所欄1、住所欄2、電話番号を更新可能で、すべて任意指定が可能であり指定しなかった場合は現在の値のままとなる。
      * ただし、住所欄2は`null`での更新が可能となる。
+     * 更新後にイベント([AddressUpdated])を生成する。
      *
-     * また、更新後にイベント([AddressUpdated])を生成する。
+     * また、この住所が削除されている場合には例外となる。
      *
      * @return 更新された住所
+     * @throws AddressInvalidDataStateException
      */
     fun update(
         fullName: FullName?,
@@ -50,30 +53,35 @@ class Address(
         line1: Line1?,
         line2: Line2?,
         phoneNumber: PhoneNumber?
-    ): Address = Address(
-        addressId,
-        customerId,
-        fullName = fullName ?: this.fullName,
-        zipCode = zipCode ?: this.zipCode,
-        stateOrRegion = stateOrRegion ?: this.stateOrRegion,
-        line1 = line1 ?: this.line1,
-        line2 = line2,
-        phoneNumber = phoneNumber ?: this.phoneNumber,
-        createdAt = this.createdAt,
-        updatedAt = Instant.now()
-    )
-        .addEvent(AddressEvent.Type.UPDATED, events.toList())
+    ): Address {
+        if (isDeleted) throw AddressInvalidDataStateException("Address has been deleted.")
+
+        return Address(
+            addressId,
+            customerId,
+            fullName = fullName ?: this.fullName,
+            zipCode = zipCode ?: this.zipCode,
+            stateOrRegion = stateOrRegion ?: this.stateOrRegion,
+            line1 = line1 ?: this.line1,
+            line2 = line2,
+            phoneNumber = phoneNumber ?: this.phoneNumber,
+            createdAt = this.createdAt,
+            updatedAt = Instant.now()
+        )
+            .addEvent(AddressEvent.Type.UPDATED, events.toList())
+    }
 
     /**
      * 住所を削除する。
      *
      * 削除日時([deletedAt])に現在日付が設定されことによって論理削除状態となる。
+     * 更新後にイベント([AddressDeleted])を生成する。
      *
-     * また、更新後にイベント([AddressDeleted])を生成する。
+     * また、この顧客が削除済みの場合にはそのままこの顧客が返却される。
      *
      * @return 削除された住所
      */
-    fun delete(): Address = with(Instant.now()) {
+    fun delete(): Address = if (isDeleted) this else with(Instant.now()) {
         Address(
             addressId,
             customerId,
