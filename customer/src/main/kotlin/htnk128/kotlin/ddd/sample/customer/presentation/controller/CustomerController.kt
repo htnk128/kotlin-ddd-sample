@@ -134,7 +134,7 @@ class CustomerController(private val customerService: CustomerService) {
 
     @ApiResponses(
         value = [
-            (ApiResponse(code = 204, message = "No Content", response = Unit::class)), // TODO 暫定対応でUnitとする
+            (ApiResponse(code = 204, message = "No Content", response = Unit::class)),
             (ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse::class)),
             (ApiResponse(code = 404, message = "Not Found", response = ErrorResponse::class)),
             (ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse::class))
