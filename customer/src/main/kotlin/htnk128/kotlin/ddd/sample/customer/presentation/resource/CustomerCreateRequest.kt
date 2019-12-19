@@ -17,5 +17,9 @@ data class CustomerCreateRequest(
     @ApiModelProperty(
         value = "顧客のメールアドレス", example = "example@example.com", required = true, position = 3
     )
-    val email: String
+    val email: String,
+    @ApiModelProperty(
+        value = "顧客のパスワード", required = true, position = 4
+    )
+    val password: String
 )

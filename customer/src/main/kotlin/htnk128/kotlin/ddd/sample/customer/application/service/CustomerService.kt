@@ -15,6 +15,7 @@ import htnk128.kotlin.ddd.sample.customer.domain.model.customer.CustomerReposito
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.Email
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.Name
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.NamePronunciation
+import htnk128.kotlin.ddd.sample.customer.domain.model.customer.Password
 import htnk128.kotlin.ddd.sample.shared.UnexpectedException
 import java.util.stream.Collectors
 import org.springframework.stereotype.Service
@@ -59,18 +60,22 @@ class CustomerService(
             .map { PaginationCustomerDTO(customerRepository.count(), command.limit, command.offset, it) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun create(command: CreateCustomerCommand): Mono<CustomerDTO> =
-        Mono.just(
+    fun create(command: CreateCustomerCommand): Mono<CustomerDTO> {
+        val customerId = customerRepository.nextCustomerId()
+
+        return Mono.just(
             Customer
                 .create(
-                    customerRepository.nextCustomerId(),
+                    customerId,
                     Name.valueOf(command.name),
                     NamePronunciation.valueOf(command.namePronunciation),
-                    Email.valueOf(command.email)
+                    Email.valueOf(command.email),
+                    Password.valueOf(command.password, customerId)
                 )
                 .also(customerRepository::add)
                 .toDTO()
         )
+    }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun update(command: UpdateCustomerCommand): Mono<CustomerDTO> {
@@ -78,10 +83,11 @@ class CustomerService(
         val name = command.name?.let { Name.valueOf(it) }
         val namePronunciation = command.namePronunciation?.let { NamePronunciation.valueOf(it) }
         val email = command.email?.let { Email.valueOf(it) }
+        val password = command.password?.let { Password.valueOf(it, customerId) }
 
         return lock(customerId)
             .map { customer ->
-                customer.update(name, namePronunciation, email)
+                customer.update(name, namePronunciation, email, password)
                     .also { updated ->
                         customerRepository.set(updated)
                             .takeIf { it > 0 }
@@ -116,6 +122,7 @@ class CustomerService(
             name.toValue(),
             namePronunciation.toValue(),
             email.toValue(),
+            password.format(),
             createdAt.toEpochMilli(),
             deletedAt?.toEpochMilli(),
             updatedAt.toEpochMilli()
