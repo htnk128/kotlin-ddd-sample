@@ -1,7 +1,6 @@
 # kotlin-ddd-sample
 
 This is a DDD sample using Kotlin.
-
 Modeled using Amazon's account function as a theme.
 
 - [Spring Boot](https://github.com/spring-projects/spring-boot)
