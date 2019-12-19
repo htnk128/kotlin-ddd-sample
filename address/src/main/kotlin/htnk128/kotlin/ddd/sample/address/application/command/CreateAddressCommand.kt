@@ -1,5 +1,8 @@
 package htnk128.kotlin.ddd.sample.address.application.command
 
+/**
+ * 住所を作成する際のコマンド情報。
+ */
 data class CreateAddressCommand(
     val accountId: String,
     val fullName: String,

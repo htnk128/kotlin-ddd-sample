@@ -1,5 +1,8 @@
 package htnk128.kotlin.ddd.sample.address.application.command
 
+/**
+ * 住所を更新する際のコマンド情報。
+ */
 data class UpdateAddressCommand(
     val addressId: String,
     val fullName: String?,
