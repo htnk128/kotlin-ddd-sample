@@ -4,6 +4,7 @@ import htnk128.kotlin.ddd.sample.address.domain.model.account.Account
 import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountId
 import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountRepository
 import java.net.URI
+import java.time.Instant
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.RequestEntity
 import org.springframework.stereotype.Component
@@ -37,12 +38,18 @@ class AccountClient(
     }.getOrNull()
 
     private data class AccountResponse(
-        val accountId: String
+        val accountId: String,
+        val createdAt: Long,
+        val deletedAt: Long?,
+        val updatedAt: Long
     ) {
 
         fun responseToModel(): Account =
             Account(
-                AccountId.valueOf(accountId)
+                AccountId.valueOf(accountId),
+                Instant.ofEpochMilli(createdAt),
+                deletedAt?.let { Instant.ofEpochMilli(it) },
+                Instant.ofEpochMilli(updatedAt)
             )
     }
 }

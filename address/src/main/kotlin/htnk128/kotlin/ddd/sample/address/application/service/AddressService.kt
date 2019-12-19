@@ -70,7 +70,9 @@ class AddressService(
         val line2 = command.line2?.let { Line2.valueOf(it) }
         val phoneNumber = PhoneNumber.valueOf(command.phoneNumber)
 
-        val account = accountRepository.find(accountId) ?: throw AccountNotFoundException(accountId)
+        val account = accountRepository.find(accountId)
+            ?.takeUnless { it.isDeleted }
+            ?: throw AccountNotFoundException(accountId)
 
         return Mono.just(
             Address
