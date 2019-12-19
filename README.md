@@ -21,7 +21,7 @@ $ gradle address:bootRun
 
 ## API
 
-### Customer
+### Account
 http://localhost:8080/swagger-ui.html
 
 ### Address
