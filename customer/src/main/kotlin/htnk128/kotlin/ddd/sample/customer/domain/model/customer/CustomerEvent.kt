@@ -15,7 +15,7 @@ sealed class CustomerEvent<T : CustomerEvent<T>> : DomainEvent<T> {
 
     abstract val customer: Customer
 
-    val occurredOn: Instant = Instant.now()
+    override val occurredOn: Instant = Instant.now()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

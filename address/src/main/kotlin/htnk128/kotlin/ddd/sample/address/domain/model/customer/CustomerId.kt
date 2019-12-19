@@ -8,7 +8,9 @@ import htnk128.kotlin.ddd.sample.dddcore.domain.Identity
  *
  * 64桁までの一意な文字列をもつ。
  */
-class CustomerId private constructor(override val value: String) : Identity<CustomerId, String> {
+class CustomerId private constructor(private val value: String) : Identity<CustomerId, String> {
+
+    override fun id(): String = value
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

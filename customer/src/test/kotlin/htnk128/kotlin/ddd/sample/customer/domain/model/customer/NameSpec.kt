@@ -13,7 +13,7 @@ class NameSpec : StringSpec({
         forall(
             row("a".repeat(100))
         ) { value ->
-            Name.valueOf(value).value shouldBe value
+            Name.valueOf(value).toValue() shouldBe value
         }
     }
 

@@ -15,7 +15,7 @@ class AddressIdSpec : StringSpec({
             row("a_b-c-d-e"),
             row("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
         ) { value ->
-            AddressId.valueOf(value).value shouldBe value
+            AddressId.valueOf(value).id() shouldBe value
         }
     }
 

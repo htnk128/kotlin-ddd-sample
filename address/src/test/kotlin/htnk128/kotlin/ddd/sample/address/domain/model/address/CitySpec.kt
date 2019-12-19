@@ -13,7 +13,7 @@ class CitySpec : StringSpec({
         forall(
             row("a".repeat(100))
         ) { value ->
-            City.valueOf(value).value shouldBe value
+            City.valueOf(value).toValue() shouldBe value
         }
     }
 

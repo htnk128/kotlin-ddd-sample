@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional
 class CustomerExposedRepository : CustomerRepository {
 
     override fun find(customerId: CustomerId, lock: Boolean): Customer? =
-        CustomerTable.select { CustomerTable.customerId eq customerId.value }
+        CustomerTable.select { CustomerTable.customerId eq customerId.id() }
             .run { if (lock) this.forUpdate() else this }
             .firstOrNull()
             ?.rowToModel()
@@ -39,10 +39,10 @@ class CustomerExposedRepository : CustomerRepository {
 
     override fun add(customer: Customer) {
         CustomerTable.insert {
-            it[customerId] = customer.customerId.value
-            it[name] = customer.name.value
-            it[namePronunciation] = customer.namePronunciation.value
-            it[email] = customer.email.value
+            it[customerId] = customer.customerId.id()
+            it[name] = customer.name.toValue()
+            it[namePronunciation] = customer.namePronunciation.toValue()
+            it[email] = customer.email.toValue()
             it[createdAt] = customer.createdAt
             it[deletedAt] = customer.deletedAt
             it[updatedAt] = customer.updatedAt
@@ -50,15 +50,15 @@ class CustomerExposedRepository : CustomerRepository {
     }
 
     override fun set(customer: Customer): Int =
-        CustomerTable.update({ CustomerTable.customerId eq customer.customerId.value }) {
-            it[name] = customer.name.value
-            it[namePronunciation] = customer.namePronunciation.value
-            it[email] = customer.email.value
+        CustomerTable.update({ CustomerTable.customerId eq customer.customerId.id() }) {
+            it[name] = customer.name.toValue()
+            it[namePronunciation] = customer.namePronunciation.toValue()
+            it[email] = customer.email.toValue()
             it[updatedAt] = customer.updatedAt
         }
 
     override fun remove(customer: Customer): Int =
-        CustomerTable.update({ CustomerTable.customerId eq customer.customerId.value }) {
+        CustomerTable.update({ CustomerTable.customerId eq customer.customerId.id() }) {
             it[deletedAt] = customer.deletedAt
             it[updatedAt] = customer.updatedAt
         }
