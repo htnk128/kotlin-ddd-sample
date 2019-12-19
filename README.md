@@ -1,8 +1,8 @@
 # kotlin-ddd-sample
 
-I modeled Amazon's account function.
+This is a DDD sample using Kotlin.
 
-Samples of DDD using kotlin
+Modeled using Amazon's account function as a theme.
 
 - [Spring Boot](https://github.com/spring-projects/spring-boot)
 - [Exposed](https://github.com/JetBrains/Exposed)
