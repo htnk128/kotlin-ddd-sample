@@ -1,5 +1,7 @@
 # kotlin-ddd-sample
 
+I modeled Amazon's account function.
+
 Samples of DDD using kotlin
 
 - [Spring Boot](https://github.com/spring-projects/spring-boot)
