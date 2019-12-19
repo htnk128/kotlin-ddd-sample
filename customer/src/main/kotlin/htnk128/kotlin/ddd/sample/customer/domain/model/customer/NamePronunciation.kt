@@ -8,8 +8,11 @@ import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
  *
  * 100桁までの文字列をもつ。
  */
-class NamePronunciation private constructor(override val value: String) :
-    SingleValueObject<NamePronunciation, String>() {
+class NamePronunciation private constructor(
+    private val value: String
+) : SingleValueObject<NamePronunciation, String>() {
+
+    override fun toValue(): String = value
 
     companion object {
 

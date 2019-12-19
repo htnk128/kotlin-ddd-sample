@@ -15,7 +15,7 @@ class CustomerIdSpec : StringSpec({
             row("a_b-c-d-e"),
             row("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
         ) { value ->
-            CustomerId.valueOf(value).value shouldBe value
+            CustomerId.valueOf(value).id() shouldBe value
         }
     }
 

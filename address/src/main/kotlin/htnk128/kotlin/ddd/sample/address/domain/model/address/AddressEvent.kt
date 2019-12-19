@@ -15,7 +15,7 @@ sealed class AddressEvent<T : AddressEvent<T>> : DomainEvent<T> {
 
     abstract val address: Address
 
-    val occurredOn: Instant = Instant.now()
+    override val occurredOn: Instant = Instant.now()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

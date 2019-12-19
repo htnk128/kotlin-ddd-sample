@@ -129,14 +129,14 @@ class AddressService(
 
     private fun Address.toDTO(): AddressDTO =
         AddressDTO(
-            addressId.value,
-            customerId.value,
-            fullName.value,
-            zipCode.value,
-            stateOrRegion.value,
-            line1.value,
-            line2?.value,
-            phoneNumber.value,
+            addressId.id(),
+            customerId.id(),
+            fullName.toValue(),
+            zipCode.toValue(),
+            stateOrRegion.toValue(),
+            line1.toValue(),
+            line2?.toValue(),
+            phoneNumber.toValue(),
             createdAt.toEpochMilli(),
             deletedAt?.toEpochMilli(),
             updatedAt.toEpochMilli()

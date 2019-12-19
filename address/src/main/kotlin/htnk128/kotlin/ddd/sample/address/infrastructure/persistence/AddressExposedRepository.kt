@@ -25,25 +25,25 @@ import org.springframework.transaction.annotation.Transactional
 class AddressExposedRepository : AddressRepository {
 
     override fun find(addressId: AddressId, lock: Boolean): Address? =
-        AddressTable.select { AddressTable.addressId eq addressId.value }
+        AddressTable.select { AddressTable.addressId eq addressId.id() }
             .run { if (lock) this.forUpdate() else this }
             .firstOrNull()
             ?.rowToModel()
 
     override fun findAll(customerId: CustomerId): List<Address> =
-        AddressTable.select { AddressTable.customerId eq customerId.value }
+        AddressTable.select { AddressTable.customerId eq customerId.id() }
             .map { it.rowToModel() }
 
     override fun add(address: Address) {
         AddressTable.insert {
-            it[addressId] = address.addressId.value
-            it[customerId] = address.customerId.value
-            it[fullName] = address.fullName.value
-            it[zipCode] = address.zipCode.value
-            it[stateOrRegion] = address.stateOrRegion.value
-            it[line1] = address.line1.value
-            it[line2] = address.line2?.value
-            it[phoneNumber] = address.phoneNumber.value
+            it[addressId] = address.addressId.id()
+            it[customerId] = address.customerId.id()
+            it[fullName] = address.fullName.toValue()
+            it[zipCode] = address.zipCode.toValue()
+            it[stateOrRegion] = address.stateOrRegion.toValue()
+            it[line1] = address.line1.toValue()
+            it[line2] = address.line2?.toValue()
+            it[phoneNumber] = address.phoneNumber.toValue()
             it[createdAt] = address.createdAt
             it[deletedAt] = address.deletedAt
             it[updatedAt] = address.updatedAt
@@ -51,18 +51,18 @@ class AddressExposedRepository : AddressRepository {
     }
 
     override fun set(address: Address): Int =
-        AddressTable.update({ AddressTable.addressId eq address.addressId.value }) {
-            it[fullName] = address.fullName.value
-            it[zipCode] = address.zipCode.value
-            it[stateOrRegion] = address.stateOrRegion.value
-            it[line1] = address.line1.value
-            it[line2] = address.line2?.value
-            it[phoneNumber] = address.phoneNumber.value
+        AddressTable.update({ AddressTable.addressId eq address.addressId.id() }) {
+            it[fullName] = address.fullName.toValue()
+            it[zipCode] = address.zipCode.toValue()
+            it[stateOrRegion] = address.stateOrRegion.toValue()
+            it[line1] = address.line1.toValue()
+            it[line2] = address.line2?.toValue()
+            it[phoneNumber] = address.phoneNumber.toValue()
             it[updatedAt] = address.updatedAt
         }
 
     override fun remove(address: Address): Int =
-        AddressTable.update({ AddressTable.addressId eq address.addressId.value }) {
+        AddressTable.update({ AddressTable.addressId eq address.addressId.id() }) {
             it[deletedAt] = address.deletedAt
             it[updatedAt] = address.updatedAt
         }

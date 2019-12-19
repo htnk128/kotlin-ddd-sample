@@ -13,7 +13,7 @@ class NamePronunciationSpec : StringSpec({
         forall(
             row("a".repeat(100))
         ) { value ->
-            NamePronunciation.valueOf(value).value shouldBe value
+            NamePronunciation.valueOf(value).toValue() shouldBe value
         }
     }
 

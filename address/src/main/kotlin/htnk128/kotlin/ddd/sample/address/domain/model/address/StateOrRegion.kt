@@ -8,7 +8,9 @@ import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
  *
  * 100桁までの文字列をもつ。
  */
-class StateOrRegion private constructor(override val value: String) : SingleValueObject<StateOrRegion, String>() {
+class StateOrRegion private constructor(private val value: String) : SingleValueObject<StateOrRegion, String>() {
+
+    override fun toValue(): String = value
 
     companion object {
 

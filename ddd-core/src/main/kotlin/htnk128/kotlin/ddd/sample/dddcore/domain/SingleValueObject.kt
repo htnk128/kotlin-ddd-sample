@@ -8,7 +8,7 @@ package htnk128.kotlin.ddd.sample.dddcore.domain
  */
 abstract class SingleValueObject<T : SingleValueObject<T, V>, V : Comparable<V>> : ValueObject<T> {
 
-    abstract val value: V
+    abstract fun toValue(): V
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -18,9 +18,9 @@ abstract class SingleValueObject<T : SingleValueObject<T, V>, V : Comparable<V>>
         return sameValueAs(other)
     }
 
-    override fun hashCode(): Int = value.hashCode()
+    override fun hashCode(): Int = toValue().hashCode()
 
-    override fun sameValueAs(other: T): Boolean = value == other.value
+    override fun sameValueAs(other: T): Boolean = toValue() == other.toValue()
 
-    override fun toString(): String = "$value"
+    override fun toString(): String = "${toValue()}"
 }

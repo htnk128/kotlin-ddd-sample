@@ -14,7 +14,7 @@ class ZipCodeSpec : StringSpec({
             row("1".repeat(50)),
             row("12345667890")
         ) { value ->
-            ZipCode.valueOf(value).value shouldBe value
+            ZipCode.valueOf(value).toValue() shouldBe value
         }
     }
 

@@ -112,10 +112,10 @@ class CustomerService(
 
     private fun Customer.toDTO(): CustomerDTO =
         CustomerDTO(
-            customerId.value,
-            name.value,
-            namePronunciation.value,
-            email.value,
+            customerId.id(),
+            name.toValue(),
+            namePronunciation.toValue(),
+            email.toValue(),
             createdAt.toEpochMilli(),
             deletedAt?.toEpochMilli(),
             updatedAt.toEpochMilli()
