@@ -1,5 +1,5 @@
 package htnk128.kotlin.ddd.sample.address.application.command
 
 data class FindAllAddressCommand(
-    val customerId: String
+    val accountId: String
 )

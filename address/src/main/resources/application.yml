@@ -21,5 +21,5 @@ rest:
   connect.timeout: 5000
   read.timeout: 5000
 api:
-  customer:
-    url: http://localhost:8080/customers
+  account:
+    url: http://localhost:8080/accounts

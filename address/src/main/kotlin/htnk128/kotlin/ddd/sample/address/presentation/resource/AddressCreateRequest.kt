@@ -7,9 +7,9 @@ import io.swagger.annotations.ApiModelProperty
  */
 data class AddressCreateRequest(
     @ApiModelProperty(
-        value = "住所に紐付ける顧客のID", example = "CUS_c5fb2cec-a77c-4886-b997-ffc2ef060e78", required = true, position = 1
+        value = "住所に紐付けるアカウントのID", example = "CUS_c5fb2cec-a77c-4886-b997-ffc2ef060e78", required = true, position = 1
     )
-    val customerId: String,
+    val accountId: String,
     @ApiModelProperty(
         value = "住所の氏名または会社名", example = "あいうえお", required = true, position = 2
     )

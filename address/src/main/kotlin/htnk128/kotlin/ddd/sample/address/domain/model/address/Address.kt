@@ -1,7 +1,7 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
 import htnk128.kotlin.ddd.sample.address.domain.exception.AddressInvalidDataStateException
-import htnk128.kotlin.ddd.sample.address.domain.model.customer.CustomerId
+import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountId
 import htnk128.kotlin.ddd.sample.dddcore.domain.Entity
 import java.time.Instant
 
@@ -11,11 +11,11 @@ import java.time.Instant
  * 氏名または会社名、郵便番号などの情報を指定して作成することが可能である。
  * また、住所の作成後は更新、削除が可能である。
  *
- * なお、この住所は顧客のID[customerId]と紐づけが行われる。
+ * なお、この住所はアカウントのID[accountId]と紐づけが行われる。
  */
 class Address(
     val addressId: AddressId,
-    val customerId: CustomerId,
+    val accountId: AccountId,
     val fullName: FullName,
     val zipCode: ZipCode,
     val stateOrRegion: StateOrRegion,
@@ -58,7 +58,7 @@ class Address(
 
         return Address(
             addressId,
-            customerId,
+            accountId,
             fullName = fullName ?: this.fullName,
             zipCode = zipCode ?: this.zipCode,
             stateOrRegion = stateOrRegion ?: this.stateOrRegion,
@@ -77,14 +77,14 @@ class Address(
      * 削除日時([deletedAt])に現在日付が設定されことによって論理削除状態となる。
      * 更新後にイベント([AddressDeleted])を生成する。
      *
-     * また、この顧客が削除済みの場合にはそのままこの顧客が返却される。
+     * また、このアカウントが削除済みの場合にはそのままこのアカウントが返却される。
      *
      * @return 削除された住所
      */
     fun delete(): Address = if (isDeleted) this else with(Instant.now()) {
         Address(
             addressId,
-            customerId,
+            accountId,
             fullName = fullName,
             zipCode = zipCode,
             stateOrRegion = stateOrRegion,
@@ -131,7 +131,7 @@ class Address(
         /**
          * 住所を作成する。
          *
-         * 住所欄2を除くすべての項目(顧客のID、氏名または会社名、郵便番号、都道府県、住所欄1、電話番号)が必須指定となる。
+         * 住所欄2を除くすべての項目(アカウントのID、氏名または会社名、郵便番号、都道府県、住所欄1、電話番号)が必須指定となる。
          *
          * また、作成後にイベント([AddressCreated])を生成する。
          *
@@ -139,7 +139,7 @@ class Address(
          */
         fun create(
             addressId: AddressId,
-            customerId: CustomerId,
+            accountId: AccountId,
             fullName: FullName,
             zipCode: ZipCode,
             stateOrRegion: StateOrRegion,
@@ -149,7 +149,7 @@ class Address(
         ): Address = with(Instant.now()) {
             Address(
                 addressId,
-                customerId,
+                accountId,
                 fullName,
                 zipCode,
                 stateOrRegion,
