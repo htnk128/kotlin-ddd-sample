@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.address.domain.exception.AddressInvalidRequestException
 import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
 
 /**

@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.address
 
-import htnk128.kotlin.ddd.sample.account.domain.exception.AddressInvalidRequestException
 import htnk128.kotlin.ddd.sample.dddcore.domain.Identity
 
 /**

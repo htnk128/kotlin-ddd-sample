@@ -8,15 +8,8 @@ import java.time.Instant
  */
 class Account(
     val accountId: AccountId,
-    val createdAt: Instant,
-    val deletedAt: Instant?,
-    val updatedAt: Instant
+    val deletedAt: Instant?
 ) : Entity<Account> {
-
-    /**
-     * このアカウントが削除されている場合に`true`を返す。
-     */
-    val isDeleted: Boolean = deletedAt != null
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -7,15 +7,15 @@ import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountId
  */
 interface AddressRepository {
 
-    fun find(addressId: AddressId, lock: Boolean = false): Address?
+    fun find(addressId: AddressId, lock: Boolean = false): Address
 
     fun findAll(accountId: AccountId): List<Address>
 
     fun add(address: Address)
 
-    fun set(address: Address): Int
+    fun set(address: Address)
 
-    fun remove(address: Address): Int
+    fun remove(address: Address)
 
     fun nextAddressId(): AddressId = AddressId.generate()
 }

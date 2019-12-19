@@ -5,5 +5,5 @@ package htnk128.kotlin.ddd.sample.address.domain.model.account
  */
 interface AccountRepository {
 
-    fun find(accountId: AccountId): Account?
+    fun find(accountId: AccountId): Account
 }

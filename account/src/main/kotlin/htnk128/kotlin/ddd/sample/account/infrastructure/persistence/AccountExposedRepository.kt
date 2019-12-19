@@ -2,7 +2,9 @@ package htnk128.kotlin.ddd.sample.account.infrastructure.persistence
 
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Account
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountId
+import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountNotFoundException
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountRepository
+import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountUpdateFailedException
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Email
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Name
 import htnk128.kotlin.ddd.sample.account.domain.model.account.NamePronunciation
@@ -22,11 +24,12 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class AccountExposedRepository : AccountRepository {
 
-    override fun find(accountId: AccountId, lock: Boolean): Account? =
+    override fun find(accountId: AccountId, lock: Boolean): Account =
         AccountTable.select { AccountTable.accountId eq accountId.id() }
             .run { if (lock) this.forUpdate() else this }
             .firstOrNull()
             ?.rowToModel()
+            ?: throw AccountNotFoundException(accountId)
 
     override fun findAll(limit: Int, offset: Int): List<Account> =
         AccountTable.selectAll()
@@ -51,7 +54,7 @@ class AccountExposedRepository : AccountRepository {
         }
     }
 
-    override fun set(account: Account): Int =
+    override fun set(account: Account) {
         AccountTable.update({ AccountTable.accountId eq account.accountId.id() }) {
             it[name] = account.name.toValue()
             it[namePronunciation] = account.namePronunciation.toValue()
@@ -59,12 +62,18 @@ class AccountExposedRepository : AccountRepository {
             it[password] = account.password.toValue()
             it[updatedAt] = account.updatedAt
         }
+            .takeIf { it > 0 }
+            ?: throw AccountUpdateFailedException(account.accountId)
+    }
 
-    override fun remove(account: Account): Int =
+    override fun remove(account: Account) {
         AccountTable.update({ AccountTable.accountId eq account.accountId.id() }) {
             it[deletedAt] = account.deletedAt
             it[updatedAt] = account.updatedAt
         }
+            .takeIf { it > 0 }
+            ?: throw AccountUpdateFailedException(account.accountId)
+    }
 
     private fun ResultRow.rowToModel(): Account =
         Account(

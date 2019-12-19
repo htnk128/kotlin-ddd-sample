@@ -2,6 +2,7 @@ package htnk128.kotlin.ddd.sample.address.infrastructure.transfer
 
 import htnk128.kotlin.ddd.sample.address.domain.model.account.Account
 import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountId
+import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountNotFoundException
 import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountRepository
 import java.net.URI
 import java.time.Instant
@@ -16,7 +17,9 @@ class AccountRestRepository(
     private val accountClient: AccountClient
 ) : AccountRepository {
 
-    override fun find(accountId: AccountId): Account? = accountClient.find(accountId)
+    override fun find(accountId: AccountId): Account =
+        accountClient.find(accountId)
+            ?: throw AccountNotFoundException(accountId)
 }
 
 @Component
@@ -39,17 +42,13 @@ class AccountClient(
 
     private data class AccountResponse(
         val accountId: String,
-        val createdAt: Long,
-        val deletedAt: Long?,
-        val updatedAt: Long
+        val deletedAt: Long?
     ) {
 
         fun responseToModel(): Account =
             Account(
                 AccountId.valueOf(accountId),
-                Instant.ofEpochMilli(createdAt),
-                deletedAt?.let { Instant.ofEpochMilli(it) },
-                Instant.ofEpochMilli(updatedAt)
+                deletedAt?.let { Instant.ofEpochMilli(it) }
             )
     }
 }

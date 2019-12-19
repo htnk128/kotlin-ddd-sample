@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.account
 
-import htnk128.kotlin.ddd.sample.account.domain.exception.AccountInvalidRequestException
 import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
 import java.security.MessageDigest
 import javax.crypto.SecretKeyFactory

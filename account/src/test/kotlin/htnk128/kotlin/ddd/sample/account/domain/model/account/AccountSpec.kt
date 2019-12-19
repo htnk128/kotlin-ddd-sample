@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.account
 
-import htnk128.kotlin.ddd.sample.account.domain.exception.AccountInvalidDataStateException
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec

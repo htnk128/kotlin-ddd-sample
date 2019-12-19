@@ -7,7 +7,6 @@ import htnk128.kotlin.ddd.sample.account.application.command.FindAllAccountComma
 import htnk128.kotlin.ddd.sample.account.application.command.UpdateAccountCommand
 import htnk128.kotlin.ddd.sample.account.application.dto.AccountDTO
 import htnk128.kotlin.ddd.sample.account.application.dto.PaginationAccountDTO
-import htnk128.kotlin.ddd.sample.account.application.exception.AccountNotFoundException
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Account
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountId
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountRepository
@@ -16,7 +15,6 @@ import htnk128.kotlin.ddd.sample.account.domain.model.account.Name
 import htnk128.kotlin.ddd.sample.account.domain.model.account.NamePronunciation
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Password
 import htnk128.kotlin.ddd.sample.account.domain.model.address.AddressRepository
-import htnk128.kotlin.ddd.sample.shared.UnexpectedException
 import java.util.stream.Collectors
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -33,22 +31,14 @@ class AccountService(
 ) {
 
     @Transactional(readOnly = true)
-    fun find(command: FindAccountCommand): Mono<AccountDTO> {
-        val accountId = AccountId.valueOf(command.accountId)
-
-        return Mono.just(
-            accountRepository.find(accountId)
-                ?.toDTO()
-                ?: throw AccountNotFoundException(accountId)
-        )
-    }
+    fun find(command: FindAccountCommand): Mono<AccountDTO> =
+        Mono.just(accountRepository.find(AccountId.valueOf(command.accountId)).toDTO())
+            .onErrorResume { Mono.error(it.error()) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun lock(accountId: AccountId): Mono<Account> =
-        Mono.just(
-            accountRepository.find(accountId, lock = true)
-                ?: throw AccountNotFoundException(accountId)
-        )
+        Mono.just(accountRepository.find(accountId, lock = true))
+            .onErrorResume { Mono.error(it.error()) }
 
     @Transactional(readOnly = true)
     fun findAll(command: FindAllAccountCommand): Mono<PaginationAccountDTO> =
@@ -58,6 +48,7 @@ class AccountService(
         )
             .collect(Collectors.toList())
             .map { PaginationAccountDTO(accountRepository.count(), command.limit, command.offset, it) }
+            .onErrorResume { Mono.error(it.error()) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun create(command: CreateAccountCommand): Mono<AccountDTO> {
@@ -75,6 +66,7 @@ class AccountService(
                 .also(accountRepository::add)
                 .toDTO()
         )
+            .onErrorResume { Mono.error(it.error()) }
     }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
@@ -88,13 +80,10 @@ class AccountService(
         return lock(accountId)
             .map { account ->
                 account.update(name, namePronunciation, email, password)
-                    .also { updated ->
-                        accountRepository.set(updated)
-                            .takeIf { it > 0 }
-                            ?: throw UnexpectedException("Account update failed.")
-                    }
+                    .also { updated -> accountRepository.set(updated) }
                     .toDTO()
             }
+            .onErrorResume { Mono.error(it.error()) }
     }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
@@ -107,26 +96,11 @@ class AccountService(
                     .forEach { addressRepository.remove(it) }
 
                 account.delete()
-                    .also { deleted ->
-                        accountRepository.remove(deleted)
-                            .takeIf { it > 0 }
-                            ?: throw UnexpectedException("Account update failed.")
-                    }
+                    .also { deleted -> accountRepository.remove(deleted) }
                     .toDTO()
             }
+            .onErrorResume { Mono.error(it.error()) }
     }
-
-    private fun Account.toDTO(): AccountDTO =
-        AccountDTO(
-            accountId.id(),
-            name.toValue(),
-            namePronunciation.toValue(),
-            email.toValue(),
-            password.format(),
-            createdAt.toEpochMilli(),
-            deletedAt?.toEpochMilli(),
-            updatedAt.toEpochMilli()
-        )
 
     private companion object {
 

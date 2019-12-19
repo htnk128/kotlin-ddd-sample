@@ -5,7 +5,7 @@ package htnk128.kotlin.ddd.sample.account.domain.model.account
  */
 interface AccountRepository {
 
-    fun find(accountId: AccountId, lock: Boolean = false): Account?
+    fun find(accountId: AccountId, lock: Boolean = false): Account
 
     fun findAll(limit: Int, offset: Int): List<Account>
 
@@ -13,9 +13,9 @@ interface AccountRepository {
 
     fun add(account: Account)
 
-    fun set(account: Account): Int
+    fun set(account: Account)
 
-    fun remove(account: Account): Int
+    fun remove(account: Account)
 
     fun nextAccountId(): AccountId = AccountId.generate()
 }

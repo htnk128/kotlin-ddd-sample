@@ -1,7 +1,7 @@
 package htnk128.kotlin.ddd.sample.shared.presentation.resource
 
 /**
- * エラーが発生した場合のエラーレスポンス情報。
+ * エラーが発生した場合の最終的なエンドユーザ向けエラーレスポンス情報。
  *
  * エラーレスポンス情報には"error"というキーでエラーの詳細情報([Error])が含まれる。
  */
