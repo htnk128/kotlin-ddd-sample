@@ -3,7 +3,9 @@ package htnk128.kotlin.ddd.sample.address.infrastructure.persistence
 import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountId
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Address
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressId
+import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressNotFoundException
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressRepository
+import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressUpdateFailedException
 import htnk128.kotlin.ddd.sample.address.domain.model.address.FullName
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Line1
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Line2
@@ -24,11 +26,12 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class AddressExposedRepository : AddressRepository {
 
-    override fun find(addressId: AddressId, lock: Boolean): Address? =
+    override fun find(addressId: AddressId, lock: Boolean): Address =
         AddressTable.select { AddressTable.addressId eq addressId.id() }
             .run { if (lock) this.forUpdate() else this }
             .firstOrNull()
             ?.rowToModel()
+            ?: throw AddressNotFoundException(addressId)
 
     override fun findAll(accountId: AccountId): List<Address> =
         AddressTable.select { AddressTable.accountId eq accountId.id() }
@@ -50,7 +53,7 @@ class AddressExposedRepository : AddressRepository {
         }
     }
 
-    override fun set(address: Address): Int =
+    override fun set(address: Address) {
         AddressTable.update({ AddressTable.addressId eq address.addressId.id() }) {
             it[fullName] = address.fullName.toValue()
             it[zipCode] = address.zipCode.toValue()
@@ -60,12 +63,18 @@ class AddressExposedRepository : AddressRepository {
             it[phoneNumber] = address.phoneNumber.toValue()
             it[updatedAt] = address.updatedAt
         }
+            .takeIf { it > 0 }
+            ?: throw AddressUpdateFailedException(address.addressId)
+    }
 
-    override fun remove(address: Address): Int =
+    override fun remove(address: Address) {
         AddressTable.update({ AddressTable.addressId eq address.addressId.id() }) {
             it[deletedAt] = address.deletedAt
             it[updatedAt] = address.updatedAt
         }
+            .takeIf { it > 0 }
+            ?: throw AddressUpdateFailedException(address.addressId)
+    }
 
     private fun ResultRow.rowToModel() =
         Address(

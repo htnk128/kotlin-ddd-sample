@@ -5,11 +5,9 @@ package htnk128.kotlin.ddd.sample.address.domain.model.address
  */
 class AddressNotFoundException(
     addressId: AddressId,
-    message: String = "Address not found. (addressId=$addressId)",
+    override val message: String = "Address not found. (addressId=$addressId)",
     cause: Throwable? = null
-) : RuntimeException(message = message, cause = cause) {
+) : RuntimeException(message, cause) {
 
     val type: String = "not_found_error"
-
-    val status: Int = 404
 }

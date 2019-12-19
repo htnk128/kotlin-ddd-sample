@@ -53,9 +53,7 @@ class Address(
         line2: Line2?,
         phoneNumber: PhoneNumber?
     ): Address {
-        if (isDeleted) throw AddressInvalidDataStateException(
-            "Address has been deleted."
-        )
+        if (isDeleted) throw AddressInvalidDataStateException("Address has been deleted.")
 
         return Address(
             addressId,

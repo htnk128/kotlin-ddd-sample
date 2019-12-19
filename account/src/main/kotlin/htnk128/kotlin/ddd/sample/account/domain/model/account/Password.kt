@@ -54,9 +54,7 @@ class Password private constructor(private val value: String) : SingleValueObjec
                         .joinToString("") { b -> String.format("%02x", b.toInt() and 255) }
                 }
                 ?.let { Password(it) }
-                ?: throw AccountInvalidRequestException(
-                    "Name must be 100 characters or less."
-                )
+                ?: throw AccountInvalidRequestException("Name must be 100 characters or less.")
         }
 
         /**

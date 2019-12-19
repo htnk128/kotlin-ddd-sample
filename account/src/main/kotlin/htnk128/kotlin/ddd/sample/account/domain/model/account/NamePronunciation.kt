@@ -28,8 +28,6 @@ class NamePronunciation private constructor(
         fun valueOf(value: String): NamePronunciation = value
             .takeIf { LENGTH_RANGE.contains(it.length) }
             ?.let { NamePronunciation(it) }
-            ?: throw AccountInvalidRequestException(
-                "Name pronunciation must be 100 characters or less."
-            )
+            ?: throw AccountInvalidRequestException("Name pronunciation must be 100 characters or less.")
     }
 }

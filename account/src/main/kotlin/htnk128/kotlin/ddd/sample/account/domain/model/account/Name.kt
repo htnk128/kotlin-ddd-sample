@@ -26,8 +26,6 @@ class Name private constructor(private val value: String) : SingleValueObject<Na
         fun valueOf(value: String): Name = value
             .takeIf { LENGTH_RANGE.contains(it.length) }
             ?.let { Name(it) }
-            ?: throw AccountInvalidRequestException(
-                "Name must be 100 characters or less."
-            )
+            ?: throw AccountInvalidRequestException("Name must be 100 characters or less.")
     }
 }

@@ -13,9 +13,9 @@ interface AccountRepository {
 
     fun add(account: Account)
 
-    fun set(account: Account): Int
+    fun set(account: Account)
 
-    fun remove(account: Account): Int
+    fun remove(account: Account)
 
     fun nextAccountId(): AccountId = AccountId.generate()
 }
