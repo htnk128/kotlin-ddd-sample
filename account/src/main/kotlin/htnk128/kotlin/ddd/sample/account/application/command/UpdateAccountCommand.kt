@@ -1,5 +1,8 @@
 package htnk128.kotlin.ddd.sample.account.application.command
 
+/**
+ * アカウントを更新する際のコマンド情報。
+ */
 data class UpdateAccountCommand(
     val accountId: String,
     val name: String?,

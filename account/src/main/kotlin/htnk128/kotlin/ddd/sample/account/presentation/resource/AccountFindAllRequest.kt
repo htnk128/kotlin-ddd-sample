@@ -2,6 +2,9 @@ package htnk128.kotlin.ddd.sample.account.presentation.resource
 
 import io.swagger.annotations.ApiModelProperty
 
+/**
+ * すべてのアカウント取得時のリクエスト情報。
+ */
 data class AccountFindAllRequest(
     @ApiModelProperty(
         value = "取得するデータ数の最大値", example = "10", required = false, allowableValues = "range[1, 100]", position = 1
