@@ -48,14 +48,13 @@ class Password private constructor(private val value: String) : SingleValueObjec
                         .apply { update(customerId.id().toByteArray()) }
                         .digest()
 
-                    Password(
-                        SecretKeyFactory
-                            .getInstance("PBKDF2WithHmacSHA256")
-                            .generateSecret(PBEKeySpec(secret, salt, ITERATION_COUNT, KEY_LENGTH))
-                            .encoded
-                            .joinToString("") { b -> String.format("%02x", b.toInt() and 255) }
-                    )
+                    SecretKeyFactory
+                        .getInstance("PBKDF2WithHmacSHA256")
+                        .generateSecret(PBEKeySpec(secret, salt, ITERATION_COUNT, KEY_LENGTH))
+                        .encoded
+                        .joinToString("") { b -> String.format("%02x", b.toInt() and 255) }
                 }
+                ?.let { Password(it) }
                 ?: throw CustomerInvalidRequestException("Name must be 100 characters or less.")
         }
 
