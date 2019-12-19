@@ -2,13 +2,13 @@ package htnk128.kotlin.ddd.sample.account.infrastructure.persistence
 
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Account
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountId
+import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountNotFoundException
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountRepository
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Email
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Name
 import htnk128.kotlin.ddd.sample.account.domain.model.account.NamePronunciation
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Password
 import htnk128.kotlin.ddd.sample.shared.infrastructure.persistence.ExposedTable
-import java.time.Instant
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
@@ -17,16 +17,18 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.update
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 
 @Repository
 @Transactional
 class AccountExposedRepository : AccountRepository {
 
-    override fun find(accountId: AccountId, lock: Boolean): Account? =
+    override fun find(accountId: AccountId, lock: Boolean): Account =
         AccountTable.select { AccountTable.accountId eq accountId.id() }
             .run { if (lock) this.forUpdate() else this }
             .firstOrNull()
             ?.rowToModel()
+            ?: throw AccountNotFoundException(accountId)
 
     override fun findAll(limit: Int, offset: Int): List<Account> =
         AccountTable.selectAll()

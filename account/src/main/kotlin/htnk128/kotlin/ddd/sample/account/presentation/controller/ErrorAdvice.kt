@@ -15,29 +15,29 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 @RestControllerAdvice
 class ErrorAdvice {
 
-    @ExceptionHandler(NotFoundException::class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    fun handleNotFoundException(exception: NotFoundException): ErrorResponse {
-        logger.warn(exception) { "type=${exception.type}, status=${exception.status}, message=${exception.message}" }
-        return errorResponse(exception.type, exception.status, exception.message)
-    }
-
-    @ExceptionHandler(InvalidRequestException::class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    fun handleInvalidRequestException(exception: InvalidRequestException): ErrorResponse {
-        logger.warn(exception) { "type=${exception.type}, status=${exception.status}, message=${exception.message}" }
-        return errorResponse(exception.type, exception.status, exception.message)
-    }
-
-    @ExceptionHandler(InvalidDataStateException::class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    @ResponseBody
-    fun handleInvalidDataStateException(exception: InvalidDataStateException): ErrorResponse {
-        logger.warn(exception) { "type=${exception.type}, status=${exception.status}, message=${exception.message}" }
-        return errorResponse(exception.type, exception.status, exception.message)
-    }
+    // @ExceptionHandler(NotFoundException::class)
+    // @ResponseStatus(HttpStatus.NOT_FOUND)
+    // @ResponseBody
+    // fun handleNotFoundException(exception: NotFoundException): ErrorResponse {
+    //     logger.warn(exception) { "type=${exception.type}, status=${exception.status}, message=${exception.message}" }
+    //     return errorResponse(exception.type, exception.status, exception.message)
+    // }
+    //
+    // @ExceptionHandler(InvalidRequestException::class)
+    // @ResponseStatus(HttpStatus.BAD_REQUEST)
+    // @ResponseBody
+    // fun handleInvalidRequestException(exception: InvalidRequestException): ErrorResponse {
+    //     logger.warn(exception) { "type=${exception.type}, status=${exception.status}, message=${exception.message}" }
+    //     return errorResponse(exception.type, exception.status, exception.message)
+    // }
+    //
+    // @ExceptionHandler(InvalidDataStateException::class)
+    // @ResponseStatus(HttpStatus.CONFLICT)
+    // @ResponseBody
+    // fun handleInvalidDataStateException(exception: InvalidDataStateException): ErrorResponse {
+    //     logger.warn(exception) { "type=${exception.type}, status=${exception.status}, message=${exception.message}" }
+    //     return errorResponse(exception.type, exception.status, exception.message)
+    // }
 
     @ExceptionHandler(UnexpectedException::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -6,6 +6,6 @@ package htnk128.kotlin.ddd.sample.shared.applicatio.exception
 open class ExpectedException(
     val type: String,
     val status: Int,
-    override val message: String,
+    override val message: String?,
     override val cause: Throwable? = null
 ) : RuntimeException(message, cause)
