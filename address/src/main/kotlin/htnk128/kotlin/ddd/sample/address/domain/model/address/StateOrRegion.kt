@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.address.domain.exception.AddressInvalidRequestException
 import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
 
 /**
@@ -27,6 +26,8 @@ class StateOrRegion private constructor(private val value: String) : SingleValue
         fun valueOf(value: String): StateOrRegion = value
             .takeIf { LENGTH_RANGE.contains(it.length) }
             ?.let { StateOrRegion(it) }
-            ?: throw AddressInvalidRequestException("State or region must be 100 characters or less.")
+            ?: throw AddressInvalidRequestException(
+                "State or region must be 100 characters or less."
+            )
     }
 }

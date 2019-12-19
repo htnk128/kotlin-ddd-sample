@@ -1,18 +1,18 @@
 package htnk128.kotlin.ddd.sample.account.presentation.controller
 
-import htnk128.kotlin.ddd.sample.shared.UnexpectedException
+import htnk128.kotlin.ddd.sample.shared.applicatio.exception.UnexpectedException
 import htnk128.kotlin.ddd.sample.shared.application.exception.NotFoundException
 import htnk128.kotlin.ddd.sample.shared.domain.exception.InvalidDataStateException
 import htnk128.kotlin.ddd.sample.shared.domain.exception.InvalidRequestException
 import htnk128.kotlin.ddd.sample.shared.presentation.resource.ErrorResponse
 import mu.KLogging
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.bind.annotation.RestControllerAdvice
 
-@ControllerAdvice
+@RestControllerAdvice
 class ErrorAdvice {
 
     @ExceptionHandler(NotFoundException::class)

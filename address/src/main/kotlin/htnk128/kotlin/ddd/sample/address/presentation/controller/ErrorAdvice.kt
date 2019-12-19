@@ -1,6 +1,6 @@
 package htnk128.kotlin.ddd.sample.address.presentation.controller
 
-import htnk128.kotlin.ddd.sample.shared.UnexpectedException
+import htnk128.kotlin.ddd.sample.shared.applicatio.exception.UnexpectedException
 import htnk128.kotlin.ddd.sample.shared.application.exception.NotFoundException
 import htnk128.kotlin.ddd.sample.shared.domain.exception.InvalidDataStateException
 import htnk128.kotlin.ddd.sample.shared.domain.exception.InvalidRequestException

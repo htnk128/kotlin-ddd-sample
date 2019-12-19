@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.account
 
-import htnk128.kotlin.ddd.sample.account.domain.exception.AccountInvalidRequestException
 import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
 import java.security.MessageDigest
 import javax.crypto.SecretKeyFactory
@@ -55,7 +54,9 @@ class Password private constructor(private val value: String) : SingleValueObjec
                         .joinToString("") { b -> String.format("%02x", b.toInt() and 255) }
                 }
                 ?.let { Password(it) }
-                ?: throw AccountInvalidRequestException("Name must be 100 characters or less.")
+                ?: throw AccountInvalidRequestException(
+                    "Name must be 100 characters or less."
+                )
         }
 
         /**

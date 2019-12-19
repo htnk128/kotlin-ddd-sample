@@ -7,21 +7,21 @@ import htnk128.kotlin.ddd.sample.account.application.command.FindAllAccountComma
 import htnk128.kotlin.ddd.sample.account.application.command.UpdateAccountCommand
 import htnk128.kotlin.ddd.sample.account.application.dto.AccountDTO
 import htnk128.kotlin.ddd.sample.account.application.dto.PaginationAccountDTO
-import htnk128.kotlin.ddd.sample.account.application.exception.AccountNotFoundException
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Account
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountId
+import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountNotFoundException
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountRepository
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Email
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Name
 import htnk128.kotlin.ddd.sample.account.domain.model.account.NamePronunciation
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Password
 import htnk128.kotlin.ddd.sample.account.domain.model.address.AddressRepository
-import htnk128.kotlin.ddd.sample.shared.UnexpectedException
-import java.util.stream.Collectors
+import htnk128.kotlin.ddd.sample.shared.applicatio.exception.UnexpectedException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import java.util.stream.Collectors
 
 /**
  * アカウント([Account])ドメインの操作を提供するアプリケーションサービス。
@@ -39,7 +39,9 @@ class AccountService(
         return Mono.just(
             accountRepository.find(accountId)
                 ?.toDTO()
-                ?: throw AccountNotFoundException(accountId)
+                ?: throw AccountNotFoundException(
+                    accountId
+                )
         )
     }
 
@@ -47,7 +49,9 @@ class AccountService(
     fun lock(accountId: AccountId): Mono<Account> =
         Mono.just(
             accountRepository.find(accountId, lock = true)
-                ?: throw AccountNotFoundException(accountId)
+                ?: throw AccountNotFoundException(
+                    accountId
+                )
         )
 
     @Transactional(readOnly = true)
@@ -91,7 +95,9 @@ class AccountService(
                     .also { updated ->
                         accountRepository.set(updated)
                             .takeIf { it > 0 }
-                            ?: throw UnexpectedException("Account update failed.")
+                            ?: throw UnexpectedException(
+                                "Account update failed."
+                            )
                     }
                     .toDTO()
             }
@@ -110,7 +116,9 @@ class AccountService(
                     .also { deleted ->
                         accountRepository.remove(deleted)
                             .takeIf { it > 0 }
-                            ?: throw UnexpectedException("Account update failed.")
+                            ?: throw UnexpectedException(
+                                "Account update failed."
+                            )
                     }
                     .toDTO()
             }

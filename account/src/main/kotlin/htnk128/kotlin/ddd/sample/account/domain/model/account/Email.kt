@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.account
 
-import htnk128.kotlin.ddd.sample.account.domain.exception.AccountInvalidRequestException
 import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
 
 /**
@@ -27,6 +26,8 @@ class Email private constructor(private val value: String) : SingleValueObject<E
         fun valueOf(value: String): Email = value
             .takeIf { LENGTH_RANGE.contains(it.length) }
             ?.let { Email(it) }
-            ?: throw AccountInvalidRequestException("Email must be 100 characters or less.")
+            ?: throw AccountInvalidRequestException(
+                "Email must be 100 characters or less."
+            )
     }
 }

@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.address.domain.exception.AddressInvalidRequestException
 import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
 
 /**
@@ -29,6 +28,8 @@ class PhoneNumber private constructor(private val value: String) : SingleValueOb
         fun valueOf(value: String): PhoneNumber = value
             .takeIf { LENGTH_RANGE.contains(it.length) && PATTERN.matches(it) }
             ?.let { PhoneNumber(it) }
-            ?: throw AddressInvalidRequestException("Phone number must be 50 characters or less and numeric.")
+            ?: throw AddressInvalidRequestException(
+                "Phone number must be 50 characters or less and numeric."
+            )
     }
 }

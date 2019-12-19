@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.address.domain.exception.AddressInvalidDataStateException
 import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountId
 import htnk128.kotlin.ddd.sample.dddcore.domain.Entity
 import java.time.Instant
@@ -54,7 +53,9 @@ class Address(
         line2: Line2?,
         phoneNumber: PhoneNumber?
     ): Address {
-        if (isDeleted) throw AddressInvalidDataStateException("Address has been deleted.")
+        if (isDeleted) throw AddressInvalidDataStateException(
+            "Address has been deleted."
+        )
 
         return Address(
             addressId,

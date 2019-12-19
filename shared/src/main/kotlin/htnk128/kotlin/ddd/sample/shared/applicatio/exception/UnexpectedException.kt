@@ -1,4 +1,4 @@
-package htnk128.kotlin.ddd.sample.shared
+package htnk128.kotlin.ddd.sample.shared.applicatio.exception
 
 /**
  * 予期せぬ問題が発生した場合に発生する例外。

@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.address.domain.exception.AddressInvalidRequestException
 import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
 
 /**
@@ -27,6 +26,8 @@ class City private constructor(private val value: String) : SingleValueObject<Ci
         fun valueOf(value: String): City = value
             .takeIf { LENGTH_RANGE.contains(it.length) }
             ?.let { City(it) }
-            ?: throw AddressInvalidRequestException("City must be 100 characters or less.")
+            ?: throw AddressInvalidRequestException(
+                "City must be 100 characters or less."
+            )
     }
 }

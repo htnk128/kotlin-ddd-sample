@@ -6,8 +6,8 @@ import htnk128.kotlin.ddd.sample.address.application.command.FindAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.command.FindAllAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.command.UpdateAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.dto.AddressDTO
-import htnk128.kotlin.ddd.sample.address.application.exception.AccountNotFoundException
-import htnk128.kotlin.ddd.sample.address.application.exception.AddressNotFoundException
+import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountNotFoundException
+import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressNotFoundException
 import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountId
 import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountRepository
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Address
@@ -19,7 +19,7 @@ import htnk128.kotlin.ddd.sample.address.domain.model.address.Line2
 import htnk128.kotlin.ddd.sample.address.domain.model.address.PhoneNumber
 import htnk128.kotlin.ddd.sample.address.domain.model.address.StateOrRegion
 import htnk128.kotlin.ddd.sample.address.domain.model.address.ZipCode
-import htnk128.kotlin.ddd.sample.shared.UnexpectedException
+import htnk128.kotlin.ddd.sample.shared.applicatio.exception.UnexpectedException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
@@ -41,7 +41,9 @@ class AddressService(
         return Mono.just(
             addressRepository.find(addressId)
                 ?.toDTO()
-                ?: throw AddressNotFoundException(addressId)
+                ?: throw AddressNotFoundException(
+                    addressId
+                )
         )
     }
 
@@ -49,7 +51,9 @@ class AddressService(
     fun lock(addressId: AddressId): Mono<Address> =
         Mono.just(
             addressRepository.find(addressId, lock = true)
-                ?: throw AddressNotFoundException(addressId)
+                ?: throw AddressNotFoundException(
+                    addressId
+                )
         )
 
     @Transactional(readOnly = true)
@@ -72,7 +76,9 @@ class AddressService(
 
         val account = accountRepository.find(accountId)
             ?.takeUnless { it.isDeleted }
-            ?: throw AccountNotFoundException(accountId)
+            ?: throw AccountNotFoundException(
+                accountId
+            )
 
         return Mono.just(
             Address
@@ -107,7 +113,9 @@ class AddressService(
                     .also { updated ->
                         addressRepository.set(updated)
                             .takeIf { it > 0 }
-                            ?: throw UnexpectedException("Address update failed.")
+                            ?: throw UnexpectedException(
+                                "Address update failed."
+                            )
                     }
                     .toDTO()
             }
@@ -123,7 +131,9 @@ class AddressService(
                     .also { deleted ->
                         addressRepository.remove(deleted)
                             .takeIf { it > 0 }
-                            ?: throw UnexpectedException("Address update failed.")
+                            ?: throw UnexpectedException(
+                                "Address update failed."
+                            )
                     }
                     .toDTO()
             }

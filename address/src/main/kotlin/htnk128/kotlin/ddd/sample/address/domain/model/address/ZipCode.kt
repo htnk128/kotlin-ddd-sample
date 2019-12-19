@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.address.domain.exception.AddressInvalidRequestException
 import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
 
 /**
@@ -29,6 +28,8 @@ class ZipCode private constructor(private val value: String) : SingleValueObject
         fun valueOf(value: String): ZipCode = value
             .takeIf { LENGTH_RANGE.contains(it.length) && PATTERN.matches(it) }
             ?.let { ZipCode(it) }
-            ?: throw AddressInvalidRequestException("Zip code must be 50 characters or less and alphanumeric.")
+            ?: throw AddressInvalidRequestException(
+                "Zip code must be 50 characters or less and alphanumeric."
+            )
     }
 }

@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.account
 
-import htnk128.kotlin.ddd.sample.account.domain.exception.AccountInvalidDataStateException
 import htnk128.kotlin.ddd.sample.dddcore.domain.Entity
 import java.time.Instant
 
@@ -45,7 +44,9 @@ class Account(
         email: Email?,
         password: Password?
     ): Account {
-        if (isDeleted) throw AccountInvalidDataStateException("Account has been deleted.")
+        if (isDeleted) throw AccountInvalidDataStateException(
+            "Account has been deleted."
+        )
 
         return Account(
             accountId,

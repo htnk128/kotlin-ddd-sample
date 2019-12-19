@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.address.domain.exception.AddressInvalidRequestException
 import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
 
 /**
@@ -27,6 +26,8 @@ class Line2 private constructor(private val value: String) : SingleValueObject<L
         fun valueOf(value: String): Line2 = value
             .takeIf { LENGTH_RANGE.contains(it.length) }
             ?.let { Line2(it) }
-            ?: throw AddressInvalidRequestException("Line2 must be 100 characters or less.")
+            ?: throw AddressInvalidRequestException(
+                "Line2 must be 100 characters or less."
+            )
     }
 }
