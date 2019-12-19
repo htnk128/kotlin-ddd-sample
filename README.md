@@ -12,12 +12,12 @@ Modeled using Amazon's account function as a theme.
 
 ### Account
 ``` bash
-$ gradle account:bootRun
+$ ./gradlew account:bootRun
 ```
 
 ### Address
 ``` bash
-$ gradle address:bootRun
+$ ./gradlew address:bootRun
 ```
 
 
