@@ -37,6 +37,9 @@ allprojects {
                 }
             }
         }
+        filter {
+            include("**/kotlin/**")
+        }
     }
 
     tasks {
