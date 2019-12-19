@@ -1,7 +1,7 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
 import htnk128.kotlin.ddd.sample.address.domain.exception.AddressInvalidDataStateException
-import htnk128.kotlin.ddd.sample.address.domain.model.customer.CustomerId
+import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountId
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec
@@ -12,7 +12,7 @@ class AddressSpec : StringSpec({
     "住所が作成されること" {
         val now = Instant.now()
         val addressId = AddressId.generate()
-        val customerId = CustomerId.valueOf("customer01")
+        val accountId = AccountId.valueOf("account01")
         val fullName = FullName.valueOf("あいうえお")
         val zipCode = ZipCode.valueOf("1234567")
         val stateOrRegion = StateOrRegion.valueOf("かきくけこ")
@@ -22,7 +22,7 @@ class AddressSpec : StringSpec({
 
         val address = Address.create(
             addressId,
-            customerId,
+            accountId,
             fullName,
             zipCode,
             stateOrRegion,
@@ -32,7 +32,7 @@ class AddressSpec : StringSpec({
         )
 
         address.addressId shouldBe addressId
-        address.customerId shouldBe customerId
+        address.accountId shouldBe accountId
         address.fullName shouldBe fullName
         address.zipCode shouldBe zipCode
         address.stateOrRegion shouldBe stateOrRegion
@@ -48,7 +48,7 @@ class AddressSpec : StringSpec({
             .also {
                 it.type shouldBe AddressEvent.Type.CREATED
                 it.address.addressId shouldBe addressId
-                it.address.customerId shouldBe customerId
+                it.address.accountId shouldBe accountId
                 it.address.fullName shouldBe fullName
                 it.address.zipCode shouldBe zipCode
                 it.address.stateOrRegion shouldBe stateOrRegion
@@ -70,7 +70,7 @@ class AddressSpec : StringSpec({
 
         val created = Address.create(
             AddressId.generate(),
-            CustomerId.valueOf("customer01"),
+            AccountId.valueOf("account01"),
             FullName.valueOf("あいうえお"),
             ZipCode.valueOf("1234567"),
             StateOrRegion.valueOf("かきくけこ"),
@@ -88,7 +88,7 @@ class AddressSpec : StringSpec({
             phoneNumber2
         )
 
-        updated.customerId shouldBe created.customerId
+        updated.accountId shouldBe created.accountId
         updated.fullName shouldBe fullName2
         updated.zipCode shouldBe zipCode2
         updated.stateOrRegion shouldBe stateOrRegion2
@@ -102,7 +102,7 @@ class AddressSpec : StringSpec({
         events[1]
             .also {
                 it.type shouldBe AddressEvent.Type.UPDATED
-                it.address.customerId shouldBe created.customerId
+                it.address.accountId shouldBe created.accountId
                 it.address.fullName shouldBe fullName2
                 it.address.zipCode shouldBe zipCode2
                 it.address.stateOrRegion shouldBe stateOrRegion2
@@ -119,7 +119,7 @@ class AddressSpec : StringSpec({
 
         val created = Address.create(
             AddressId.generate(),
-            CustomerId.valueOf("customer01"),
+            AccountId.valueOf("account01"),
             FullName.valueOf("あいうえお"),
             ZipCode.valueOf("1234567"),
             StateOrRegion.valueOf("かきくけこ"),
@@ -137,7 +137,7 @@ class AddressSpec : StringSpec({
             null
         )
 
-        updated.customerId shouldBe created.customerId
+        updated.accountId shouldBe created.accountId
         updated.fullName shouldBe created.fullName
         updated.zipCode shouldBe created.zipCode
         updated.stateOrRegion shouldBe created.stateOrRegion
@@ -151,7 +151,7 @@ class AddressSpec : StringSpec({
         events[1]
             .also {
                 it.type shouldBe AddressEvent.Type.UPDATED
-                it.address.customerId shouldBe created.customerId
+                it.address.accountId shouldBe created.accountId
                 it.address.fullName shouldBe created.fullName
                 it.address.zipCode shouldBe created.zipCode
                 it.address.stateOrRegion shouldBe created.stateOrRegion
@@ -166,7 +166,7 @@ class AddressSpec : StringSpec({
     "この住所が削除されている場合には例外となること" {
         val deleted = Address.create(
             AddressId.generate(),
-            CustomerId.valueOf("customer01"),
+            AccountId.valueOf("account01"),
             FullName.valueOf("あいうえお"),
             ZipCode.valueOf("1234567"),
             StateOrRegion.valueOf("かきくけこ"),
@@ -193,7 +193,7 @@ class AddressSpec : StringSpec({
 
         val created = Address.create(
             AddressId.generate(),
-            CustomerId.valueOf("customer01"),
+            AccountId.valueOf("account01"),
             FullName.valueOf("あいうえお"),
             ZipCode.valueOf("1234567"),
             StateOrRegion.valueOf("かきくけこ"),
@@ -204,7 +204,7 @@ class AddressSpec : StringSpec({
 
         val deleted = created.delete()
 
-        deleted.customerId shouldBe created.customerId
+        deleted.accountId shouldBe created.accountId
         deleted.fullName shouldBe created.fullName
         deleted.zipCode shouldBe created.zipCode
         deleted.stateOrRegion shouldBe created.stateOrRegion
@@ -219,7 +219,7 @@ class AddressSpec : StringSpec({
         events[1]
             .also {
                 it.type shouldBe AddressEvent.Type.DELETED
-                it.address.customerId shouldBe created.customerId
+                it.address.accountId shouldBe created.accountId
                 it.address.fullName shouldBe created.fullName
                 it.address.zipCode shouldBe created.zipCode
                 it.address.stateOrRegion shouldBe created.stateOrRegion
@@ -231,10 +231,10 @@ class AddressSpec : StringSpec({
             }
     }
 
-    "この住所が削除済みの場合にはそのままこの顧客が返却されること" {
+    "この住所が削除済みの場合にはそのままこのアカウントが返却されること" {
         val deleted = Address.create(
             AddressId.generate(),
-            CustomerId.valueOf("customer01"),
+            AccountId.valueOf("account01"),
             FullName.valueOf("あいうえお"),
             ZipCode.valueOf("1234567"),
             StateOrRegion.valueOf("かきくけこ"),
@@ -246,7 +246,7 @@ class AddressSpec : StringSpec({
 
         val deleted2 = deleted.delete()
 
-        deleted2.customerId shouldBe deleted.customerId
+        deleted2.accountId shouldBe deleted.accountId
         deleted2.fullName shouldBe deleted.fullName
         deleted2.zipCode shouldBe deleted.zipCode
         deleted2.stateOrRegion shouldBe deleted.stateOrRegion
@@ -263,7 +263,7 @@ class AddressSpec : StringSpec({
         val addressId = AddressId.generate()
         val address1 = Address.create(
             addressId,
-            CustomerId.valueOf("customer01"),
+            AccountId.valueOf("account01"),
             FullName.valueOf("あいうえお"),
             ZipCode.valueOf("1234567"),
             StateOrRegion.valueOf("かきくけこ"),
@@ -273,7 +273,7 @@ class AddressSpec : StringSpec({
         )
         val address2 = Address.create(
             addressId,
-            CustomerId.valueOf("customer02"),
+            AccountId.valueOf("account02"),
             FullName.valueOf("あいうえお1"),
             ZipCode.valueOf("12345678"),
             StateOrRegion.valueOf("かきくけこ2"),
@@ -289,7 +289,7 @@ class AddressSpec : StringSpec({
     "属性が同一でも一意な識別子が異なれば等価とならない" {
         val address1 = Address.create(
             AddressId.generate(),
-            CustomerId.valueOf("customer01"),
+            AccountId.valueOf("account01"),
             FullName.valueOf("あいうえお"),
             ZipCode.valueOf("1234567"),
             StateOrRegion.valueOf("かきくけこ"),
@@ -299,7 +299,7 @@ class AddressSpec : StringSpec({
         )
         val address2 = Address.create(
             AddressId.generate(),
-            CustomerId.valueOf("customer01"),
+            AccountId.valueOf("account01"),
             FullName.valueOf("あいうえお"),
             ZipCode.valueOf("1234567"),
             StateOrRegion.valueOf("かきくけこ"),

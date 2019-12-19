@@ -6,8 +6,10 @@ import htnk128.kotlin.ddd.sample.address.application.command.FindAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.command.FindAllAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.command.UpdateAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.dto.AddressDTO
+import htnk128.kotlin.ddd.sample.address.application.exception.AccountNotFoundException
 import htnk128.kotlin.ddd.sample.address.application.exception.AddressNotFoundException
-import htnk128.kotlin.ddd.sample.address.application.exception.CustomerNotFoundException
+import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountId
+import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountRepository
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Address
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressId
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressRepository
@@ -17,8 +19,6 @@ import htnk128.kotlin.ddd.sample.address.domain.model.address.Line2
 import htnk128.kotlin.ddd.sample.address.domain.model.address.PhoneNumber
 import htnk128.kotlin.ddd.sample.address.domain.model.address.StateOrRegion
 import htnk128.kotlin.ddd.sample.address.domain.model.address.ZipCode
-import htnk128.kotlin.ddd.sample.address.domain.model.customer.CustomerId
-import htnk128.kotlin.ddd.sample.address.domain.model.customer.CustomerRepository
 import htnk128.kotlin.ddd.sample.shared.UnexpectedException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -31,7 +31,7 @@ import reactor.core.publisher.Mono
 @Service
 class AddressService(
     private val addressRepository: AddressRepository,
-    private val customerRepository: CustomerRepository
+    private val accountRepository: AccountRepository
 ) {
 
     @Transactional(readOnly = true)
@@ -56,13 +56,13 @@ class AddressService(
     fun findAll(command: FindAllAddressCommand): Flux<AddressDTO> =
         Flux.fromIterable(
             addressRepository
-                .findAll(CustomerId.valueOf(command.customerId))
+                .findAll(AccountId.valueOf(command.accountId))
                 .map { it.toDTO() }
         )
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun create(command: CreateAddressCommand): Mono<AddressDTO> {
-        val customerId = CustomerId.valueOf(command.customerId)
+        val accountId = AccountId.valueOf(command.accountId)
         val fullName = FullName.valueOf(command.fullName)
         val zipCode = ZipCode.valueOf(command.zipCode)
         val stateOrRegion = StateOrRegion.valueOf(command.stateOrRegion)
@@ -70,13 +70,13 @@ class AddressService(
         val line2 = command.line2?.let { Line2.valueOf(it) }
         val phoneNumber = PhoneNumber.valueOf(command.phoneNumber)
 
-        val customer = customerRepository.find(customerId) ?: throw CustomerNotFoundException(customerId)
+        val account = accountRepository.find(accountId) ?: throw AccountNotFoundException(accountId)
 
         return Mono.just(
             Address
                 .create(
                     addressRepository.nextAddressId(),
-                    customer.customerId,
+                    account.accountId,
                     fullName,
                     zipCode,
                     stateOrRegion,
@@ -130,7 +130,7 @@ class AddressService(
     private fun Address.toDTO(): AddressDTO =
         AddressDTO(
             addressId.id(),
-            customerId.id(),
+            accountId.id(),
             fullName.toValue(),
             zipCode.toValue(),
             stateOrRegion.toValue(),

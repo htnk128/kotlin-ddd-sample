@@ -65,13 +65,13 @@ class AddressController(private val addressService: AddressService) {
             (ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse::class))
         ]
     )
-    @ApiOperation("顧客のすべての住所を取得する")
+    @ApiOperation("アカウントのすべての住所を取得する")
     @GetMapping("")
     fun findAll(
         @ModelAttribute request: AddressFindAllRequest
     ): Mono<AddressResponses> =
         addressService.findAll(
-            FindAllAddressCommand(request.customerId)
+            FindAllAddressCommand(request.accountId)
         )
             .map { it.toResponse() }
             .collect(Collectors.toList())
@@ -93,7 +93,7 @@ class AddressController(private val addressService: AddressService) {
     ): Mono<AddressResponse> =
         addressService.create(
             CreateAddressCommand(
-                request.customerId,
+                request.accountId,
                 request.fullName,
                 request.zipCode,
                 request.stateOrRegion,

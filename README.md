@@ -8,9 +8,9 @@ Samples of DDD using kotlin
 
 ## Run Application
 
-### Customer
+### Account
 ``` bash
-$ gradle customer:bootRun
+$ gradle account:bootRun
 ```
 
 ### Address
