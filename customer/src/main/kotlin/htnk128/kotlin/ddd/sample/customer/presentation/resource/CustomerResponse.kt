@@ -24,15 +24,19 @@ data class CustomerResponse(
     )
     val email: String,
     @ApiModelProperty(
-        value = "顧客の作成日時", example = "1576120910973", required = true, position = 5
+        value = "顧客のパスワード", required = true, position = 5
+    )
+    val password: String,
+    @ApiModelProperty(
+        value = "顧客の作成日時", example = "1576120910973", required = true, position = 6
     )
     val createdAt: Long,
     @ApiModelProperty(
-        value = "顧客の削除日時", example = "1576120910973", required = false, position = 6
+        value = "顧客の削除日時", example = "1576120910973", required = false, position = 7
     )
     val deletedAt: Long?,
     @ApiModelProperty(
-        value = "顧客の更新日時", example = "1576120910973", required = true, position = 7
+        value = "顧客の更新日時", example = "1576120910973", required = true, position = 8
     )
     val updatedAt: Long
 ) {
@@ -45,6 +49,7 @@ data class CustomerResponse(
                 dto.name,
                 dto.namePronunciation,
                 dto.email,
+                dto.password,
                 dto.createdAt,
                 dto.deletedAt,
                 dto.updatedAt

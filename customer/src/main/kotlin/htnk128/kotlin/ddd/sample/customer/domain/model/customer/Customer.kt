@@ -15,6 +15,7 @@ class Customer(
     val name: Name,
     val namePronunciation: NamePronunciation,
     val email: Email,
+    val password: Password,
     val createdAt: Instant,
     val deletedAt: Instant? = null,
     val updatedAt: Instant
@@ -30,7 +31,7 @@ class Customer(
     /**
      * 顧客を更新する。
      *
-     * 氏名または会社名、発音、メールアドレスを更新可能で、すべて任意指定が可能であり指定しなかった場合は現在の値のままとなる。
+     * 氏名または会社名、発音、メールアドレス、パスワードを更新可能で、すべて任意指定が可能であり指定しなかった場合は現在の値のままとなる。
      * 更新後にイベント([CustomerUpdated])を生成する。
      *
      * また、この顧客が削除されている場合には例外となる。
@@ -41,7 +42,8 @@ class Customer(
     fun update(
         name: Name?,
         namePronunciation: NamePronunciation?,
-        email: Email?
+        email: Email?,
+        password: Password?
     ): Customer {
         if (isDeleted) throw CustomerInvalidDataStateException("Customer has been deleted.")
 
@@ -50,6 +52,7 @@ class Customer(
             name = name ?: this.name,
             namePronunciation = namePronunciation ?: this.namePronunciation,
             email = email ?: this.email,
+            password = password ?: this.password,
             createdAt = this.createdAt,
             updatedAt = Instant.now()
         )
@@ -72,6 +75,7 @@ class Customer(
             name = name,
             namePronunciation = namePronunciation,
             email = email,
+            password = password,
             createdAt = createdAt,
             deletedAt = this,
             updatedAt = this
@@ -112,7 +116,7 @@ class Customer(
         /**
          * 顧客を作成する。
          *
-         * 名前、発音、メールアドレスすべての項目が必須指定となる。
+         * 名前、発音、メールアドレス、パスワードすべての項目が必須指定となる。
          *
          * また、作成後にイベント([CustomerCreated])を生成する。
          *
@@ -122,13 +126,15 @@ class Customer(
             customerId: CustomerId,
             name: Name,
             namePronunciation: NamePronunciation,
-            email: Email
+            email: Email,
+            password: Password
         ): Customer = with(Instant.now()) {
             Customer(
                 customerId,
                 name,
                 namePronunciation,
                 email,
+                password,
                 createdAt = this,
                 updatedAt = this
             )

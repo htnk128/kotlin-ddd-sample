@@ -6,6 +6,7 @@ import htnk128.kotlin.ddd.sample.customer.domain.model.customer.CustomerReposito
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.Email
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.Name
 import htnk128.kotlin.ddd.sample.customer.domain.model.customer.NamePronunciation
+import htnk128.kotlin.ddd.sample.customer.domain.model.customer.Password
 import htnk128.kotlin.ddd.sample.shared.infrastructure.persistence.ExposedTable
 import java.time.Instant
 import org.jetbrains.exposed.sql.Column
@@ -43,6 +44,7 @@ class CustomerExposedRepository : CustomerRepository {
             it[name] = customer.name.toValue()
             it[namePronunciation] = customer.namePronunciation.toValue()
             it[email] = customer.email.toValue()
+            it[password] = customer.password.toValue()
             it[createdAt] = customer.createdAt
             it[deletedAt] = customer.deletedAt
             it[updatedAt] = customer.updatedAt
@@ -54,6 +56,7 @@ class CustomerExposedRepository : CustomerRepository {
             it[name] = customer.name.toValue()
             it[namePronunciation] = customer.namePronunciation.toValue()
             it[email] = customer.email.toValue()
+            it[password] = customer.password.toValue()
             it[updatedAt] = customer.updatedAt
         }
 
@@ -69,6 +72,7 @@ class CustomerExposedRepository : CustomerRepository {
             Name.valueOf(this[CustomerTable.name]),
             NamePronunciation.valueOf(this[CustomerTable.namePronunciation]),
             Email.valueOf(this[CustomerTable.email]),
+            Password.from(this[CustomerTable.password]),
             this[CustomerTable.createdAt],
             this[CustomerTable.deletedAt],
             this[CustomerTable.updatedAt]
@@ -81,6 +85,7 @@ private object CustomerTable : ExposedTable<Customer>("customer") {
     val name: Column<String> = varchar("name", length = 100)
     val namePronunciation: Column<String> = varchar("name_pronunciation", length = 100)
     val email: Column<String> = varchar("email", length = 100)
+    val password: Column<String> = varchar("password", length = 64)
     val createdAt: Column<Instant> = instant("created_at")
     val deletedAt: Column<Instant?> = instant("deleted_at").nullable()
     val updatedAt: Column<Instant> = instant("updated_at")

@@ -101,7 +101,8 @@ class CustomerController(private val customerService: CustomerService) {
             CreateCustomerCommand(
                 request.name,
                 request.namePronunciation,
-                request.email
+                request.email,
+                request.password
             )
         )
             .map { it.toResponse() }
@@ -127,7 +128,8 @@ class CustomerController(private val customerService: CustomerService) {
                 customerId,
                 request.name,
                 request.namePronunciation,
-                request.email
+                request.email,
+                request.password
             )
         )
             .map { it.toResponse() }

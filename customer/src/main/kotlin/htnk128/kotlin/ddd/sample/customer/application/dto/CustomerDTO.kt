@@ -10,6 +10,7 @@ data class CustomerDTO(
     val name: String,
     val namePronunciation: String,
     val email: String,
+    val password: String,
     val createdAt: Long,
     val deletedAt: Long?,
     val updatedAt: Long
