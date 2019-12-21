@@ -136,7 +136,7 @@ class AccountController(private val accountService: AccountService) {
 
     @ApiResponses(
         value = [
-            (ApiResponse(code = 204, message = "No Content", response = Unit::class)),
+            (ApiResponse(code = 200, message = "OK", response = AccountResponse::class)),
             (ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse::class)),
             (ApiResponse(code = 404, message = "Not Found", response = ErrorResponse::class)),
             (ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse::class))
@@ -144,7 +144,6 @@ class AccountController(private val accountService: AccountService) {
     )
     @ApiOperation("アカウントを削除する")
     @DeleteMapping("/{accountId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(
         @ApiParam(value = "アカウントのID", required = true, example = "AC_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable accountId: String

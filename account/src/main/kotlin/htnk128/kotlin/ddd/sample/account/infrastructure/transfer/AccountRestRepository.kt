@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
 import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
@@ -20,7 +19,7 @@ class AddressRestRepository(
     override fun findAll(accountId: AccountId): Flux<Address> =
         addressClient.findAll(accountId)
 
-    override fun remove(address: Address): Mono<Unit> =
+    override fun remove(address: Address): Mono<Address> =
         addressClient.delete(address.addressId)
 }
 
@@ -41,14 +40,15 @@ class AddressClient(
             .flatMapIterable { it.data }
             .map { it.responseToModel() }
 
-    fun delete(addressId: AddressId): Mono<Unit> =
+    fun delete(addressId: AddressId): Mono<Address> =
         WebClient
             .builder()
             .build()
             .delete()
             .uri("$addressUrl/$addressId")
             .retrieve()
-            .bodyToMono()
+            .bodyToMono(AddressResponse::class.java)
+            .map { it.responseToModel() }
 
     private data class AddressResponses(
         val data: List<AddressResponse>

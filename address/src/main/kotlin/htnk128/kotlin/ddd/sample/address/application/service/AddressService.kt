@@ -44,11 +44,21 @@ class AddressService(
 
     @Transactional(readOnly = true)
     fun findAll(command: FindAllAddressCommand): Flux<AddressDTO> =
-        Flux.fromIterable(
-            addressRepository
-                .findAll(AccountId.valueOf(command.accountId))
-                .map { it.toDTO() }
-        )
+        accountRepository.find(AccountId.valueOf(command.accountId))
+            .map { account ->
+                if (account.deletedAt != null) {
+                    throw AccountNotFoundException(account.accountId)
+                }
+                account
+            }
+            .flux()
+            .flatMap { account ->
+                Flux.fromIterable(
+                    addressRepository
+                        .findAll(AccountId.valueOf(command.accountId))
+                        .map { it.toDTO() }
+                )
+            }
             .onErrorResume { Mono.error(it.error()) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])

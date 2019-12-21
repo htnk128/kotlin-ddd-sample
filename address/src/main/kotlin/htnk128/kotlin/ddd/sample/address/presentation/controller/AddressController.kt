@@ -135,7 +135,7 @@ class AddressController(private val addressService: AddressService) {
 
     @ApiResponses(
         value = [
-            (ApiResponse(code = 204, message = "No Content", response = Unit::class)),
+            (ApiResponse(code = 200, message = "OK", response = AddressResponse::class)),
             (ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse::class)),
             (ApiResponse(code = 404, message = "Not Found", response = ErrorResponse::class)),
             (ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse::class))
@@ -143,7 +143,6 @@ class AddressController(private val addressService: AddressService) {
     )
     @ApiOperation("住所を削除する")
     @DeleteMapping("/{addressId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(
         @ApiParam(value = "住所のID", required = true, example = "ADDR_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable addressId: String
