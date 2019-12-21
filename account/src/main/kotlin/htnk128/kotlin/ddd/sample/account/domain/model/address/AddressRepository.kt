@@ -11,5 +11,5 @@ interface AddressRepository {
 
     fun findAll(accountId: AccountId): Flux<Address>
 
-    fun remove(address: Address): Mono<Unit>
+    fun remove(address: Address): Mono<Address>
 }
