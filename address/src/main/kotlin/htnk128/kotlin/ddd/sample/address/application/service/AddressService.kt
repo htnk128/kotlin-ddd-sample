@@ -61,25 +61,26 @@ class AddressService(
         val line2 = command.line2?.let { Line2.valueOf(it) }
         val phoneNumber = PhoneNumber.valueOf(command.phoneNumber)
 
-        val account = accountRepository.find(accountId)
-            .takeIf { it.deletedAt == null }
-            ?: throw AccountNotFoundException(accountId)
+        return accountRepository.find(accountId)
+            .map { account ->
+                if (account.deletedAt != null) {
+                    throw AccountNotFoundException(account.accountId)
+                }
 
-        return Mono.just(
-            Address
-                .create(
-                    addressRepository.nextAddressId(),
-                    account.accountId,
-                    fullName,
-                    zipCode,
-                    stateOrRegion,
-                    line1,
-                    line2,
-                    phoneNumber
-                )
-                .also(addressRepository::add)
-                .toDTO()
-        )
+                Address
+                    .create(
+                        addressRepository.nextAddressId(),
+                        account.accountId,
+                        fullName,
+                        zipCode,
+                        stateOrRegion,
+                        line1,
+                        line2,
+                        phoneNumber
+                    )
+                    .also(addressRepository::add)
+                    .toDTO()
+            }
             .onErrorResume { Mono.error(it.error()) }
     }
 

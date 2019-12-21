@@ -4,55 +4,51 @@ import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountId
 import htnk128.kotlin.ddd.sample.account.domain.model.address.Address
 import htnk128.kotlin.ddd.sample.account.domain.model.address.AddressId
 import htnk128.kotlin.ddd.sample.account.domain.model.address.AddressRepository
-import java.net.URI
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpMethod
-import org.springframework.http.RequestEntity
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.bodyToMono
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 @Repository
 class AddressRestRepository(
     private val addressClient: AddressClient
 ) : AddressRepository {
 
-    override fun findAll(accountId: AccountId): List<Address> = addressClient.findAll(accountId)
+    override fun findAll(accountId: AccountId): Flux<Address> =
+        addressClient.findAll(accountId)
 
-    override fun remove(address: Address): Int = addressClient.delete(address.addressId)
+    override fun remove(address: Address): Mono<Unit> =
+        addressClient.delete(address.addressId)
 }
 
 @Component
 class AddressClient(
     @Value("\${api.address.url:http://localhost:8081/addresses}")
-    private val addressUrl: String,
-    private val restTemplate: RestTemplate
+    private val addressUrl: String
 ) {
 
-    fun findAll(accountId: AccountId): List<Address> = runCatching {
-        RequestEntity
-            .get(URI("$addressUrl?accountId=$accountId"))
+    fun findAll(accountId: AccountId): Flux<Address> =
+        WebClient
+            .builder()
             .build()
-            .run { restTemplate.exchange(this, AddressResponses::class.java) }
-            .takeIf { it.statusCode.is2xxSuccessful }
-            ?.body
-            ?.data
-            ?.map { it.responseToModel() }
-            ?: error("Address response status is not OK.")
-    }.getOrElse { emptyList() }
+            .get()
+            .uri("$addressUrl?accountId=$accountId")
+            .retrieve()
+            .bodyToMono(AddressResponses::class.java)
+            .flatMapIterable { it.data }
+            .map { it.responseToModel() }
 
-    fun delete(addressId: AddressId): Int = runCatching {
-        restTemplate.exchange(
-            URI("$addressUrl/$addressId"),
-            HttpMethod.DELETE,
-            HttpEntity.EMPTY,
-            String::class.java
-        )
-            .takeIf { it.statusCode.is2xxSuccessful }
-            ?.let { 1 }
-            ?: error("Address response status is not OK.")
-    }.getOrThrow()
+    fun delete(addressId: AddressId): Mono<Unit> =
+        WebClient
+            .builder()
+            .build()
+            .delete()
+            .uri("$addressUrl/$addressId")
+            .retrieve()
+            .bodyToMono()
 
     private data class AddressResponses(
         val data: List<AddressResponse>

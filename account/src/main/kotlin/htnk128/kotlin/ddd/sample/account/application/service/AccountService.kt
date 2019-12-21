@@ -91,10 +91,13 @@ class AccountService(
         val accountId = AccountId.valueOf(command.accountId)
 
         return lock(accountId)
-            .map { account ->
+            .flatMap { account ->
                 addressRepository.findAll(accountId)
-                    .forEach { addressRepository.remove(it) }
-
+                    .flatMap { addressRepository.remove(it) }
+                    .collectList()
+                    .map { account }
+            }
+            .map { account ->
                 account.delete()
                     .also { deleted -> accountRepository.remove(deleted) }
                     .toDTO()

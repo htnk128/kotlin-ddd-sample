@@ -17,9 +17,6 @@ logging:
   level:
     htnk128.kotlin.ddd.sample.account: INFO
     Exposed: INFO
-rest:
-  connect.timeout: 5000
-  read.timeout: 5000
 api:
   address:
     url: http://localhost:8081/addresses
