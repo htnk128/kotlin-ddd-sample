@@ -26,6 +26,8 @@ class ErrorAdvice {
         val status = HttpStatus.INTERNAL_SERVER_ERROR.value()
         val message = "internal server error."
 
+        logger.error(exception) { "type=$type, status=$status, message=$message" }
+
         return ResponseEntity
             .status(status)
             .body(errorResponse(type, status, message))
