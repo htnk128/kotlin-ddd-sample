@@ -6,10 +6,10 @@ import java.time.Instant
 /**
  * 住所([Address])の持ち主を表現する。
  */
-class Owner(
-    val accountId: AccountId,
+class AddressOwner(
+    val addressOwnerId: AddressOwnerId,
     private val deletedAt: Instant?
-) : ValueObject<Owner> {
+) : ValueObject<AddressOwner> {
 
     /**
      * この住所の持ち主が有効な場合に`true`を返す。
@@ -21,18 +21,18 @@ class Owner(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-        other as Owner
+        other as AddressOwner
         return sameValueAs(other)
     }
 
     override fun hashCode(): Int {
-        var result = accountId.hashCode()
+        var result = addressOwnerId.hashCode()
         result = 31 * result + deletedAt.hashCode()
         return result
     }
 
-    override fun sameValueAs(other: Owner): Boolean {
-        if (accountId != other.accountId) return false
+    override fun sameValueAs(other: AddressOwner): Boolean {
+        if (addressOwnerId != other.addressOwnerId) return false
         if (deletedAt != other.deletedAt) return false
         return true
     }

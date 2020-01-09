@@ -7,7 +7,7 @@ interface AddressRepository {
 
     fun find(addressId: AddressId, lock: Boolean = false): Address
 
-    fun findAll(accountId: AccountId): List<Address>
+    fun findAll(addressOwnerId: AddressOwnerId): List<Address>
 
     fun add(address: Address)
 

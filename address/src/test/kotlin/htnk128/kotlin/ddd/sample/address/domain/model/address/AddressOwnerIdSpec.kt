@@ -6,7 +6,7 @@ import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec
 import io.kotlintest.tables.row
 
-class AccountIdSpec : StringSpec({
+class AddressOwnerIdSpec : StringSpec({
 
     "正しい値の場合インスタンスを生成できる" {
         forall(
@@ -14,7 +14,7 @@ class AccountIdSpec : StringSpec({
             row("a_b-c-d-e"),
             row("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
         ) { value ->
-            AccountId.valueOf(value).id() shouldBe value
+            AddressOwnerId.valueOf(value).id() shouldBe value
         }
     }
 
@@ -25,7 +25,7 @@ class AccountIdSpec : StringSpec({
             row("あ")
         ) { value ->
             shouldThrow<AddressInvalidRequestException> {
-                AccountId.valueOf(value)
+                AddressOwnerId.valueOf(value)
             }
         }
     }

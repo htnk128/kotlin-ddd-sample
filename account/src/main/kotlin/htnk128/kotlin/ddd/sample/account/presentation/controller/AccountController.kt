@@ -6,7 +6,7 @@ import htnk128.kotlin.ddd.sample.account.application.command.FindAccountCommand
 import htnk128.kotlin.ddd.sample.account.application.command.FindAllAccountCommand
 import htnk128.kotlin.ddd.sample.account.application.command.UpdateAccountCommand
 import htnk128.kotlin.ddd.sample.account.application.dto.AccountDTO
-import htnk128.kotlin.ddd.sample.account.application.service.AccountService
+import htnk128.kotlin.ddd.sample.account.application.service.AccountApplicationService
 import htnk128.kotlin.ddd.sample.account.presentation.resource.AccountCreateRequest
 import htnk128.kotlin.ddd.sample.account.presentation.resource.AccountFindAllRequest
 import htnk128.kotlin.ddd.sample.account.presentation.resource.AccountResponse
@@ -35,7 +35,7 @@ import reactor.core.publisher.Mono
 @Api("アカウントを管理するAPI", tags = ["Accounts"])
 @RestController
 @RequestMapping("/accounts")
-class AccountController(private val accountService: AccountService) {
+class AccountController(private val accountApplicationService: AccountApplicationService) {
 
     @ApiResponses(
         value = [
@@ -51,7 +51,7 @@ class AccountController(private val accountService: AccountService) {
         @ApiParam(value = "アカウントのID", required = true, example = "AC_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable accountId: String
     ): Mono<AccountResponse> =
-        accountService.find(
+        accountApplicationService.find(
             FindAccountCommand(accountId)
         )
             .map { it.toResponse() }
@@ -69,7 +69,7 @@ class AccountController(private val accountService: AccountService) {
     fun findAll(
         @ModelAttribute request: AccountFindAllRequest
     ): Mono<AccountResponses> =
-        accountService.findAll(
+        accountApplicationService.findAll(
             FindAllAccountCommand(
                 request.limit,
                 request.offset
@@ -97,7 +97,7 @@ class AccountController(private val accountService: AccountService) {
     fun create(
         @RequestBody request: AccountCreateRequest
     ): Mono<AccountResponse> =
-        accountService.create(
+        accountApplicationService.create(
             CreateAccountCommand(
                 request.name,
                 request.namePronunciation,
@@ -123,7 +123,7 @@ class AccountController(private val accountService: AccountService) {
         @PathVariable accountId: String,
         @RequestBody request: AccountUpdateRequest
     ): Mono<AccountResponse> =
-        accountService.update(
+        accountApplicationService.update(
             UpdateAccountCommand(
                 accountId,
                 request.name,
@@ -148,7 +148,7 @@ class AccountController(private val accountService: AccountService) {
         @ApiParam(value = "アカウントのID", required = true, example = "AC_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable accountId: String
     ): Mono<AccountResponse> =
-        accountService.delete(
+        accountApplicationService.delete(
             DeleteAccountCommand(accountId)
         )
             .map { it.toResponse() }

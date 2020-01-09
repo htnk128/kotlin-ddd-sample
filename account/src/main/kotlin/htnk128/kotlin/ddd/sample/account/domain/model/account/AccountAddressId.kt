@@ -1,20 +1,20 @@
-package htnk128.kotlin.ddd.sample.account.domain.model.address
+package htnk128.kotlin.ddd.sample.account.domain.model.account
 
 import htnk128.kotlin.ddd.sample.dddcore.domain.Identity
 
 /**
- * アカウントのIDを表現する。
+ * アカウントの住所のIDを表現する。
  *
  * 64桁までの一意な文字列をもつ。
  */
-class AddressId private constructor(private val value: String) : Identity<AddressId, String> {
+class AccountAddressId private constructor(private val value: String) : Identity<AccountAddressId, String> {
 
     override fun id(): String = value
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-        other as AddressId
+        other as AccountAddressId
         return sameValueAs(other)
     }
 
@@ -22,7 +22,7 @@ class AddressId private constructor(private val value: String) : Identity<Addres
 
     override fun toString(): String = value
 
-    override fun sameValueAs(other: AddressId): Boolean = value == other.value
+    override fun sameValueAs(other: AccountAddressId): Boolean = value == other.value
 
     companion object {
 
@@ -36,14 +36,14 @@ class AddressId private constructor(private val value: String) : Identity<Addres
          * 指定可能な値は、英数字、ハイフン、アンダースコアとなる。
          * この条件に違反した値を指定した場合には例外となる。
          *
-         * @throws AddressInvalidRequestException 条件に違反した値を指定した場合
+         * @throws AccountInvalidRequestException 条件に違反した値を指定した場合
          * @return 指定された値を持つ住所のID
          */
-        fun valueOf(value: String): AddressId = value
+        fun valueOf(value: String): AccountAddressId = value
             .takeIf { LENGTH_RANGE.contains(it.length) && PATTERN.matches(it) }
-            ?.let { AddressId(it) }
-            ?: throw AddressInvalidRequestException(
-                "Address id must be 64 characters or less and alphanumeric, hyphen, underscore."
+            ?.let { AccountAddressId(it) }
+            ?: throw AccountInvalidRequestException(
+                "Account address id must be 64 characters or less and alphanumeric, hyphen, underscore."
             )
     }
 }

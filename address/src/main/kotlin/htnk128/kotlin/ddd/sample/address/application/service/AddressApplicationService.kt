@@ -6,18 +6,18 @@ import htnk128.kotlin.ddd.sample.address.application.command.FindAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.command.FindAllAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.command.UpdateAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.dto.AddressDTO
-import htnk128.kotlin.ddd.sample.address.domain.model.address.AccountId
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Address
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressId
+import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerId
+import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerNotFoundException
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressRepository
 import htnk128.kotlin.ddd.sample.address.domain.model.address.FullName
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Line1
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Line2
-import htnk128.kotlin.ddd.sample.address.domain.model.address.OwnerNotFoundException
 import htnk128.kotlin.ddd.sample.address.domain.model.address.PhoneNumber
 import htnk128.kotlin.ddd.sample.address.domain.model.address.StateOrRegion
 import htnk128.kotlin.ddd.sample.address.domain.model.address.ZipCode
-import htnk128.kotlin.ddd.sample.address.domain.service.OwnerDomainService
+import htnk128.kotlin.ddd.sample.address.domain.service.AddressOwnerDomainService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
@@ -29,13 +29,15 @@ import reactor.core.publisher.Mono
 @Service
 class AddressApplicationService(
     private val addressRepository: AddressRepository,
-    private val ownerDomainService: OwnerDomainService
+    private val addressOwnerDomainService: AddressOwnerDomainService
 ) {
 
     @Transactional(readOnly = true)
-    fun find(command: FindAddressCommand): Mono<AddressDTO> =
+    fun find(command: FindAddressCommand): Mono<AddressDTO> = runCatching {
         Mono.just(addressRepository.find(AddressId.valueOf(command.addressId)).toDTO())
             .onErrorResume { Mono.error(it.error()) }
+    }
+        .getOrElse { Mono.error(it.error()) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun lock(addressId: AddressId): Mono<Address> =
@@ -43,26 +45,23 @@ class AddressApplicationService(
             .onErrorResume { Mono.error(it.error()) }
 
     @Transactional(readOnly = true)
-    fun findAll(command: FindAllAddressCommand): Flux<AddressDTO> =
-        ownerDomainService.find(AccountId.valueOf(command.accountId))
-            .map { owner ->
-                if (!owner.isAvailable) throw OwnerNotFoundException(owner.accountId)
-
-                owner
-            }
+    fun findAll(command: FindAllAddressCommand): Flux<AddressDTO> = runCatching {
+        addressOwnerDomainService.findOwner(AddressOwnerId.valueOf(command.addressOwnerId))
             .flux()
-            .flatMap { account ->
+            .flatMap { _ ->
                 Flux.fromIterable(
                     addressRepository
-                        .findAll(AccountId.valueOf(command.accountId))
+                        .findAll(AddressOwnerId.valueOf(command.addressOwnerId))
                         .map { it.toDTO() }
                 )
             }
             .onErrorResume { Mono.error(it.error()) }
+    }
+        .getOrElse { Flux.error(it.error()) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun create(command: CreateAddressCommand): Mono<AddressDTO> {
-        val accountId = AccountId.valueOf(command.accountId)
+    fun create(command: CreateAddressCommand): Mono<AddressDTO> = runCatching {
+        val addressOwnerId = AddressOwnerId.valueOf(command.addressOwnerId)
         val fullName = FullName.valueOf(command.fullName)
         val zipCode = ZipCode.valueOf(command.zipCode)
         val stateOrRegion = StateOrRegion.valueOf(command.stateOrRegion)
@@ -70,14 +69,14 @@ class AddressApplicationService(
         val line2 = command.line2?.let { Line2.valueOf(it) }
         val phoneNumber = PhoneNumber.valueOf(command.phoneNumber)
 
-        return ownerDomainService.find(accountId)
+        return addressOwnerDomainService.findOwner(addressOwnerId)
             .map { owner ->
-                if (!owner.isAvailable) throw OwnerNotFoundException(owner.accountId)
+                if (!owner.isAvailable) throw AddressOwnerNotFoundException(owner.addressOwnerId)
 
                 Address
                     .create(
                         addressRepository.nextAddressId(),
-                        owner.accountId,
+                        owner.addressOwnerId,
                         fullName,
                         zipCode,
                         stateOrRegion,
@@ -90,9 +89,10 @@ class AddressApplicationService(
             }
             .onErrorResume { Mono.error(it.error()) }
     }
+        .getOrElse { Mono.error(it.error()) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun update(command: UpdateAddressCommand): Mono<AddressDTO> {
+    fun update(command: UpdateAddressCommand): Mono<AddressDTO> = runCatching {
         val addressId = AddressId.valueOf(command.addressId)
         val fullName = command.fullName?.let { FullName.valueOf(it) }
         val zipCode = command.zipCode?.let { ZipCode.valueOf(it) }
@@ -109,9 +109,10 @@ class AddressApplicationService(
             }
             .onErrorResume { Mono.error(it.error()) }
     }
+        .getOrElse { Mono.error(it.error()) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun delete(command: DeleteAddressCommand): Mono<AddressDTO> {
+    fun delete(command: DeleteAddressCommand): Mono<AddressDTO> = runCatching {
         val addressId = AddressId.valueOf(command.addressId)
 
         return lock(addressId)
@@ -122,6 +123,7 @@ class AddressApplicationService(
             }
             .onErrorResume { Mono.error(it.error()) }
     }
+        .getOrElse { Mono.error(it.error()) }
 
     private companion object {
 

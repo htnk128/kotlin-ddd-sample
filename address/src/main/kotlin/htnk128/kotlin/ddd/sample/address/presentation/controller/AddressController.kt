@@ -71,7 +71,7 @@ class AddressController(private val addressApplicationService: AddressApplicatio
         @ModelAttribute request: AddressFindAllRequest
     ): Mono<AddressResponses> =
         addressApplicationService.findAll(
-            FindAllAddressCommand(request.accountId)
+            FindAllAddressCommand(request.addressOwnerId)
         )
             .map { it.toResponse() }
             .collect(Collectors.toList())
@@ -93,7 +93,7 @@ class AddressController(private val addressApplicationService: AddressApplicatio
     ): Mono<AddressResponse> =
         addressApplicationService.create(
             CreateAddressCommand(
-                request.accountId,
+                request.addressOwnerId,
                 request.fullName,
                 request.zipCode,
                 request.stateOrRegion,
