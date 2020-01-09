@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountId
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec

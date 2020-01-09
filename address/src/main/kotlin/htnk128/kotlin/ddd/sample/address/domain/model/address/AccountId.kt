@@ -1,4 +1,4 @@
-package htnk128.kotlin.ddd.sample.address.domain.model.account
+package htnk128.kotlin.ddd.sample.address.domain.model.address
 
 import htnk128.kotlin.ddd.sample.dddcore.domain.Identity
 
@@ -36,13 +36,13 @@ class AccountId private constructor(private val value: String) : Identity<Accoun
          * 指定可能な値は、英数字、ハイフン、アンダースコアとなる。
          * この条件に違反した値を指定した場合には例外となる。
          *
-         * @throws AccountInvalidRequestException 条件に違反した値を指定した場合
+         * @throws AddressInvalidRequestException 条件に違反した値を指定した場合
          * @return 指定された値を持つアカウントのID
          */
         fun valueOf(value: String): AccountId = value
             .takeIf { LENGTH_RANGE.contains(it.length) && PATTERN.matches(it) }
             ?.let { AccountId(it) }
-            ?: throw AccountInvalidRequestException(
+            ?: throw AddressInvalidRequestException(
                 "Account id must be 64 characters or less and alphanumeric, hyphen, underscore."
             )
     }

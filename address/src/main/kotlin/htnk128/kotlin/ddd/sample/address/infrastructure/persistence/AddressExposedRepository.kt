@@ -1,6 +1,6 @@
 package htnk128.kotlin.ddd.sample.address.infrastructure.persistence
 
-import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountId
+import htnk128.kotlin.ddd.sample.address.domain.model.address.AccountId
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Address
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressId
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressNotFoundException

@@ -1,7 +1,5 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountId
-
 /**
  * 住所を操作するためのリポジトリを表現する。
  */

@@ -6,18 +6,18 @@ import htnk128.kotlin.ddd.sample.address.application.command.FindAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.command.FindAllAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.command.UpdateAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.dto.AddressDTO
-import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountId
-import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountNotFoundException
-import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountRepository
+import htnk128.kotlin.ddd.sample.address.domain.model.address.AccountId
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Address
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressId
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressRepository
 import htnk128.kotlin.ddd.sample.address.domain.model.address.FullName
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Line1
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Line2
+import htnk128.kotlin.ddd.sample.address.domain.model.address.OwnerNotFoundException
 import htnk128.kotlin.ddd.sample.address.domain.model.address.PhoneNumber
 import htnk128.kotlin.ddd.sample.address.domain.model.address.StateOrRegion
 import htnk128.kotlin.ddd.sample.address.domain.model.address.ZipCode
+import htnk128.kotlin.ddd.sample.address.domain.service.OwnerDomainService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
@@ -27,9 +27,9 @@ import reactor.core.publisher.Mono
  * 住所([Address])ドメインの操作を提供するアプリケーションサービス。
  */
 @Service
-class AddressService(
+class AddressApplicationService(
     private val addressRepository: AddressRepository,
-    private val accountRepository: AccountRepository
+    private val ownerDomainService: OwnerDomainService
 ) {
 
     @Transactional(readOnly = true)
@@ -44,12 +44,11 @@ class AddressService(
 
     @Transactional(readOnly = true)
     fun findAll(command: FindAllAddressCommand): Flux<AddressDTO> =
-        accountRepository.find(AccountId.valueOf(command.accountId))
-            .map { account ->
-                if (account.deletedAt != null) {
-                    throw AccountNotFoundException(account.accountId)
-                }
-                account
+        ownerDomainService.find(AccountId.valueOf(command.accountId))
+            .map { owner ->
+                if (!owner.isAvailable) throw OwnerNotFoundException(owner.accountId)
+
+                owner
             }
             .flux()
             .flatMap { account ->
@@ -71,16 +70,14 @@ class AddressService(
         val line2 = command.line2?.let { Line2.valueOf(it) }
         val phoneNumber = PhoneNumber.valueOf(command.phoneNumber)
 
-        return accountRepository.find(accountId)
-            .map { account ->
-                if (account.deletedAt != null) {
-                    throw AccountNotFoundException(account.accountId)
-                }
+        return ownerDomainService.find(accountId)
+            .map { owner ->
+                if (!owner.isAvailable) throw OwnerNotFoundException(owner.accountId)
 
                 Address
                     .create(
                         addressRepository.nextAddressId(),
-                        account.accountId,
+                        owner.accountId,
                         fullName,
                         zipCode,
                         stateOrRegion,
