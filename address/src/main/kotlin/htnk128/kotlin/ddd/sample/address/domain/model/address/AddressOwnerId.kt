@@ -1,20 +1,20 @@
-package htnk128.kotlin.ddd.sample.address.domain.model.account
+package htnk128.kotlin.ddd.sample.address.domain.model.address
 
 import htnk128.kotlin.ddd.sample.dddcore.domain.Identity
 
 /**
- * アカウントのIDを表現する。
+ * 住所の持ち主のIDを表現する。
  *
  * 64桁までの一意な文字列をもつ。
  */
-class AccountId private constructor(private val value: String) : Identity<AccountId, String> {
+class AddressOwnerId private constructor(private val value: String) : Identity<AddressOwnerId, String> {
 
     override fun id(): String = value
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
-        other as AccountId
+        other as AddressOwnerId
         return sameValueAs(other)
     }
 
@@ -22,7 +22,7 @@ class AccountId private constructor(private val value: String) : Identity<Accoun
 
     override fun toString(): String = value
 
-    override fun sameValueAs(other: AccountId): Boolean = value == other.value
+    override fun sameValueAs(other: AddressOwnerId): Boolean = value == other.value
 
     companion object {
 
@@ -36,14 +36,14 @@ class AccountId private constructor(private val value: String) : Identity<Accoun
          * 指定可能な値は、英数字、ハイフン、アンダースコアとなる。
          * この条件に違反した値を指定した場合には例外となる。
          *
-         * @throws AccountInvalidRequestException 条件に違反した値を指定した場合
+         * @throws AddressInvalidRequestException 条件に違反した値を指定した場合
          * @return 指定された値を持つアカウントのID
          */
-        fun valueOf(value: String): AccountId = value
+        fun valueOf(value: String): AddressOwnerId = value
             .takeIf { LENGTH_RANGE.contains(it.length) && PATTERN.matches(it) }
-            ?.let { AccountId(it) }
-            ?: throw AccountInvalidRequestException(
-                "Account id must be 64 characters or less and alphanumeric, hyphen, underscore."
+            ?.let { AddressOwnerId(it) }
+            ?: throw AddressInvalidRequestException(
+                "Account owner id must be 64 characters or less and alphanumeric, hyphen, underscore."
             )
     }
 }

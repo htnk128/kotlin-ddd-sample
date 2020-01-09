@@ -14,7 +14,7 @@ import htnk128.kotlin.ddd.sample.account.domain.model.account.Email
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Name
 import htnk128.kotlin.ddd.sample.account.domain.model.account.NamePronunciation
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Password
-import htnk128.kotlin.ddd.sample.account.domain.model.address.AddressRepository
+import htnk128.kotlin.ddd.sample.account.domain.model.service.AccountAddressDomainService
 import java.util.stream.Collectors
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -25,15 +25,17 @@ import reactor.core.publisher.Mono
  * アカウント([Account])ドメインの操作を提供するアプリケーションサービス。
  */
 @Service
-class AccountService(
+class AccountApplicationService(
     private val accountRepository: AccountRepository,
-    private val addressRepository: AddressRepository
+    private val accountAddressDomainService: AccountAddressDomainService
 ) {
 
     @Transactional(readOnly = true)
-    fun find(command: FindAccountCommand): Mono<AccountDTO> =
+    fun find(command: FindAccountCommand): Mono<AccountDTO> = runCatching {
         Mono.just(accountRepository.find(AccountId.valueOf(command.accountId)).toDTO())
             .onErrorResume { Mono.error(it.error()) }
+    }
+        .getOrElse { Mono.error(it.error()) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun lock(accountId: AccountId): Mono<Account> =
@@ -51,33 +53,32 @@ class AccountService(
             .onErrorResume { Mono.error(it.error()) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun create(command: CreateAccountCommand): Mono<AccountDTO> {
+    fun create(command: CreateAccountCommand): Mono<AccountDTO> = runCatching {
         val accountId = accountRepository.nextAccountId()
+        val name = Name.valueOf(command.name)
+        val namePronunciation = NamePronunciation.valueOf(command.namePronunciation)
+        val email = Email.valueOf(command.email)
+        val password = Password.valueOf(command.password, accountId)
 
         return Mono.just(
             Account
-                .create(
-                    accountId,
-                    Name.valueOf(command.name),
-                    NamePronunciation.valueOf(command.namePronunciation),
-                    Email.valueOf(command.email),
-                    Password.valueOf(command.password, accountId)
-                )
+                .create(accountId, name, namePronunciation, email, password)
                 .also(accountRepository::add)
                 .toDTO()
         )
             .onErrorResume { Mono.error(it.error()) }
     }
+        .getOrElse { Mono.error(it.error()) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun update(command: UpdateAccountCommand): Mono<AccountDTO> {
+    fun update(command: UpdateAccountCommand): Mono<AccountDTO> = runCatching {
         val accountId = AccountId.valueOf(command.accountId)
         val name = command.name?.let { Name.valueOf(it) }
         val namePronunciation = command.namePronunciation?.let { NamePronunciation.valueOf(it) }
         val email = command.email?.let { Email.valueOf(it) }
         val password = command.password?.let { Password.valueOf(it, accountId) }
 
-        return lock(accountId)
+        lock(accountId)
             .map { account ->
                 account.update(name, namePronunciation, email, password)
                     .also { updated -> accountRepository.set(updated) }
@@ -85,15 +86,17 @@ class AccountService(
             }
             .onErrorResume { Mono.error(it.error()) }
     }
+        .getOrElse { Mono.error(it.error()) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun delete(command: DeleteAccountCommand): Mono<AccountDTO> {
+    fun delete(command: DeleteAccountCommand): Mono<AccountDTO> = runCatching {
         val accountId = AccountId.valueOf(command.accountId)
 
         return lock(accountId)
             .flatMap { account ->
-                addressRepository.findAll(accountId)
-                    .flatMap { addressRepository.remove(it) }
+                accountAddressDomainService.findAll(accountId)
+                    .filter { it.isAvailable }
+                    .flatMap { address -> accountAddressDomainService.remove(address.accountAddressId) }
                     .collectList()
                     .map { account }
             }
@@ -104,6 +107,7 @@ class AccountService(
             }
             .onErrorResume { Mono.error(it.error()) }
     }
+        .getOrElse { Mono.error(it.error()) }
 
     private companion object {
 

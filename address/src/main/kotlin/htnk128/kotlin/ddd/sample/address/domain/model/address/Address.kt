@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.address.domain.model.account.AccountId
 import htnk128.kotlin.ddd.sample.dddcore.domain.Entity
 import java.time.Instant
 
@@ -9,12 +8,10 @@ import java.time.Instant
  *
  * 氏名または会社名、郵便番号などの情報を指定して作成することが可能である。
  * また、住所の作成後は更新、削除が可能である。
- *
- * なお、この住所はアカウントのID[accountId]と紐づけが行われる。
  */
 class Address(
     val addressId: AddressId,
-    val accountId: AccountId,
+    val addressOwnerId: AddressOwnerId,
     val fullName: FullName,
     val zipCode: ZipCode,
     val stateOrRegion: StateOrRegion,
@@ -57,7 +54,7 @@ class Address(
 
         return Address(
             addressId,
-            accountId,
+            addressOwnerId,
             fullName = fullName ?: this.fullName,
             zipCode = zipCode ?: this.zipCode,
             stateOrRegion = stateOrRegion ?: this.stateOrRegion,
@@ -83,7 +80,7 @@ class Address(
     fun delete(): Address = if (isDeleted) this else with(Instant.now()) {
         Address(
             addressId,
-            accountId,
+            addressOwnerId,
             fullName = fullName,
             zipCode = zipCode,
             stateOrRegion = stateOrRegion,
@@ -138,7 +135,7 @@ class Address(
          */
         fun create(
             addressId: AddressId,
-            accountId: AccountId,
+            addressOwnerId: AddressOwnerId,
             fullName: FullName,
             zipCode: ZipCode,
             stateOrRegion: StateOrRegion,
@@ -148,7 +145,7 @@ class Address(
         ): Address = with(Instant.now()) {
             Address(
                 addressId,
-                accountId,
+                addressOwnerId,
                 fullName,
                 zipCode,
                 stateOrRegion,

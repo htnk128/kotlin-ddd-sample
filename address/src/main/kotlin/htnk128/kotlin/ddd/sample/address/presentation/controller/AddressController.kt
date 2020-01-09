@@ -6,7 +6,7 @@ import htnk128.kotlin.ddd.sample.address.application.command.FindAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.command.FindAllAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.command.UpdateAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.dto.AddressDTO
-import htnk128.kotlin.ddd.sample.address.application.service.AddressService
+import htnk128.kotlin.ddd.sample.address.application.service.AddressApplicationService
 import htnk128.kotlin.ddd.sample.address.presentation.resource.AddressCreateRequest
 import htnk128.kotlin.ddd.sample.address.presentation.resource.AddressFindAllRequest
 import htnk128.kotlin.ddd.sample.address.presentation.resource.AddressResponse
@@ -36,7 +36,7 @@ import reactor.core.publisher.Mono
 @Api("住所を管理するAPI", tags = ["Addresses"])
 @RestController
 @RequestMapping("/addresses")
-class AddressController(private val addressService: AddressService) {
+class AddressController(private val addressApplicationService: AddressApplicationService) {
 
     @ApiResponses(
         value = [
@@ -52,7 +52,7 @@ class AddressController(private val addressService: AddressService) {
         @ApiParam(value = "住所のID", required = true, example = "ADDR_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable addressId: String
     ): Mono<AddressResponse> =
-        addressService.find(
+        addressApplicationService.find(
             FindAddressCommand(addressId)
         )
             .map { it.toResponse() }
@@ -70,8 +70,8 @@ class AddressController(private val addressService: AddressService) {
     fun findAll(
         @ModelAttribute request: AddressFindAllRequest
     ): Mono<AddressResponses> =
-        addressService.findAll(
-            FindAllAddressCommand(request.accountId)
+        addressApplicationService.findAll(
+            FindAllAddressCommand(request.addressOwnerId)
         )
             .map { it.toResponse() }
             .collect(Collectors.toList())
@@ -91,9 +91,9 @@ class AddressController(private val addressService: AddressService) {
     fun create(
         @RequestBody request: AddressCreateRequest
     ): Mono<AddressResponse> =
-        addressService.create(
+        addressApplicationService.create(
             CreateAddressCommand(
-                request.accountId,
+                request.addressOwnerId,
                 request.fullName,
                 request.zipCode,
                 request.stateOrRegion,
@@ -120,7 +120,7 @@ class AddressController(private val addressService: AddressService) {
         @PathVariable addressId: String,
         @RequestBody request: AddressUpdateRequest
     ): Mono<AddressResponse> =
-        addressService.update(
+        addressApplicationService.update(
             UpdateAddressCommand(
                 addressId,
                 request.fullName,
@@ -147,7 +147,7 @@ class AddressController(private val addressService: AddressService) {
         @ApiParam(value = "住所のID", required = true, example = "ADDR_c5fb2cec-a77c-4886-b997-ffc2ef060e78")
         @PathVariable addressId: String
     ): Mono<AddressResponse> =
-        addressService.delete(
+        addressApplicationService.delete(
             DeleteAddressCommand(addressId)
         )
             .map { it.toResponse() }
