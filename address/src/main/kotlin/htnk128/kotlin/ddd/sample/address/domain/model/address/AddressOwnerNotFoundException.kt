@@ -1,7 +1,7 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
 /**
- * 住所の持ち主([AddressOwner])のドメインモデルが存在しない場合に発生する例外。
+ * 住所の持ち主のドメインモデルが存在しない場合に発生する例外。
  */
 class AddressOwnerNotFoundException(
     addressOwnerId: AddressOwnerId,

@@ -17,7 +17,7 @@ import htnk128.kotlin.ddd.sample.address.domain.model.address.Line2
 import htnk128.kotlin.ddd.sample.address.domain.model.address.PhoneNumber
 import htnk128.kotlin.ddd.sample.address.domain.model.address.StateOrRegion
 import htnk128.kotlin.ddd.sample.address.domain.model.address.ZipCode
-import htnk128.kotlin.ddd.sample.address.domain.service.AddressOwnerDomainService
+import htnk128.kotlin.ddd.sample.address.domain.service.address.AddressOwnerOperator
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
@@ -27,9 +27,9 @@ import reactor.core.publisher.Mono
  * 住所([Address])ドメインの操作を提供するアプリケーションサービス。
  */
 @Service
-class AddressApplicationService(
+class AddressService(
     private val addressRepository: AddressRepository,
-    private val addressOwnerDomainService: AddressOwnerDomainService
+    private val addressOwnerOperator: AddressOwnerOperator
 ) {
 
     @Transactional(readOnly = true)
@@ -46,7 +46,7 @@ class AddressApplicationService(
 
     @Transactional(readOnly = true)
     fun findAll(command: FindAllAddressCommand): Flux<AddressDTO> = runCatching {
-        addressOwnerDomainService.findOwner(AddressOwnerId.valueOf(command.addressOwnerId))
+        addressOwnerOperator.find(AddressOwnerId.valueOf(command.addressOwnerId))
             .flux()
             .flatMap { _ ->
                 Flux.fromIterable(
@@ -69,7 +69,7 @@ class AddressApplicationService(
         val line2 = command.line2?.let { Line2.valueOf(it) }
         val phoneNumber = PhoneNumber.valueOf(command.phoneNumber)
 
-        return addressOwnerDomainService.findOwner(addressOwnerId)
+        return addressOwnerOperator.find(addressOwnerId)
             .map { owner ->
                 if (!owner.isAvailable) throw AddressOwnerNotFoundException(owner.addressOwnerId)
 

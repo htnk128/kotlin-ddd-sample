@@ -4,7 +4,7 @@ import htnk128.kotlin.ddd.sample.dddcore.domain.ValueObject
 import java.time.Instant
 
 /**
- * アカウント([Account])の住所を表現する。
+ * アカウントの住所を表現する。
  */
 class AccountAddress(
     val accountAddressId: AccountAddressId,
