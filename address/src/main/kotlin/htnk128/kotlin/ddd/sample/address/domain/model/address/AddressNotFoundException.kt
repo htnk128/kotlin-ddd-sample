@@ -1,7 +1,7 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
 /**
- * 住所([Address])のドメインモデルが存在しない場合に発生する例外。
+ * 住所のドメインモデルが存在しない場合に発生する例外。
  */
 class AddressNotFoundException(
     addressId: AddressId,

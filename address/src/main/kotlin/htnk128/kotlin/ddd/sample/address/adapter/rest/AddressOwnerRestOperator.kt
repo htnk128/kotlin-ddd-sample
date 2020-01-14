@@ -3,7 +3,7 @@ package htnk128.kotlin.ddd.sample.address.adapter.rest
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwner
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerId
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerNotFoundException
-import htnk128.kotlin.ddd.sample.address.domain.service.AddressOwnerDomainService
+import htnk128.kotlin.ddd.sample.address.domain.service.address.AddressOwnerOperator
 import java.time.Instant
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -11,11 +11,11 @@ import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
 @Component
-class AddressOwnerRestDomainService(
+class AddressOwnerRestOperator(
     private val accountClient: AccountClient
-) : AddressOwnerDomainService {
+) : AddressOwnerOperator {
 
-    override fun findOwner(addressOwnerId: AddressOwnerId): Mono<AddressOwner> =
+    override fun find(addressOwnerId: AddressOwnerId): Mono<AddressOwner> =
         accountClient.find(addressOwnerId)
 }
 

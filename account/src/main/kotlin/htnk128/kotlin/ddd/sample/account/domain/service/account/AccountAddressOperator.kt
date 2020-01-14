@@ -1,4 +1,4 @@
-package htnk128.kotlin.ddd.sample.account.domain.model.service
+package htnk128.kotlin.ddd.sample.account.domain.service.account
 
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountAddress
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountAddressId
@@ -7,9 +7,9 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 /**
- * アカウントの住所([AccountAddress])ドメインの操作を提供するドメインサービス。
+ * アカウントの住所を操作するドメインサービス。
  */
-interface AccountAddressDomainService {
+interface AccountAddressOperator {
 
     fun findAll(accountId: AccountId): Flux<AccountAddress>
 

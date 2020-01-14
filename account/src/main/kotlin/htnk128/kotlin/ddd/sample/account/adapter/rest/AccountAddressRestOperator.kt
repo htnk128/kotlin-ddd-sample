@@ -3,7 +3,7 @@ package htnk128.kotlin.ddd.sample.account.adapter.rest
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountAddress
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountAddressId
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountId
-import htnk128.kotlin.ddd.sample.account.domain.model.service.AccountAddressDomainService
+import htnk128.kotlin.ddd.sample.account.domain.service.account.AccountAddressOperator
 import java.time.Instant
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -12,9 +12,9 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @Component
-class AccountAddressRestDomainService(
+class AccountAddressRestOperator(
     private val addressClient: AddressClient
-) : AccountAddressDomainService {
+) : AccountAddressOperator {
 
     override fun findAll(accountId: AccountId): Flux<AccountAddress> =
         addressClient.findAll(accountId)

@@ -4,7 +4,7 @@ import htnk128.kotlin.ddd.sample.dddcore.domain.ValueObject
 import java.time.Instant
 
 /**
- * 住所([Address])の持ち主を表現する。
+ * 住所の持ち主を表現する。
  */
 class AddressOwner(
     val addressOwnerId: AddressOwnerId,

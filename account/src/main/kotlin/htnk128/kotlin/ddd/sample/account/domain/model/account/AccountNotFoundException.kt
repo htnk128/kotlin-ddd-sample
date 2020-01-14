@@ -1,7 +1,7 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.account
 
 /**
- * アカウント([Account])のドメインモデルが存在しない場合に発生する例外。
+ * アカウントのドメインモデルが存在しない場合に発生する例外。
  */
 class AccountNotFoundException(
     accountId: AccountId,

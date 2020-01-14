@@ -1,7 +1,7 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.account
 
 /**
- * アカウント([Account])のドメインモデルの更新に失敗した場合に発生する例外。
+ * アカウントのドメインモデルの更新に失敗した場合に発生する例外。
  */
 class AccountUpdateFailedException(
     accountId: AccountId,

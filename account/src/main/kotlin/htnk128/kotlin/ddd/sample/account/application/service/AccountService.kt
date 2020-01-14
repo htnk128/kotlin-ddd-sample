@@ -14,7 +14,7 @@ import htnk128.kotlin.ddd.sample.account.domain.model.account.Email
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Name
 import htnk128.kotlin.ddd.sample.account.domain.model.account.NamePronunciation
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Password
-import htnk128.kotlin.ddd.sample.account.domain.model.service.AccountAddressDomainService
+import htnk128.kotlin.ddd.sample.account.domain.service.account.AccountAddressOperator
 import java.util.stream.Collectors
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -25,9 +25,9 @@ import reactor.core.publisher.Mono
  * アカウント([Account])ドメインの操作を提供するアプリケーションサービス。
  */
 @Service
-class AccountApplicationService(
+class AccountService(
     private val accountRepository: AccountRepository,
-    private val accountAddressDomainService: AccountAddressDomainService
+    private val accountAddressOperator: AccountAddressOperator
 ) {
 
     @Transactional(readOnly = true)
@@ -94,9 +94,9 @@ class AccountApplicationService(
 
         return lock(accountId)
             .flatMap { account ->
-                accountAddressDomainService.findAll(accountId)
+                accountAddressOperator.findAll(accountId)
                     .filter { it.isAvailable }
-                    .flatMap { address -> accountAddressDomainService.remove(address.accountAddressId) }
+                    .flatMap { address -> accountAddressOperator.remove(address.accountAddressId) }
                     .collectList()
                     .map { account }
             }
