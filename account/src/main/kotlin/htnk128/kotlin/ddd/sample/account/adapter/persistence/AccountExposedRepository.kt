@@ -42,10 +42,10 @@ class AccountExposedRepository : AccountRepository {
     override fun add(account: Account) {
         AccountTable.insert {
             it[accountId] = account.accountId.id()
-            it[name] = account.name.toValue()
-            it[namePronunciation] = account.namePronunciation.toValue()
-            it[email] = account.email.toValue()
-            it[password] = account.password.toValue()
+            it[name] = account.name.value()
+            it[namePronunciation] = account.namePronunciation.value()
+            it[email] = account.email.value()
+            it[password] = account.password.value()
             it[createdAt] = account.createdAt
             it[deletedAt] = account.deletedAt
             it[updatedAt] = account.updatedAt
@@ -54,10 +54,10 @@ class AccountExposedRepository : AccountRepository {
 
     override fun set(account: Account) {
         AccountTable.update({ AccountTable.accountId eq account.accountId.id() }) {
-            it[name] = account.name.toValue()
-            it[namePronunciation] = account.namePronunciation.toValue()
-            it[email] = account.email.toValue()
-            it[password] = account.password.toValue()
+            it[name] = account.name.value()
+            it[namePronunciation] = account.namePronunciation.value()
+            it[email] = account.email.value()
+            it[password] = account.password.value()
             it[updatedAt] = account.updatedAt
         }
             .takeIf { it > 0 }

@@ -1,6 +1,6 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.dddcore.domain.Identity
+import htnk128.kotlin.ddd.sample.dddcore.domain.SomeIdentity
 import java.util.UUID
 
 /**
@@ -8,38 +8,19 @@ import java.util.UUID
  *
  * 64桁までの一意な文字列をもつ。
  */
-class AddressId private constructor(private val value: String) : Identity<AddressId, String> {
-
-    override fun id(): String = this.value
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-        other as AddressId
-        return sameValueAs(other)
-    }
-
-    override fun hashCode(): Int = value.hashCode()
-
-    override fun toString(): String = value
-
-    override fun sameValueAs(other: AddressId): Boolean = value == other.value
+class AddressId private constructor(id: String) : SomeIdentity<AddressId>(id) {
 
     companion object {
-
-        private val LENGTH_RANGE = (1..64)
-        private val PATTERN = "[\\p{Alnum}-_]*".toRegex()
 
         /**
          * [UUID]を用いて住所のIDを生成する。
          *
          * @return 生成した値を持つ住所のID
          */
-        fun generate(): AddressId =
-            AddressId("ADDR_${UUID.randomUUID()}")
+        fun generate(): AddressId = AddressId("ADDR_${UUID.randomUUID()}")
 
         /**
-         * [value]に指定された値を住所のIDに変換する。
+         * [id]に指定された値を住所のIDに変換する。
          *
          * 値には、64桁までの一意な文字列を指定することが可能で、
          * 指定可能な値は、英数字、ハイフン、アンダースコアとなる。
@@ -48,7 +29,7 @@ class AddressId private constructor(private val value: String) : Identity<Addres
          * @throws AddressInvalidRequestException 条件に違反した値を指定した場合
          * @return 指定された値を持つ住所のID
          */
-        fun valueOf(value: String): AddressId = value
+        fun valueOf(id: String): AddressId = id
             .takeIf { LENGTH_RANGE.contains(it.length) && PATTERN.matches(it) }
             ?.let { AddressId(it) }
             ?: throw AddressInvalidRequestException(

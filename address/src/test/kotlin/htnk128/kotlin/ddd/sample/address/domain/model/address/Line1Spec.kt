@@ -12,7 +12,7 @@ class Line1Spec : StringSpec({
         forall(
             row("a".repeat(100))
         ) { value ->
-            Line1.valueOf(value).toValue() shouldBe value
+            Line1.valueOf(value).value() shouldBe value
         }
     }
 

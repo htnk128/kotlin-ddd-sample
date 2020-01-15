@@ -16,7 +16,7 @@ class PasswordSpec : StringSpec({
             (6..100).map { row("あ".repeat(it)) }
 
         forall(*rows.toTypedArray()) { value ->
-            Password.valueOf(value, accountId).toValue().length shouldBe 64
+            Password.valueOf(value, accountId).value().length shouldBe 64
         }
     }
 

@@ -1,15 +1,13 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.account
 
-import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
+import htnk128.kotlin.ddd.sample.dddcore.domain.SomeValueObject
 
 /**
  * アカウントの氏名または会社名を表現する。
  *
  * 100桁までの文字列をもつ。
  */
-class Name private constructor(private val value: String) : SingleValueObject<Name, String>() {
-
-    override fun toValue(): String = value
+class Name private constructor(value: String) : SomeValueObject<Name, String>(value) {
 
     companion object {
 

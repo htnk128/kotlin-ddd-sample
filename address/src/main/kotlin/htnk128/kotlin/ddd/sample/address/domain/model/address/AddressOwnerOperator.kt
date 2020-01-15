@@ -1,7 +1,5 @@
-package htnk128.kotlin.ddd.sample.address.domain.service.address
+package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwner
-import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerId
 import reactor.core.publisher.Mono
 
 /**

@@ -1,9 +1,10 @@
 package htnk128.kotlin.ddd.sample.account.adapter.rest
 
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountAddress
+import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountAddressBook
+import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountAddressBookOperator
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountAddressId
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountId
-import htnk128.kotlin.ddd.sample.account.domain.service.account.AccountAddressOperator
 import java.time.Instant
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -12,12 +13,14 @@ import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 @Component
-class AccountAddressRestOperator(
+class AccountAddressBookRestOperator(
     private val addressClient: AddressClient
-) : AccountAddressOperator {
+) : AccountAddressBookOperator {
 
-    override fun findAll(accountId: AccountId): Flux<AccountAddress> =
+    override fun find(accountId: AccountId): Mono<AccountAddressBook> =
         addressClient.findAll(accountId)
+            .collectList()
+            .map { AccountAddressBook(it) }
 
     override fun remove(accountAddressId: AccountAddressId): Mono<Unit> =
         addressClient.delete(accountAddressId)

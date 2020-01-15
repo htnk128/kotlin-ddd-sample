@@ -1,15 +1,13 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
+import htnk128.kotlin.ddd.sample.dddcore.domain.SomeValueObject
 
 /**
  * 住所の市町村を表現する。
  *
  * 100桁までの文字列をもつ。
  */
-class City private constructor(private val value: String) : SingleValueObject<City, String>() {
-
-    override fun toValue(): String = value
+class City private constructor(value: String) : SomeValueObject<City, String>(value) {
 
     companion object {
 

@@ -11,9 +11,9 @@ import htnk128.kotlin.ddd.sample.shared.application.exception.ApplicationExcepti
 fun Account.toDTO(): AccountDTO =
     AccountDTO(
         accountId.id(),
-        name.toValue(),
-        namePronunciation.toValue(),
-        email.toValue(),
+        name.value(),
+        namePronunciation.value(),
+        email.value(),
         password.format(),
         createdAt.toEpochMilli(),
         deletedAt?.toEpochMilli(),

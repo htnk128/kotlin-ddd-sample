@@ -13,12 +13,12 @@ fun Address.toDTO(): AddressDTO =
     AddressDTO(
         addressId.id(),
         addressOwnerId.id(),
-        fullName.toValue(),
-        zipCode.toValue(),
-        stateOrRegion.toValue(),
-        line1.toValue(),
-        line2?.toValue(),
-        phoneNumber.toValue(),
+        fullName.value(),
+        zipCode.value(),
+        stateOrRegion.value(),
+        line1.value(),
+        line2?.value(),
+        phoneNumber.value(),
         createdAt.toEpochMilli(),
         deletedAt?.toEpochMilli(),
         updatedAt.toEpochMilli()

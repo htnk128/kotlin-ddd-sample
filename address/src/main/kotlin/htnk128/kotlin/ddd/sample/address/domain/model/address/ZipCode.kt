@@ -1,15 +1,13 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
+import htnk128.kotlin.ddd.sample.dddcore.domain.SomeValueObject
 
 /**
  * 住所の郵便番号を表現する。
  *
  * 50桁までの文字列をもつ。
  */
-class ZipCode private constructor(private val value: String) : SingleValueObject<ZipCode, String>() {
-
-    override fun toValue(): String = value
+class ZipCode private constructor(value: String) : SomeValueObject<ZipCode, String>(value) {
 
     companion object {
 

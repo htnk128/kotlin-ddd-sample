@@ -13,7 +13,7 @@ class PhoneNumberSpec : StringSpec({
             row("1".repeat(50)),
             row("12345667890")
         ) { value ->
-            PhoneNumber.valueOf(value).toValue() shouldBe value
+            PhoneNumber.valueOf(value).value() shouldBe value
         }
     }
 

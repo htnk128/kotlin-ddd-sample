@@ -12,7 +12,7 @@ class FullNameSpec : StringSpec({
         forall(
             row("a".repeat(100))
         ) { value ->
-            FullName.valueOf(value).toValue() shouldBe value
+            FullName.valueOf(value).value() shouldBe value
         }
     }
 

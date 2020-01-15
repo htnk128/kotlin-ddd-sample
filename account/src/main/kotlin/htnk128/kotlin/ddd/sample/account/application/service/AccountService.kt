@@ -8,13 +8,13 @@ import htnk128.kotlin.ddd.sample.account.application.command.UpdateAccountComman
 import htnk128.kotlin.ddd.sample.account.application.dto.AccountDTO
 import htnk128.kotlin.ddd.sample.account.application.dto.PaginationAccountDTO
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Account
+import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountAddressBookOperator
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountId
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountRepository
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Email
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Name
 import htnk128.kotlin.ddd.sample.account.domain.model.account.NamePronunciation
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Password
-import htnk128.kotlin.ddd.sample.account.domain.service.account.AccountAddressOperator
 import java.util.stream.Collectors
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -27,7 +27,7 @@ import reactor.core.publisher.Mono
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
-    private val accountAddressOperator: AccountAddressOperator
+    private val accountAddressBookOperator: AccountAddressBookOperator
 ) {
 
     @Transactional(readOnly = true)
@@ -94,10 +94,11 @@ class AccountService(
 
         return lock(accountId)
             .flatMap { account ->
-                accountAddressOperator.findAll(accountId)
-                    .filter { it.isAvailable }
-                    .flatMap { address -> accountAddressOperator.remove(address.accountAddressId) }
-                    .collectList()
+                accountAddressBookOperator.find(accountId)
+                    .map {
+                        it.availableAccountAddresses
+                            .forEach { aa -> accountAddressBookOperator.remove(aa.accountAddressId) }
+                    }
                     .map { account }
             }
             .map { account ->

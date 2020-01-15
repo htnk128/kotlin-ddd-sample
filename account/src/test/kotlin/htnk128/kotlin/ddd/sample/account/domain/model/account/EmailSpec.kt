@@ -12,7 +12,7 @@ class EmailSpec : StringSpec({
         forall(
             row("a".repeat(100))
         ) { value ->
-            Email.valueOf(value).toValue() shouldBe value
+            Email.valueOf(value).value() shouldBe value
         }
     }
 

@@ -1,17 +1,13 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.account
 
-import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
+import htnk128.kotlin.ddd.sample.dddcore.domain.SomeValueObject
 
 /**
  * アカウントの発音を表現する。
  *
  * 100桁までの文字列をもつ。
  */
-class NamePronunciation private constructor(
-    private val value: String
-) : SingleValueObject<NamePronunciation, String>() {
-
-    override fun toValue(): String = value
+class NamePronunciation private constructor(value: String) : SomeValueObject<NamePronunciation, String>(value) {
 
     companion object {
 

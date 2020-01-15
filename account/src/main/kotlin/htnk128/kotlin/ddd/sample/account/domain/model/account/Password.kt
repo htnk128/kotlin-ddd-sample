@@ -1,6 +1,6 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.account
 
-import htnk128.kotlin.ddd.sample.dddcore.domain.SingleValueObject
+import htnk128.kotlin.ddd.sample.dddcore.domain.SomeValueObject
 import java.security.MessageDigest
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
@@ -10,7 +10,7 @@ import javax.crypto.spec.PBEKeySpec
  *
  * 必ず64文字の文字列をもつ。
  */
-class Password private constructor(private val value: String) : SingleValueObject<Password, String>() {
+class Password private constructor(value: String) : SomeValueObject<Password, String>(value) {
 
     /**
      * アカウントを外部向けのフォーマットに変換する。
@@ -18,9 +18,8 @@ class Password private constructor(private val value: String) : SingleValueObjec
      */
     fun format(): String = "*****"
 
-    override fun toValue(): String = value
-
     companion object {
+
         private const val ITERATION_COUNT = 100
         private const val KEY_LENGTH = 256
 
@@ -54,7 +53,7 @@ class Password private constructor(private val value: String) : SingleValueObjec
                         .joinToString("") { b -> String.format("%02x", b.toInt() and 255) }
                 }
                 ?.let { Password(it) }
-                ?: throw AccountInvalidRequestException("Password must be 100 characters or less.")
+                ?: throw AccountInvalidRequestException("Password must be between 6 and 100 characters.")
         }
 
         /**

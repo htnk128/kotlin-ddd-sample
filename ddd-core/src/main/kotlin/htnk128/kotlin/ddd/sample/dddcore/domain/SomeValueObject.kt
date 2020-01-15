@@ -1,14 +1,14 @@
 package htnk128.kotlin.ddd.sample.dddcore.domain
 
 /**
- * 何らかの型の値を1つ持つ値オブジェクトの概念。
+ * 何らかの型の値を1つ持つ値オブジェクト。
  *
  * @param T 値オブジェクトの型
  * @param V 値オブジェクトが持つ値の型
  */
-abstract class SingleValueObject<T : SingleValueObject<T, V>, V : Comparable<V>> : ValueObject<T> {
+abstract class SomeValueObject<T : SomeValueObject<T, V>, V : Comparable<V>>(private val value: V) : ValueObject<T> {
 
-    abstract fun toValue(): V
+    fun value(): V = value
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -18,9 +18,9 @@ abstract class SingleValueObject<T : SingleValueObject<T, V>, V : Comparable<V>>
         return sameValueAs(other)
     }
 
-    override fun hashCode(): Int = toValue().hashCode()
+    override fun hashCode(): Int = value().hashCode()
 
-    override fun sameValueAs(other: T): Boolean = toValue() == other.toValue()
+    override fun sameValueAs(other: T): Boolean = value() == other.value()
 
-    override fun toString(): String = "${toValue()}"
+    override fun toString(): String = "${value()}"
 }

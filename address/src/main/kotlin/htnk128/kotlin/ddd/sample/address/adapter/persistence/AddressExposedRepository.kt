@@ -39,12 +39,12 @@ class AddressExposedRepository : AddressRepository {
         AddressTable.insert {
             it[addressId] = address.addressId.id()
             it[addressOwnerId] = address.addressOwnerId.id()
-            it[fullName] = address.fullName.toValue()
-            it[zipCode] = address.zipCode.toValue()
-            it[stateOrRegion] = address.stateOrRegion.toValue()
-            it[line1] = address.line1.toValue()
-            it[line2] = address.line2?.toValue()
-            it[phoneNumber] = address.phoneNumber.toValue()
+            it[fullName] = address.fullName.value()
+            it[zipCode] = address.zipCode.value()
+            it[stateOrRegion] = address.stateOrRegion.value()
+            it[line1] = address.line1.value()
+            it[line2] = address.line2?.value()
+            it[phoneNumber] = address.phoneNumber.value()
             it[createdAt] = address.createdAt
             it[deletedAt] = address.deletedAt
             it[updatedAt] = address.updatedAt
@@ -53,12 +53,12 @@ class AddressExposedRepository : AddressRepository {
 
     override fun set(address: Address) {
         AddressTable.update({ AddressTable.addressId eq address.addressId.id() }) {
-            it[fullName] = address.fullName.toValue()
-            it[zipCode] = address.zipCode.toValue()
-            it[stateOrRegion] = address.stateOrRegion.toValue()
-            it[line1] = address.line1.toValue()
-            it[line2] = address.line2?.toValue()
-            it[phoneNumber] = address.phoneNumber.toValue()
+            it[fullName] = address.fullName.value()
+            it[zipCode] = address.zipCode.value()
+            it[stateOrRegion] = address.stateOrRegion.value()
+            it[line1] = address.line1.value()
+            it[line2] = address.line2?.value()
+            it[phoneNumber] = address.phoneNumber.value()
             it[updatedAt] = address.updatedAt
         }
             .takeIf { it > 0 }

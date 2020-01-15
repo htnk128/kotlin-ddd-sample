@@ -10,6 +10,7 @@ import htnk128.kotlin.ddd.sample.address.domain.model.address.Address
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressId
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerId
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerNotFoundException
+import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerOperator
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressRepository
 import htnk128.kotlin.ddd.sample.address.domain.model.address.FullName
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Line1
@@ -17,7 +18,6 @@ import htnk128.kotlin.ddd.sample.address.domain.model.address.Line2
 import htnk128.kotlin.ddd.sample.address.domain.model.address.PhoneNumber
 import htnk128.kotlin.ddd.sample.address.domain.model.address.StateOrRegion
 import htnk128.kotlin.ddd.sample.address.domain.model.address.ZipCode
-import htnk128.kotlin.ddd.sample.address.domain.service.address.AddressOwnerOperator
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux

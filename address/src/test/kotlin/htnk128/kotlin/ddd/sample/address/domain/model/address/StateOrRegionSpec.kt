@@ -12,7 +12,7 @@ class StateOrRegionSpec : StringSpec({
         forall(
             row("a".repeat(100))
         ) { value ->
-            StateOrRegion.valueOf(value).toValue() shouldBe value
+            StateOrRegion.valueOf(value).value() shouldBe value
         }
     }
 
