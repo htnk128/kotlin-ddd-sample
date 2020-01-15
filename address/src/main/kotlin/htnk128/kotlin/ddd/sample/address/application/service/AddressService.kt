@@ -8,9 +8,6 @@ import htnk128.kotlin.ddd.sample.address.application.command.UpdateAddressComman
 import htnk128.kotlin.ddd.sample.address.application.dto.AddressDTO
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Address
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressId
-import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerId
-import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerNotFoundException
-import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerOperator
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressRepository
 import htnk128.kotlin.ddd.sample.address.domain.model.address.FullName
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Line1
@@ -18,6 +15,9 @@ import htnk128.kotlin.ddd.sample.address.domain.model.address.Line2
 import htnk128.kotlin.ddd.sample.address.domain.model.address.PhoneNumber
 import htnk128.kotlin.ddd.sample.address.domain.model.address.StateOrRegion
 import htnk128.kotlin.ddd.sample.address.domain.model.address.ZipCode
+import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerId
+import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerNotFoundException
+import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
@@ -29,7 +29,7 @@ import reactor.core.publisher.Mono
 @Service
 class AddressService(
     private val addressRepository: AddressRepository,
-    private val addressOwnerOperator: AddressOwnerOperator
+    private val ownerService: OwnerService
 ) {
 
     @Transactional(readOnly = true)
@@ -46,12 +46,12 @@ class AddressService(
 
     @Transactional(readOnly = true)
     fun findAll(command: FindAllAddressCommand): Flux<AddressDTO> = runCatching {
-        addressOwnerOperator.find(AddressOwnerId.valueOf(command.addressOwnerId))
+        ownerService.find(OwnerId.valueOf(command.ownerId))
             .flux()
             .flatMap { _ ->
                 Flux.fromIterable(
                     addressRepository
-                        .findAll(AddressOwnerId.valueOf(command.addressOwnerId))
+                        .findAll(OwnerId.valueOf(command.ownerId))
                         .map { it.toDTO() }
                 )
             }
@@ -61,7 +61,7 @@ class AddressService(
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun create(command: CreateAddressCommand): Mono<AddressDTO> = runCatching {
-        val addressOwnerId = AddressOwnerId.valueOf(command.addressOwnerId)
+        val ownerId = OwnerId.valueOf(command.ownerId)
         val fullName = FullName.valueOf(command.fullName)
         val zipCode = ZipCode.valueOf(command.zipCode)
         val stateOrRegion = StateOrRegion.valueOf(command.stateOrRegion)
@@ -69,14 +69,14 @@ class AddressService(
         val line2 = command.line2?.let { Line2.valueOf(it) }
         val phoneNumber = PhoneNumber.valueOf(command.phoneNumber)
 
-        return addressOwnerOperator.find(addressOwnerId)
+        return ownerService.find(ownerId)
             .map { owner ->
-                if (!owner.isAvailable) throw AddressOwnerNotFoundException(owner.addressOwnerId)
+                if (!owner.isAvailable) throw OwnerNotFoundException(owner.ownerId)
 
                 Address
                     .create(
                         addressRepository.nextAddressId(),
-                        owner.addressOwnerId,
+                        owner.ownerId,
                         fullName,
                         zipCode,
                         stateOrRegion,

@@ -6,6 +6,7 @@ import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountInvalidData
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountInvalidRequestException
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountNotFoundException
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountUpdateFailedException
+import htnk128.kotlin.ddd.sample.account.domain.model.addressbook.AddressBookInvalidRequestException
 import htnk128.kotlin.ddd.sample.shared.application.exception.ApplicationException
 
 fun Account.toDTO(): AccountDTO =
@@ -23,6 +24,7 @@ fun Account.toDTO(): AccountDTO =
 fun Throwable.error(): Throwable =
     when (this) {
         is AccountInvalidRequestException -> ApplicationException(type, 400, message, this)
+        is AddressBookInvalidRequestException -> ApplicationException(type, 400, message, this)
         is AccountNotFoundException -> ApplicationException(type, 404, message, this)
         is AccountInvalidDataStateException -> ApplicationException(type, 409, message, this)
         is AccountUpdateFailedException -> ApplicationException(type, 500, message, this)

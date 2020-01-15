@@ -1,9 +1,9 @@
 package htnk128.kotlin.ddd.sample.address.adapter.rest
 
-import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwner
-import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerId
-import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerNotFoundException
-import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerOperator
+import htnk128.kotlin.ddd.sample.address.domain.model.owner.Owner
+import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerId
+import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerNotFoundException
+import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerService
 import java.time.Instant
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -11,12 +11,12 @@ import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
 @Component
-class AddressOwnerRestOperator(
+class OwnerRestService(
     private val accountClient: AccountClient
-) : AddressOwnerOperator {
+) : OwnerService {
 
-    override fun find(addressOwnerId: AddressOwnerId): Mono<AddressOwner> =
-        accountClient.find(addressOwnerId)
+    override fun find(ownerId: OwnerId): Mono<Owner> =
+        accountClient.find(ownerId)
 }
 
 @Component
@@ -25,25 +25,25 @@ class AccountClient(
     private val accountUrl: String
 ) {
 
-    fun find(addressOwnerId: AddressOwnerId): Mono<AddressOwner> =
+    fun find(ownerId: OwnerId): Mono<Owner> =
         WebClient
             .builder()
             .build()
             .get()
-            .uri("$accountUrl/$addressOwnerId")
+            .uri("$accountUrl/$ownerId")
             .retrieve()
             .bodyToMono(AccountResponse::class.java)
             .map { it.responseToModel() }
-            .onErrorResume { throw AddressOwnerNotFoundException(addressOwnerId, cause = it) }
+            .onErrorResume { throw OwnerNotFoundException(ownerId, cause = it) }
 
     private data class AccountResponse(
         val accountId: String,
         val deletedAt: Long?
     ) {
 
-        fun responseToModel(): AddressOwner =
-            AddressOwner(
-                AddressOwnerId.valueOf(accountId),
+        fun responseToModel(): Owner =
+            Owner(
+                OwnerId.valueOf(accountId),
                 deletedAt?.let { Instant.ofEpochMilli(it) }
             )
     }

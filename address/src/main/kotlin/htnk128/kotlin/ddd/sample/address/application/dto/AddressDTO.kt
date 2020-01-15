@@ -7,7 +7,7 @@ import htnk128.kotlin.ddd.sample.address.domain.model.address.Address
  */
 data class AddressDTO(
     val addressId: String,
-    val addressOwnerId: String,
+    val ownerId: String,
     val fullName: String,
     val zipCode: String,
     val stateOrRegion: String,

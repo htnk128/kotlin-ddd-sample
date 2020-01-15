@@ -9,7 +9,7 @@ data class AddressCreateRequest(
     @ApiModelProperty(
         value = "住所の持ち主のID", example = "AC_c5fb2cec-a77c-4886-b997-ffc2ef060e78", required = true, position = 1
     )
-    val addressOwnerId: String,
+    val ownerId: String,
     @ApiModelProperty(
         value = "住所の氏名または会社名", example = "あいうえお", required = true, position = 2
     )

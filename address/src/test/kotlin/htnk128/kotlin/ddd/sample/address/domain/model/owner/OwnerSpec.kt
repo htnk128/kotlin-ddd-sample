@@ -1,4 +1,4 @@
-package htnk128.kotlin.ddd.sample.address.domain.model.address
+package htnk128.kotlin.ddd.sample.address.domain.model.owner
 
 import io.kotlintest.data.forall
 import io.kotlintest.shouldBe
@@ -7,29 +7,29 @@ import io.kotlintest.specs.StringSpec
 import io.kotlintest.tables.row
 import java.time.Instant
 
-class AddressOwnerSpec : StringSpec({
+class OwnerSpec : StringSpec({
 
     "住所の持ち主が有効な場合の判定が想定通りであること" {
         forall(
             row(Instant.now(), false),
             row(null, true)
         ) { deletedAt, expected ->
-            AddressOwner(
-                AddressOwnerId.valueOf("account01"),
+            Owner(
+                OwnerId.valueOf("account01"),
                 deletedAt
             ).isAvailable shouldBe expected
         }
     }
 
     "同じ値を持つ場合は等価となる" {
-        val addressOwnerId = AddressOwnerId.valueOf("account01")
+        val ownerId = OwnerId.valueOf("account01")
         val deletedAt = Instant.now()
-        val data1 = AddressOwner(
-            addressOwnerId,
+        val data1 = Owner(
+            ownerId,
             deletedAt
         )
-        val data2 = AddressOwner(
-            addressOwnerId,
+        val data2 = Owner(
+            ownerId,
             deletedAt
         )
 
@@ -38,12 +38,12 @@ class AddressOwnerSpec : StringSpec({
 
     "同じ値でない場合は等価とならない" {
         val deletedAt = Instant.now()
-        val data1 = AddressOwner(
-            AddressOwnerId.valueOf("account01"),
+        val data1 = Owner(
+            OwnerId.valueOf("account01"),
             deletedAt
         )
-        val data2 = AddressOwner(
-            AddressOwnerId.valueOf("account02"),
+        val data2 = Owner(
+            OwnerId.valueOf("account02"),
             deletedAt
         )
 

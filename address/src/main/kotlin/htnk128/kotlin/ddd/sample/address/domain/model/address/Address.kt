@@ -1,5 +1,6 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
+import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerId
 import htnk128.kotlin.ddd.sample.dddcore.domain.Entity
 import java.time.Instant
 
@@ -11,7 +12,7 @@ import java.time.Instant
  */
 class Address(
     val addressId: AddressId,
-    val addressOwnerId: AddressOwnerId,
+    val ownerId: OwnerId,
     val fullName: FullName,
     val zipCode: ZipCode,
     val stateOrRegion: StateOrRegion,
@@ -54,7 +55,7 @@ class Address(
 
         return Address(
             addressId,
-            addressOwnerId,
+            ownerId,
             fullName = fullName ?: this.fullName,
             zipCode = zipCode ?: this.zipCode,
             stateOrRegion = stateOrRegion ?: this.stateOrRegion,
@@ -80,7 +81,7 @@ class Address(
     fun delete(): Address = if (isDeleted) this else with(Instant.now()) {
         Address(
             addressId,
-            addressOwnerId,
+            ownerId,
             fullName = fullName,
             zipCode = zipCode,
             stateOrRegion = stateOrRegion,
@@ -135,7 +136,7 @@ class Address(
          */
         fun create(
             addressId: AddressId,
-            addressOwnerId: AddressOwnerId,
+            ownerId: OwnerId,
             fullName: FullName,
             zipCode: ZipCode,
             stateOrRegion: StateOrRegion,
@@ -145,7 +146,7 @@ class Address(
         ): Address = with(Instant.now()) {
             Address(
                 addressId,
-                addressOwnerId,
+                ownerId,
                 fullName,
                 zipCode,
                 stateOrRegion,

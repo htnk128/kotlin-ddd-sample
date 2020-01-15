@@ -1,5 +1,6 @@
-package htnk128.kotlin.ddd.sample.account.domain.model.account
+package htnk128.kotlin.ddd.sample.account.domain.model.addressbook
 
+import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountInvalidRequestException
 import io.kotlintest.data.forall
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow

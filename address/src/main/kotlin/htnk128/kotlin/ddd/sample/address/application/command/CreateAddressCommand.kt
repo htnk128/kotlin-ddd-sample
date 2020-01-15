@@ -4,7 +4,7 @@ package htnk128.kotlin.ddd.sample.address.application.command
  * 住所を作成する際のコマンド情報。
  */
 data class CreateAddressCommand(
-    val addressOwnerId: String,
+    val ownerId: String,
     val fullName: String,
     val zipCode: String,
     val stateOrRegion: String,

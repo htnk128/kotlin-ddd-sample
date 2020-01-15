@@ -1,6 +1,6 @@
 CREATE TABLE address (
   address_id            varchar(64)     PRIMARY KEY
- ,address_owner_id      varchar(64)     NOT NULL
+ ,owner_id              varchar(64)     NOT NULL
  ,full_name             varchar(100)    NOT NULL
  ,zip_code              varchar(50)     NOT NULL
  ,state_or_region       varchar(100)    NOT NULL

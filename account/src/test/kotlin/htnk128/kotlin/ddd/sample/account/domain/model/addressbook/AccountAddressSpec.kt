@@ -1,4 +1,4 @@
-package htnk128.kotlin.ddd.sample.account.domain.model.account
+package htnk128.kotlin.ddd.sample.account.domain.model.addressbook
 
 import io.kotlintest.data.forall
 import io.kotlintest.shouldBe
@@ -22,14 +22,14 @@ class AccountAddressSpec : StringSpec({
     }
 
     "同じ値を持つ場合は等価となる" {
-        val addressOwnerId = AccountAddressId.valueOf("address01")
+        val accountAddressId = AccountAddressId.valueOf("address01")
         val deletedAt = Instant.now()
         val data1 = AccountAddress(
-            addressOwnerId,
+            accountAddressId,
             deletedAt
         )
         val data2 = AccountAddress(
-            addressOwnerId,
+            accountAddressId,
             deletedAt
         )
 

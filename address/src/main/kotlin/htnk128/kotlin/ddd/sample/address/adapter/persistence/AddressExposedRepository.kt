@@ -3,7 +3,6 @@ package htnk128.kotlin.ddd.sample.address.adapter.persistence
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Address
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressId
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressNotFoundException
-import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressOwnerId
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressRepository
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressUpdateFailedException
 import htnk128.kotlin.ddd.sample.address.domain.model.address.FullName
@@ -12,6 +11,7 @@ import htnk128.kotlin.ddd.sample.address.domain.model.address.Line2
 import htnk128.kotlin.ddd.sample.address.domain.model.address.PhoneNumber
 import htnk128.kotlin.ddd.sample.address.domain.model.address.StateOrRegion
 import htnk128.kotlin.ddd.sample.address.domain.model.address.ZipCode
+import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerId
 import htnk128.kotlin.ddd.sample.shared.adapter.persistence.ExposedTable
 import java.time.Instant
 import org.jetbrains.exposed.sql.Column
@@ -31,14 +31,14 @@ class AddressExposedRepository : AddressRepository {
             ?.rowToModel()
             ?: throw AddressNotFoundException(addressId)
 
-    override fun findAll(addressOwnerId: AddressOwnerId): List<Address> =
-        AddressTable.select { AddressTable.addressOwnerId eq addressOwnerId.id() }
+    override fun findAll(ownerId: OwnerId): List<Address> =
+        AddressTable.select { AddressTable.ownerId eq ownerId.id() }
             .map { it.rowToModel() }
 
     override fun add(address: Address) {
         AddressTable.insert {
             it[addressId] = address.addressId.id()
-            it[addressOwnerId] = address.addressOwnerId.id()
+            it[ownerId] = address.ownerId.id()
             it[fullName] = address.fullName.value()
             it[zipCode] = address.zipCode.value()
             it[stateOrRegion] = address.stateOrRegion.value()
@@ -77,7 +77,7 @@ class AddressExposedRepository : AddressRepository {
     private fun ResultRow.rowToModel() =
         Address(
             AddressId.valueOf(this[AddressTable.addressId]),
-            AddressOwnerId.valueOf(this[AddressTable.addressOwnerId]),
+            OwnerId.valueOf(this[AddressTable.ownerId]),
             FullName.valueOf(this[AddressTable.fullName]),
             ZipCode.valueOf(this[AddressTable.zipCode]),
             StateOrRegion.valueOf(this[AddressTable.stateOrRegion]),
@@ -93,7 +93,7 @@ class AddressExposedRepository : AddressRepository {
 private object AddressTable : ExposedTable<Address>("address") {
 
     val addressId: Column<String> = varchar("address_id", length = 64).primaryKey()
-    val addressOwnerId: Column<String> = varchar("address_owner_id", length = 64)
+    val ownerId: Column<String> = varchar("owner_id", length = 64)
     val fullName: Column<String> = varchar("full_name", length = 100)
     val zipCode: Column<String> = varchar("zip_code", length = 50)
     val stateOrRegion: Column<String> = varchar("state_or_region", length = 100)

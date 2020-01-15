@@ -6,15 +6,15 @@ import htnk128.kotlin.ddd.sample.account.application.command.FindAccountCommand
 import htnk128.kotlin.ddd.sample.account.application.command.FindAllAccountCommand
 import htnk128.kotlin.ddd.sample.account.application.command.UpdateAccountCommand
 import htnk128.kotlin.ddd.sample.account.application.dto.AccountDTO
-import htnk128.kotlin.ddd.sample.account.application.dto.PaginationAccountDTO
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Account
-import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountAddressBookOperator
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountId
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountRepository
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Email
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Name
 import htnk128.kotlin.ddd.sample.account.domain.model.account.NamePronunciation
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Password
+import htnk128.kotlin.ddd.sample.account.domain.model.addressbook.AddressBookService
+import htnk128.kotlin.ddd.sample.shared.application.dto.PaginationDTO
 import java.util.stream.Collectors
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -27,7 +27,7 @@ import reactor.core.publisher.Mono
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
-    private val accountAddressBookOperator: AccountAddressBookOperator
+    private val addressBookService: AddressBookService
 ) {
 
     @Transactional(readOnly = true)
@@ -43,13 +43,13 @@ class AccountService(
             .onErrorResume { Mono.error(it.error()) }
 
     @Transactional(readOnly = true)
-    fun findAll(command: FindAllAccountCommand): Mono<PaginationAccountDTO> =
+    fun findAll(command: FindAllAccountCommand): Mono<PaginationDTO<AccountDTO>> =
         Flux.fromIterable(
             accountRepository.findAll(command.limit, command.offset)
                 .map { it.toDTO() }
         )
             .collect(Collectors.toList())
-            .map { PaginationAccountDTO(accountRepository.count(), command.limit, command.offset, it) }
+            .map { PaginationDTO(accountRepository.count(), command.limit, command.offset, it) }
             .onErrorResume { Mono.error(it.error()) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
@@ -94,10 +94,10 @@ class AccountService(
 
         return lock(accountId)
             .flatMap { account ->
-                accountAddressBookOperator.find(accountId)
+                addressBookService.find(accountId)
                     .map {
                         it.availableAccountAddresses
-                            .forEach { aa -> accountAddressBookOperator.remove(aa.accountAddressId) }
+                            .forEach { aa -> addressBookService.remove(aa.accountAddressId) }
                     }
                     .map { account }
             }

@@ -1,4 +1,4 @@
-package htnk128.kotlin.ddd.sample.account.domain.model.account
+package htnk128.kotlin.ddd.sample.account.domain.model.addressbook
 
 import htnk128.kotlin.ddd.sample.dddcore.domain.ValueObject
 import java.time.Instant
@@ -12,7 +12,7 @@ class AccountAddress(
 ) : ValueObject<AccountAddress> {
 
     /**
-     * アカウントのアドレス帳が有効な場合に`true`を返す。
+     * アカウントの住所が有効な場合に`true`を返す。
      *
      * 有効とは[deletedAt]が`null`の場合である。
      */

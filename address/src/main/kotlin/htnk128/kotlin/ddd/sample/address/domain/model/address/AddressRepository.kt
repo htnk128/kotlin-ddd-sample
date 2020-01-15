@@ -1,5 +1,7 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
+import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerId
+
 /**
  * 住所を操作するためのリポジトリを表現する。
  */
@@ -7,7 +9,7 @@ interface AddressRepository {
 
     fun find(addressId: AddressId, lock: Boolean = false): Address
 
-    fun findAll(addressOwnerId: AddressOwnerId): List<Address>
+    fun findAll(ownerId: OwnerId): List<Address>
 
     fun add(address: Address)
 

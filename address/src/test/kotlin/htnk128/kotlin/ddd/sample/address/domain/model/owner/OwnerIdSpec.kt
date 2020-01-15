@@ -1,12 +1,13 @@
-package htnk128.kotlin.ddd.sample.address.domain.model.address
+package htnk128.kotlin.ddd.sample.address.domain.model.owner
 
+import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressInvalidRequestException
 import io.kotlintest.data.forall
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec
 import io.kotlintest.tables.row
 
-class AddressOwnerIdSpec : StringSpec({
+class OwnerIdSpec : StringSpec({
 
     "正しい値の場合インスタンスを生成できる" {
         forall(
@@ -14,7 +15,7 @@ class AddressOwnerIdSpec : StringSpec({
             row("a_b-c-d-e"),
             row("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
         ) { value ->
-            AddressOwnerId.valueOf(value).id() shouldBe value
+            OwnerId.valueOf(value).id() shouldBe value
         }
     }
 
@@ -25,7 +26,7 @@ class AddressOwnerIdSpec : StringSpec({
             row("あ")
         ) { value ->
             shouldThrow<AddressInvalidRequestException> {
-                AddressOwnerId.valueOf(value)
+                OwnerId.valueOf(value)
             }
         }
     }
