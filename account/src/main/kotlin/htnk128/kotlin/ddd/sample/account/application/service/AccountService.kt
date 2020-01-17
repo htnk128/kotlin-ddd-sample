@@ -7,6 +7,7 @@ import htnk128.kotlin.ddd.sample.account.application.command.FindAllAccountComma
 import htnk128.kotlin.ddd.sample.account.application.command.UpdateAccountCommand
 import htnk128.kotlin.ddd.sample.account.application.dto.AccountDTO
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Account
+import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountEvent
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountId
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountRepository
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Email
@@ -14,6 +15,7 @@ import htnk128.kotlin.ddd.sample.account.domain.model.account.Name
 import htnk128.kotlin.ddd.sample.account.domain.model.account.NamePronunciation
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Password
 import htnk128.kotlin.ddd.sample.account.domain.model.addressbook.AddressBookService
+import htnk128.kotlin.ddd.sample.dddcore.domain.DomainEventPublisher
 import htnk128.kotlin.ddd.sample.shared.application.dto.PaginationDTO
 import java.util.stream.Collectors
 import org.springframework.stereotype.Service
@@ -27,7 +29,8 @@ import reactor.core.publisher.Mono
 @Service
 class AccountService(
     private val accountRepository: AccountRepository,
-    private val addressBookService: AddressBookService
+    private val addressBookService: AddressBookService,
+    private val domainEventPublisher: DomainEventPublisher<AccountEvent<*>>
 ) {
 
     @Transactional(readOnly = true)
@@ -63,7 +66,10 @@ class AccountService(
         return Mono.just(
             Account
                 .create(accountId, name, namePronunciation, email, password)
-                .also(accountRepository::add)
+                .also { created ->
+                    accountRepository.add(created)
+                    created.publish()
+                }
                 .toDTO()
         )
             .onErrorResume { Mono.error(it.error()) }
@@ -81,7 +87,10 @@ class AccountService(
         lock(accountId)
             .map { account ->
                 account.update(name, namePronunciation, email, password)
-                    .also { updated -> accountRepository.set(updated) }
+                    .also { updated ->
+                        accountRepository.set(updated)
+                        updated.publish()
+                    }
                     .toDTO()
             }
             .onErrorResume { Mono.error(it.error()) }
@@ -103,12 +112,20 @@ class AccountService(
             }
             .map { account ->
                 account.delete()
-                    .also { deleted -> accountRepository.remove(deleted) }
+                    .also { deleted ->
+                        accountRepository.remove(deleted)
+                        deleted.publish()
+                    }
                     .toDTO()
             }
             .onErrorResume { Mono.error(it.error()) }
     }
         .getOrElse { Mono.error(it.error()) }
+
+    private fun Account.publish() {
+        occurredEvents()
+            .forEach { domainEventPublisher.publish(it) }
+    }
 
     private companion object {
 

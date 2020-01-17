@@ -7,6 +7,7 @@ import htnk128.kotlin.ddd.sample.address.application.command.FindAllAddressComma
 import htnk128.kotlin.ddd.sample.address.application.command.UpdateAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.dto.AddressDTO
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Address
+import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressEvent
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressId
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressRepository
 import htnk128.kotlin.ddd.sample.address.domain.model.address.FullName
@@ -18,6 +19,7 @@ import htnk128.kotlin.ddd.sample.address.domain.model.address.ZipCode
 import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerId
 import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerNotFoundException
 import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerService
+import htnk128.kotlin.ddd.sample.dddcore.domain.DomainEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import reactor.core.publisher.Flux
@@ -29,7 +31,8 @@ import reactor.core.publisher.Mono
 @Service
 class AddressService(
     private val addressRepository: AddressRepository,
-    private val ownerService: OwnerService
+    private val ownerService: OwnerService,
+    private val domainEventPublisher: DomainEventPublisher<AddressEvent<*>>
 ) {
 
     @Transactional(readOnly = true)
@@ -84,7 +87,10 @@ class AddressService(
                         line2,
                         phoneNumber
                     )
-                    .also(addressRepository::add)
+                    .also { created ->
+                        addressRepository.add(created)
+                        created.publish()
+                    }
                     .toDTO()
             }
             .onErrorResume { Mono.error(it.error()) }
@@ -104,7 +110,10 @@ class AddressService(
         return lock(addressId)
             .map { address ->
                 address.update(fullName, zipCode, stateOrRegion, line1, line2, phoneNumber)
-                    .also { updated -> addressRepository.set(updated) }
+                    .also { updated ->
+                        addressRepository.set(updated)
+                        updated.publish()
+                    }
                     .toDTO()
             }
             .onErrorResume { Mono.error(it.error()) }
@@ -118,12 +127,20 @@ class AddressService(
         return lock(addressId)
             .map { address ->
                 address.delete()
-                    .also { deleted -> addressRepository.remove(deleted) }
+                    .also { deleted ->
+                        addressRepository.remove(deleted)
+                        deleted.publish()
+                    }
                     .toDTO()
             }
             .onErrorResume { Mono.error(it.error()) }
     }
         .getOrElse { Mono.error(it.error()) }
+
+    private fun Address.publish() {
+        occurredEvents()
+            .forEach { domainEventPublisher.publish(it) }
+    }
 
     private companion object {
 

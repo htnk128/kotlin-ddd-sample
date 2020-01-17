@@ -29,7 +29,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux
 class ExposedConfiguration(val dataSource: DataSource) : TransactionManagementConfigurer {
 
     @Bean
-    override fun annotationDrivenTransactionManager(): PlatformTransactionManager = SpringTransactionManager(dataSource)
+    override fun annotationDrivenTransactionManager(): PlatformTransactionManager =
+        SpringTransactionManager(dataSource)
 
     @Bean
     fun persistenceExceptionTranslationPostProcessor(): PersistenceExceptionTranslationPostProcessor =
