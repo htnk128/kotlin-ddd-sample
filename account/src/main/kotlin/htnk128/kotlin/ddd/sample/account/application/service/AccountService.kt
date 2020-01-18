@@ -17,10 +17,8 @@ import htnk128.kotlin.ddd.sample.account.domain.model.account.Password
 import htnk128.kotlin.ddd.sample.account.domain.model.addressbook.AddressBookService
 import htnk128.kotlin.ddd.sample.dddcore.domain.DomainEventPublisher
 import htnk128.kotlin.ddd.sample.shared.application.dto.PaginationDTO
-import java.util.stream.Collectors
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 /**
@@ -35,25 +33,24 @@ class AccountService(
 
     @Transactional(readOnly = true)
     fun find(command: FindAccountCommand): Mono<AccountDTO> = runCatching {
-        Mono.just(accountRepository.find(AccountId.valueOf(command.accountId)).toDTO())
+        val accountId = AccountId.valueOf(command.accountId)
+
+        Mono.just(accountRepository.find(accountId).toDTO())
             .onErrorResume { Mono.error(it.error()) }
     }
         .getOrElse { Mono.error(it.error()) }
 
-    @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun lock(accountId: AccountId): Mono<Account> =
-        Mono.just(accountRepository.find(accountId, lock = true))
-            .onErrorResume { Mono.error(it.error()) }
-
     @Transactional(readOnly = true)
-    fun findAll(command: FindAllAccountCommand): Mono<PaginationDTO<AccountDTO>> =
-        Flux.fromIterable(
-            accountRepository.findAll(command.limit, command.offset)
-                .map { it.toDTO() }
+    fun findAll(command: FindAllAccountCommand): Mono<PaginationDTO<AccountDTO>> = runCatching {
+        Mono.just(
+            PaginationDTO(
+                accountRepository.count(),
+                command.limit,
+                command.offset,
+                accountRepository.findAll(command.limit, command.offset).map { it.toDTO() })
         )
-            .collect(Collectors.toList())
-            .map { PaginationDTO(accountRepository.count(), command.limit, command.offset, it) }
-            .onErrorResume { Mono.error(it.error()) }
+    }
+        .getOrElse { Mono.error(it.error()) }
 
     @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
     fun create(command: CreateAccountCommand): Mono<AccountDTO> = runCatching {
@@ -63,15 +60,12 @@ class AccountService(
         val email = Email.valueOf(command.email)
         val password = Password.valueOf(command.password, accountId)
 
-        return Mono.just(
-            Account
-                .create(accountId, name, namePronunciation, email, password)
-                .also { created ->
-                    accountRepository.add(created)
-                    created.publish()
-                }
-                .toDTO()
-        )
+        val created = Account
+            .create(accountId, name, namePronunciation, email, password)
+            .also { accountRepository.add(it) }
+
+        Mono.just(created.toDTO())
+            .also { created.publish() }
             .onErrorResume { Mono.error(it.error()) }
     }
         .getOrElse { Mono.error(it.error()) }
@@ -84,15 +78,13 @@ class AccountService(
         val email = command.email?.let { Email.valueOf(it) }
         val password = command.password?.let { Password.valueOf(it, accountId) }
 
-        lock(accountId)
-            .map { account ->
-                account.update(name, namePronunciation, email, password)
-                    .also { updated ->
-                        accountRepository.set(updated)
-                        updated.publish()
-                    }
-                    .toDTO()
-            }
+        val updated = accountRepository
+            .find(accountId, lock = true)
+            .update(name, namePronunciation, email, password)
+            .also { accountRepository.set(it) }
+
+        Mono.just(updated.toDTO())
+            .also { updated.publish() }
             .onErrorResume { Mono.error(it.error()) }
     }
         .getOrElse { Mono.error(it.error()) }
@@ -101,30 +93,21 @@ class AccountService(
     fun delete(command: DeleteAccountCommand): Mono<AccountDTO> = runCatching {
         val accountId = AccountId.valueOf(command.accountId)
 
-        return lock(accountId)
-            .flatMap { account ->
-                addressBookService.find(accountId)
-                    .map {
-                        it.availableAccountAddresses
-                            .forEach { aa -> addressBookService.remove(aa.accountAddressId) }
-                    }
-                    .map { account }
-            }
-            .map { account ->
-                account.delete()
-                    .also { deleted ->
-                        accountRepository.remove(deleted)
-                        deleted.publish()
-                    }
-                    .toDTO()
-            }
+        val deleted = accountRepository
+            .find(accountId, lock = true)
+            .delete()
+            .also { accountRepository.remove(it) }
+
+        addressBookService.find(accountId)
+            .map { it.availableAccountAddresses.forEach { aa -> addressBookService.remove(aa.accountAddressId) } }
+            .map { deleted.toDTO() }
+            .also { deleted.publish() }
             .onErrorResume { Mono.error(it.error()) }
     }
         .getOrElse { Mono.error(it.error()) }
 
     private fun Account.publish() {
-        occurredEvents()
-            .forEach { domainEventPublisher.publish(it) }
+        occurredEvents().forEach { domainEventPublisher.publish(it) }
     }
 
     private companion object {

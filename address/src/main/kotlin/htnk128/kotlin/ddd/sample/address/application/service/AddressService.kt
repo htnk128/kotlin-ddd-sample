@@ -37,28 +37,19 @@ class AddressService(
 
     @Transactional(readOnly = true)
     fun find(command: FindAddressCommand): Mono<AddressDTO> = runCatching {
-        Mono.just(addressRepository.find(AddressId.valueOf(command.addressId)).toDTO())
+        val addressId = AddressId.valueOf(command.addressId)
+
+        Mono.just(addressRepository.find(addressId).toDTO())
             .onErrorResume { Mono.error(it.error()) }
     }
         .getOrElse { Mono.error(it.error()) }
 
-    @Transactional(timeout = TRANSACTIONAL_TIMEOUT_SECONDS, rollbackFor = [Exception::class])
-    fun lock(addressId: AddressId): Mono<Address> =
-        Mono.just(addressRepository.find(addressId, lock = true))
-            .onErrorResume { Mono.error(it.error()) }
-
     @Transactional(readOnly = true)
     fun findAll(command: FindAllAddressCommand): Flux<AddressDTO> = runCatching {
-        ownerService.find(OwnerId.valueOf(command.ownerId))
-            .flux()
-            .flatMap { _ ->
-                Flux.fromIterable(
-                    addressRepository
-                        .findAll(OwnerId.valueOf(command.ownerId))
-                        .map { it.toDTO() }
-                )
-            }
-            .onErrorResume { Mono.error(it.error()) }
+        val ownerId = OwnerId.valueOf(command.ownerId)
+
+        Flux.fromIterable(addressRepository.findAll(ownerId).map { it.toDTO() })
+            .onErrorResume { Flux.error(it.error()) }
     }
         .getOrElse { Flux.error(it.error()) }
 
@@ -71,28 +62,16 @@ class AddressService(
         val line1 = Line1.valueOf(command.line1)
         val line2 = command.line2?.let { Line2.valueOf(it) }
         val phoneNumber = PhoneNumber.valueOf(command.phoneNumber)
+        val addressId = addressRepository.nextAddressId()
 
-        return ownerService.find(ownerId)
-            .map { owner ->
-                if (!owner.isAvailable) throw OwnerNotFoundException(owner.ownerId)
+        val created = Address
+            .create(addressId, ownerId, fullName, zipCode, stateOrRegion, line1, line2, phoneNumber)
 
-                Address
-                    .create(
-                        addressRepository.nextAddressId(),
-                        owner.ownerId,
-                        fullName,
-                        zipCode,
-                        stateOrRegion,
-                        line1,
-                        line2,
-                        phoneNumber
-                    )
-                    .also { created ->
-                        addressRepository.add(created)
-                        created.publish()
-                    }
-                    .toDTO()
-            }
+        ownerService.find(ownerId)
+            .map { if (!it.isAvailable) throw OwnerNotFoundException(it.ownerId) }
+            .zipWith(Mono.just(addressRepository.add(created)))
+            .map { created.toDTO() }
+            .also { created.publish() }
             .onErrorResume { Mono.error(it.error()) }
     }
         .getOrElse { Mono.error(it.error()) }
@@ -107,15 +86,13 @@ class AddressService(
         val line2 = command.line2?.let { Line2.valueOf(it) }
         val phoneNumber = command.phoneNumber?.let { PhoneNumber.valueOf(it) }
 
-        return lock(addressId)
-            .map { address ->
-                address.update(fullName, zipCode, stateOrRegion, line1, line2, phoneNumber)
-                    .also { updated ->
-                        addressRepository.set(updated)
-                        updated.publish()
-                    }
-                    .toDTO()
-            }
+        val updated = addressRepository
+            .find(addressId, lock = true)
+            .update(fullName, zipCode, stateOrRegion, line1, line2, phoneNumber)
+            .also { addressRepository.set(it) }
+
+        Mono.just(updated.toDTO())
+            .also { updated.publish() }
             .onErrorResume { Mono.error(it.error()) }
     }
         .getOrElse { Mono.error(it.error()) }
@@ -124,22 +101,19 @@ class AddressService(
     fun delete(command: DeleteAddressCommand): Mono<AddressDTO> = runCatching {
         val addressId = AddressId.valueOf(command.addressId)
 
-        return lock(addressId)
-            .map { address ->
-                address.delete()
-                    .also { deleted ->
-                        addressRepository.remove(deleted)
-                        deleted.publish()
-                    }
-                    .toDTO()
-            }
+        val deleted = addressRepository
+            .find(addressId, lock = true)
+            .delete()
+            .also { addressRepository.remove(it) }
+
+        Mono.just(deleted.toDTO())
+            .also { deleted.publish() }
             .onErrorResume { Mono.error(it.error()) }
     }
         .getOrElse { Mono.error(it.error()) }
 
     private fun Address.publish() {
-        occurredEvents()
-            .forEach { domainEventPublisher.publish(it) }
+        occurredEvents().forEach { domainEventPublisher.publish(it) }
     }
 
     private companion object {
