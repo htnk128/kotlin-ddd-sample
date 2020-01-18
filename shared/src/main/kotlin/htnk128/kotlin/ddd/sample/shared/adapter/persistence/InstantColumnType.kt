@@ -2,11 +2,11 @@ package htnk128.kotlin.ddd.sample.shared.adapter.persistence
 
 import java.time.Instant
 import org.jetbrains.exposed.sql.ColumnType
-import org.jetbrains.exposed.sql.DateColumnType
+import org.jetbrains.exposed.sql.jodatime.DateColumnType as JodaDateColumnType
 import org.joda.time.DateTime
 
 class InstantColumnType(time: Boolean) : ColumnType() {
-    private val delegate = DateColumnType(time)
+    private val delegate = JodaDateColumnType(time)
 
     override fun sqlType(): String = delegate.sqlType()
 

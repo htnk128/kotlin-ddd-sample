@@ -3,6 +3,7 @@ package htnk128.kotlin.ddd.sample.address
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.zaxxer.hikari.HikariDataSource
 import io.netty.channel.ChannelOption
 import javax.sql.DataSource
 import org.jetbrains.exposed.spring.SpringTransactionManager
@@ -11,9 +12,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor
 import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.http.client.reactive.ReactorResourceFactory
-import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
-import org.springframework.transaction.annotation.TransactionManagementConfigurer
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
 import springfox.documentation.builders.ApiInfoBuilder
@@ -24,12 +23,15 @@ import springfox.documentation.spi.DocumentationType
 import springfox.documentation.spring.web.plugins.Docket
 import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux
 
+private typealias PlatformDataSource = HikariDataSource
+
 @Configuration
 @EnableTransactionManagement
-class ExposedConfiguration(val dataSource: DataSource) : TransactionManagementConfigurer {
+class ExposedConfiguration(val dataSource: DataSource) {
 
     @Bean
-    override fun annotationDrivenTransactionManager(): PlatformTransactionManager = SpringTransactionManager(dataSource)
+    fun transactionManager(dataSource: PlatformDataSource): SpringTransactionManager =
+        SpringTransactionManager(dataSource)
 
     @Bean
     fun persistenceExceptionTranslationPostProcessor(): PersistenceExceptionTranslationPostProcessor =
