@@ -67,7 +67,7 @@ allprojects {
     }
 
     group = "htnk128"
-    version = "1.1.0"
+    version = "1.0.0"
     java.sourceCompatibility = Versions.java
     java.targetCompatibility = Versions.java
 }
