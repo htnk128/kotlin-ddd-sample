@@ -19,7 +19,9 @@ import htnk128.kotlin.ddd.sample.dddcore.domain.DomainEventPublisher
 import htnk128.kotlin.ddd.sample.shared.application.dto.PaginationDTO
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.core.publisher.toMono
 
 /**
  * アカウント([Account])ドメインの操作を提供するアプリケーションサービス。
@@ -99,7 +101,10 @@ class AccountService(
             .also { accountRepository.remove(it) }
 
         addressBookService.find(accountId)
-            .map { it.availableAccountAddresses.forEach { aa -> addressBookService.remove(aa.accountAddressId) } }
+            .flux()
+            .flatMap { Flux.fromIterable(it.availableAccountAddresses) }
+            .flatMap { addressBookService.remove(it.accountAddressId) }
+            .toMono()
             .map { deleted.toDTO() }
             .also { deleted.publish() }
             .onErrorResume { Mono.error(it.error()) }

@@ -112,6 +112,19 @@ class Account(
 
     override fun sameIdentityAs(other: Account): Boolean = accountId == other.accountId
 
+    override fun toString(): String {
+        return buildString {
+            append("accountId=$accountId, ")
+            append("name=$name, ")
+            append("namePronunciation=$namePronunciation, ")
+            append("email=$email, ")
+            append("password=$password, ")
+            append("createdAt=$createdAt, ")
+            append("deletedAt=$deletedAt, ")
+            append("updatedAt=$updatedAt")
+        }
+    }
+
     companion object {
 
         /**

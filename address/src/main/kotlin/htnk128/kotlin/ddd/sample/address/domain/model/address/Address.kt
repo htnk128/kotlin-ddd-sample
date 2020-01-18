@@ -123,6 +123,22 @@ class Address(
 
     override fun sameIdentityAs(other: Address): Boolean = addressId == other.addressId
 
+    override fun toString(): String {
+        return buildString {
+            append("addressId=$addressId, ")
+            append("ownerId=$ownerId, ")
+            append("fullName=$fullName, ")
+            append("zipCode=$zipCode, ")
+            append("stateOrRegion=$stateOrRegion, ")
+            append("line1=$line1, ")
+            append("line2=$line2, ")
+            append("phoneNumber=$phoneNumber, ")
+            append("createdAt=$createdAt, ")
+            append("deletedAt=$deletedAt, ")
+            append("updatedAt=$updatedAt")
+        }
+    }
+
     companion object {
 
         /**
