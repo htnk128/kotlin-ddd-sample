@@ -1,0 +1,18 @@
+@startuml
+
+actor User
+
+:ユーザ: as User
+(住所を取得) as (find)
+(住所をすべて取得) as (findAll)
+(住所を作成) as (Create)
+(住所を更新) as (Update)
+(住所を削除) as (Delete)
+
+User --> (find)
+User --> (findAll)
+User --> (Create)
+User --> (Update)
+User --> (Delete)
+
+@enduml
