@@ -9,6 +9,4 @@ interface AccountPresenter {
     fun toDTO(account: Account): AccountDTO
 
     fun toDTO(accounts: List<Account>, count: Int, limit: Int, offset: Int): PaginationDTO<AccountDTO>
-
-    fun error(t: Throwable): Throwable
 }
