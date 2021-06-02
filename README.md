@@ -70,3 +70,14 @@ http://localhost:8081/swagger-ui.html
 | 住所の電話番号 | phone number |
 | 住所の持ち主 | owner |
 | 住所の持ち主のID | owner id |
+
+## Package configuration
+
+[Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) の思想に則ったパッケージを用意する。
+
+| package | layer | description |
+----|----|----
+| domain | Enterprise Business Rules | ビジネスロジックを表現するレイヤー。 |
+| usecase | Application Business Rules | ビジネスロジックを用いてユースケースを実現するレイヤー。 |
+| adapter | Interface Adapters | REST APIを用いた外部からのリクエストやデータベースのような外部接続といった外界と内部のレイヤーの連携する役割を果たすレイヤー。 |
+| external | Frameworks & Drivers | 外界との境界ににあり相互に通信する役割を果たすレイヤー。Webフレームワークやデータベースなどに関連するコードを配置する。 |
