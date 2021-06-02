@@ -12,7 +12,7 @@ import htnk128.kotlin.ddd.sample.address.domain.model.address.PhoneNumber
 import htnk128.kotlin.ddd.sample.address.domain.model.address.StateOrRegion
 import htnk128.kotlin.ddd.sample.address.domain.model.address.ZipCode
 import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerId
-import htnk128.kotlin.ddd.sample.shared.adapter.persistence.ExposedTable
+import htnk128.kotlin.ddd.sample.shared.adapter.gateway.db.ExposedTable
 import java.time.Instant
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow

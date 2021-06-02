@@ -12,7 +12,7 @@ import htnk128.kotlin.ddd.sample.address.application.command.FindAllAddressComma
 import htnk128.kotlin.ddd.sample.address.application.command.UpdateAddressCommand
 import htnk128.kotlin.ddd.sample.address.application.dto.AddressDTO
 import htnk128.kotlin.ddd.sample.address.application.service.AddressService
-import htnk128.kotlin.ddd.sample.shared.adapter.http.ErrorResponse
+import htnk128.kotlin.ddd.sample.shared.adapter.controller.resource.ErrorResponse
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam

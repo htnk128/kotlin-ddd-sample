@@ -1,14 +1,14 @@
-package htnk128.kotlin.ddd.sample.address.adapter.http
+package htnk128.kotlin.ddd.sample.account.adapter.controller
 
 import htnk128.kotlin.ddd.sample.shared.adapter.controller.resource.ErrorResponse
 import htnk128.kotlin.ddd.sample.shared.usecase.ApplicationException
 import mu.KLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.RestControllerAdvice
 
-@ControllerAdvice
+@RestControllerAdvice
 class ErrorAdvice {
 
     @ExceptionHandler(ApplicationException::class)

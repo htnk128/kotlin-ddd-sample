@@ -8,7 +8,7 @@ import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressNotFoundExc
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressUpdateFailedException
 import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerInvalidRequestException
 import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerNotFoundException
-import htnk128.kotlin.ddd.sample.shared.application.exception.ApplicationException
+import htnk128.kotlin.ddd.sample.shared.usecase.ApplicationException
 
 fun Address.toDTO(): AddressDTO =
     AddressDTO(
