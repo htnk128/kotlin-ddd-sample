@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 
+// TODO external.spring.restに置きたいので、ApplicationExceptionの配置を考える
 @RestControllerAdvice
 class ErrorAdvice {
 
