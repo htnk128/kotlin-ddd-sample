@@ -11,6 +11,6 @@ class AccountEventSpringSubscriber : DomainEventSubscriber<AccountEvent<*>> {
     @EventListener
     override fun handleEvent(domainEvent: AccountEvent<*>) {
         println("type=${domainEvent.type}, account=${domainEvent.account}, occurredOn=${domainEvent.occurredOn}")
-        // 何もしない。メールを送る、REST APIを叩く、どっかに通知を送るなどが考えられる
+        // 何もしない。キューにエンキューする、メールを送る、REST APIを叩く、どっかに通知を送るなどが考えられる
     }
 }

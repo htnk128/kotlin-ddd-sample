@@ -11,6 +11,6 @@ class AddressEventSpringSubscriber : DomainEventSubscriber<AddressEvent<*>> {
     @EventListener
     override fun handleEvent(domainEvent: AddressEvent<*>) {
         println("type=${domainEvent.type}, address=${domainEvent.address}, occurredOn=${domainEvent.occurredOn}")
-        // 何もしない。メールを送る、REST APIを叩く、どっかに通知を送るなどが考えられる
+        // 何もしない。キューにエンキューする、メールを送る、REST APIを叩く、どっかに通知を送るなどが考えられる
     }
 }
