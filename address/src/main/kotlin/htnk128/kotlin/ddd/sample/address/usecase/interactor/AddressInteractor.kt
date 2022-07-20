@@ -24,7 +24,7 @@ import htnk128.kotlin.ddd.sample.address.usecase.inputport.command.DeleteAddress
 import htnk128.kotlin.ddd.sample.address.usecase.inputport.command.FindAddressCommand
 import htnk128.kotlin.ddd.sample.address.usecase.inputport.command.FindAllAddressCommand
 import htnk128.kotlin.ddd.sample.address.usecase.inputport.command.UpdateAddressCommand
-import htnk128.kotlin.ddd.sample.dddcore.domain.DomainEventPublisher
+import htnk128.kotlin.ddd.sample.ddd.core.domain.DomainEventPublisher
 import htnk128.kotlin.ddd.sample.shared.usecase.ApplicationException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

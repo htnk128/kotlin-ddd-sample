@@ -1,7 +1,7 @@
 package htnk128.kotlin.ddd.sample.account.adapter.gateway.messaging
 
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountEvent
-import htnk128.kotlin.ddd.sample.dddcore.domain.DomainEventSubscriber
+import htnk128.kotlin.ddd.sample.ddd.core.domain.DomainEventSubscriber
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 

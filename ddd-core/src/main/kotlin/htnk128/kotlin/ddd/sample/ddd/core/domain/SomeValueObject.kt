@@ -1,4 +1,4 @@
-package htnk128.kotlin.ddd.sample.dddcore.domain
+package htnk128.kotlin.ddd.sample.ddd.core.domain
 
 /**
  * 何らかの型の値を1つ持つ値オブジェクト。

@@ -1,7 +1,7 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.addressbook
 
 import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountInvalidRequestException
-import htnk128.kotlin.ddd.sample.dddcore.domain.SomeIdentity
+import htnk128.kotlin.ddd.sample.ddd.core.domain.SomeIdentity
 
 /**
  * アカウントの住所のIDを表現する。

@@ -1,6 +1,6 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.owner
 
-import htnk128.kotlin.ddd.sample.dddcore.domain.ValueObject
+import htnk128.kotlin.ddd.sample.ddd.core.domain.ValueObject
 import java.time.Instant
 
 /**

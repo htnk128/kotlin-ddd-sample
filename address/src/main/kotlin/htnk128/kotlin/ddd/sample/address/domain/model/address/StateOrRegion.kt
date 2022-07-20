@@ -1,6 +1,6 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
-import htnk128.kotlin.ddd.sample.dddcore.domain.SomeValueObject
+import htnk128.kotlin.ddd.sample.ddd.core.domain.SomeValueObject
 
 /**
  * 住所の都道府県を表現する。

@@ -1,6 +1,6 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.addressbook
 
-import htnk128.kotlin.ddd.sample.dddcore.domain.ValueObject
+import htnk128.kotlin.ddd.sample.ddd.core.domain.ValueObject
 
 /**
  * アカウントの住所録を表現する。
