@@ -1,6 +1,6 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.account
 
-import htnk128.kotlin.ddd.sample.dddcore.domain.SomeValueObject
+import htnk128.kotlin.ddd.sample.ddd.core.domain.SomeValueObject
 
 /**
  * アカウントのメールアドレスを表現する。

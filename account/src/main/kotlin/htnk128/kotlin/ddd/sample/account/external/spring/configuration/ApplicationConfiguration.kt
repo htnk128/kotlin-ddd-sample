@@ -1,4 +1,4 @@
-package htnk128.kotlin.ddd.sample.account.external.spring
+package htnk128.kotlin.ddd.sample.account.external.spring.configuration
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper

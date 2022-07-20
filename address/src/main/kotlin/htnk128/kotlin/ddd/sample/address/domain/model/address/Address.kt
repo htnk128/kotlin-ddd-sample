@@ -1,7 +1,7 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.address
 
 import htnk128.kotlin.ddd.sample.address.domain.model.owner.OwnerId
-import htnk128.kotlin.ddd.sample.dddcore.domain.Entity
+import htnk128.kotlin.ddd.sample.ddd.core.domain.Entity
 import java.time.Instant
 
 /**

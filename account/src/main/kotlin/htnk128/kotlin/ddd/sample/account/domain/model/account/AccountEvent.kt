@@ -1,7 +1,7 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.account
 
-import htnk128.kotlin.ddd.sample.dddcore.domain.DomainEvent
-import htnk128.kotlin.ddd.sample.dddcore.domain.ValueObject
+import htnk128.kotlin.ddd.sample.ddd.core.domain.DomainEvent
+import htnk128.kotlin.ddd.sample.ddd.core.domain.ValueObject
 import java.time.Instant
 
 /**

@@ -1,7 +1,7 @@
 package htnk128.kotlin.ddd.sample.address.adapter.gateway.messaging
 
 import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressEvent
-import htnk128.kotlin.ddd.sample.dddcore.domain.DomainEventPublisher
+import htnk128.kotlin.ddd.sample.ddd.core.domain.DomainEventPublisher
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 

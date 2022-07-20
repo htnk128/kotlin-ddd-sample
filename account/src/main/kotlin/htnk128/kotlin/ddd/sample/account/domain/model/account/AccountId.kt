@@ -1,6 +1,6 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.account
 
-import htnk128.kotlin.ddd.sample.dddcore.domain.SomeIdentity
+import htnk128.kotlin.ddd.sample.ddd.core.domain.SomeIdentity
 import java.util.UUID
 
 /**

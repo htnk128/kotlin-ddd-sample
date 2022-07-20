@@ -1,6 +1,6 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.owner
 
-import htnk128.kotlin.ddd.sample.dddcore.domain.SomeIdentity
+import htnk128.kotlin.ddd.sample.ddd.core.domain.SomeIdentity
 
 /**
  * 住所の持ち主のIDを表現する。

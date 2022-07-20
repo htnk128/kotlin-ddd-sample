@@ -1,4 +1,4 @@
-package htnk128.kotlin.ddd.sample.dddcore.domain
+package htnk128.kotlin.ddd.sample.ddd.core.domain
 
 /**
  * 何らかのドメインを識別するIDを表現した値オブジェクトの概念。

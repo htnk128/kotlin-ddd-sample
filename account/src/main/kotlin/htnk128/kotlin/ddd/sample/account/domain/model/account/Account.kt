@@ -1,6 +1,6 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.account
 
-import htnk128.kotlin.ddd.sample.dddcore.domain.Entity
+import htnk128.kotlin.ddd.sample.ddd.core.domain.Entity
 import java.time.Instant
 
 /**
