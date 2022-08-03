@@ -28,9 +28,9 @@ jobs:
         with:
           path: |
             ~/.gradle
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('*.gradle', '**/build.gradle') }}
+          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('*.gradle', '**/build.gradle', '**/build.gradle.kts') }}
           restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('*.gradle', '**/build.gradle') }}
+            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('*.gradle', '**/build.gradle', '**/build.gradle.kts') }}
 
       - name: ktlintCheck
         env:
