@@ -20,17 +20,7 @@ jobs:
           java-version: 8
           java-package: jdk
           architecture: x64
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-kotlin-ddd-sample
-        with:
-          path: |
-            ~/.gradle
-          key: ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('*.gradle', '**/build.gradle', '**/build.gradle.kts') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ env.cache-name }}-${{ hashFiles('*.gradle', '**/build.gradle', '**/build.gradle.kts') }}
+          cache: 'gradle'
 
       - name: ktlintCheck
         env:
