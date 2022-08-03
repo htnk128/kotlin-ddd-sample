@@ -60,9 +60,7 @@ allprojects {
                 events("skipped", "failed")
                 setExceptionFormat("full")
             }
-            useJUnitPlatform {
-                includeEngines("junit-vintage", "junit-jupiter")
-            }
+            useJUnitPlatform()
         }
     }
 

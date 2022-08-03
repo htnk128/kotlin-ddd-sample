@@ -23,8 +23,10 @@ fun DependencyHandler.allModuleDependencies() {
     implementation(kotlin("reflect"))
     implementation(kotlin("stdlib-jdk8"))
     // Test
-    testImplementation("org.junit.jupiter:junit-jupiter:${Versions.junit}")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${Versions.junit}")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Versions.junit}")
     testImplementation("io.kotlintest:kotlintest-runner-junit5:${Versions.kotlintest}")
+    testImplementation("io.kotlintest:kotlintest-extensions-spring:${Versions.kotlintest}")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockitoKotlin}")
 }
 
