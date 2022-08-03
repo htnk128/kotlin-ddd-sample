@@ -60,10 +60,20 @@ allprojects {
                 events("skipped", "failed")
                 setExceptionFormat("full")
             }
-            useJUnitPlatform {
-                includeEngines("junit-vintage", "junit-jupiter")
+            useJUnitPlatform()
+        }
+
+        withType<JacocoReport> {
+            reports {
+                xml.isEnabled = true
+                csv.isEnabled = false
+                html.isEnabled = true
             }
         }
+    }
+
+    tasks.test {
+        finalizedBy(tasks.jacocoTestReport)
     }
 
     group = "htnk128"

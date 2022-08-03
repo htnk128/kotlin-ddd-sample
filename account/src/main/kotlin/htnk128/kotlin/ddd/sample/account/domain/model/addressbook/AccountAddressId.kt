@@ -25,7 +25,7 @@ class AccountAddressId private constructor(id: String) : SomeIdentity<AccountAdd
         fun valueOf(id: String): AccountAddressId = id
             .takeIf { LENGTH_RANGE.contains(it.length) && PATTERN.matches(it) }
             ?.let { AccountAddressId(it) }
-            ?: throw AddressBookInvalidRequestException(
+            ?: throw AccountInvalidRequestException(
                 "Account address id must be 64 characters or less and alphanumeric, hyphen, underscore."
             )
     }

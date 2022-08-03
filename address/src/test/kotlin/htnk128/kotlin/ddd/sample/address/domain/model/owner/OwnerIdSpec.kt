@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.address.domain.model.owner
 
-import htnk128.kotlin.ddd.sample.address.domain.model.address.AddressInvalidRequestException
 import io.kotlintest.data.forall
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
@@ -25,7 +24,7 @@ class OwnerIdSpec : StringSpec({
             row("a".repeat(65)),
             row("あ")
         ) { value ->
-            shouldThrow<AddressInvalidRequestException> {
+            shouldThrow<OwnerInvalidRequestException> {
                 OwnerId.valueOf(value)
             }
         }
