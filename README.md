@@ -1,5 +1,7 @@
 # kotlin-ddd-sample
 
+[![select_build](https://github.com/htnk128/kotlin-ddd-sample/actions/workflows/select_build.yaml/badge.svg)](https://github.com/htnk128/kotlin-ddd-sample/actions/workflows/select_build.yaml)
+
 This is a DDD sample using Kotlin.
 
 Modeled using Amazon's account function as a theme.
