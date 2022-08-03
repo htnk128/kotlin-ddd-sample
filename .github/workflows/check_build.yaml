@@ -17,20 +17,18 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: 8
-          java-package: jdk
-          architecture: x64
+          java-version: '8'
           cache: 'gradle'
 
-      - name: ktlintCheck
-        env:
-          TZ: Asia/Tokyo
-        run: ./gradlew --build-cache ktlintCheck
+#      - name: KtlintCheck
+#        env:
+#          TZ: Asia/Tokyo
+#        run: ./gradlew ktlintCheck
 
       - name: Build
         env:
           TZ: Asia/Tokyo
-        run: ./gradlew --build-cache build
+        run: ./gradlew build
 
   check_build:
     name: check_build
