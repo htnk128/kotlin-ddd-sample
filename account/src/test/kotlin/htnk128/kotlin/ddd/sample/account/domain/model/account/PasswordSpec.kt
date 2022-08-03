@@ -2,6 +2,7 @@ package htnk128.kotlin.ddd.sample.account.domain.model.account
 
 import io.kotlintest.data.forall
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotThrow
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.StringSpec
 import io.kotlintest.tables.row
@@ -17,6 +18,12 @@ class PasswordSpec : StringSpec({
 
         forall(*rows.toTypedArray()) { value ->
             Password.valueOf(value, accountId).value().length shouldBe 64
+        }
+    }
+
+    "インスタンスを生成できる" {
+        shouldNotThrow<AccountInvalidRequestException> {
+            Password.from("dummy")
         }
     }
 
