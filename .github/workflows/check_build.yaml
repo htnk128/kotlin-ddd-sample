@@ -20,10 +20,10 @@ jobs:
           java-version: '8'
           cache: 'gradle'
 
-      - name: ktlintCheck
-        env:
-          TZ: Asia/Tokyo
-        run: ./gradlew ktlintCheck
+#      - name: KtlintCheck
+#        env:
+#          TZ: Asia/Tokyo
+#        run: ./gradlew ktlintCheck
 
       - name: Build
         env:
