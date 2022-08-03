@@ -5,6 +5,7 @@ import org.gradle.plugin.use.PluginDependenciesSpec
 fun PluginDependenciesSpec.allModulePlugins() {
     kotlin("jvm") version Versions.kotlin
     id("org.jlleitschuh.gradle.ktlint") version Versions.ktlint
+    id("jacoco")
 }
 
 fun PluginDependenciesSpec.springPlugins() {
