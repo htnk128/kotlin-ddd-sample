@@ -60,10 +60,8 @@ fun DependencyHandler.flywayDependencies() {
     implementation("org.flywaydb:flyway-core:${Versions.flyway}")
 }
 
-fun DependencyHandler.swaggerDependencies() {
-    implementation("io.springfox:springfox-swagger2:${Versions.swagger}")
-    implementation("io.springfox:springfox-spring-webflux:${Versions.swagger}")
-    implementation("io.springfox:springfox-swagger-ui:${Versions.swagger}")
+fun DependencyHandler.springfoxDependencies() {
+    implementation("io.springfox:springfox-boot-starter:${Versions.springfoxVersion}")
 }
 
 fun DependencyHandler.loggingDependency() {

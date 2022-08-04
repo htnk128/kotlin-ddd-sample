@@ -13,6 +13,6 @@ dependencies {
     jacksonDependencies()
     sqlDependencies()
     flywayDependencies()
-    swaggerDependencies()
+    springfoxDependencies()
     loggingDependency()
 }

@@ -11,7 +11,7 @@ object Versions {
     const val springBoot: String = "2.2.1.RELEASE"
 
     const val jackson: String = "2.10.1"
-    const val swagger: String = "3.0.0"
+    const val springfoxVersion: String = "3.0.0"
     const val kotlinLogging: String = "1.6.26"
     const val exposed: String = "0.19.3"
     const val flyway: String = "6.0.8"
