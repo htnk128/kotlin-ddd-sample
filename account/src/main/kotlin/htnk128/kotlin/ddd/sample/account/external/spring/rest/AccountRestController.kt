@@ -14,7 +14,6 @@ import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
-import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -30,7 +29,6 @@ import reactor.core.publisher.Mono
 @Api("アカウントを管理するAPI", tags = ["Accounts"])
 @RestController
 @RequestMapping("/accounts")
-@Component
 class AccountRestController(
     private val accountController: AccountController
 ) {
