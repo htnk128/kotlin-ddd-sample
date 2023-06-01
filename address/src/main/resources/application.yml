@@ -13,6 +13,7 @@ spring:
     generate-ddl: false
 server:
   port: 8081
+  shutdown: graceful
 logging:
   level:
     htnk128.kotlin.ddd.sample.address: INFO

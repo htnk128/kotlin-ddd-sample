@@ -27,7 +27,7 @@ fun DependencyHandler.allModuleDependencies() {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${Versions.junit}")
     testImplementation("io.kotlintest:kotlintest-runner-junit5:${Versions.kotlintest}")
     testImplementation("io.kotlintest:kotlintest-extensions-spring:${Versions.kotlintest}")
-    testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockitoKotlin}")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:${Versions.mockitoKotlin}")
 }
 
 fun DependencyHandler.springDependencies() {
