@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jlleitschuh.gradle.ktlint.KtlintFormatTask
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
@@ -43,9 +42,6 @@ allprojects {
     }
 
     tasks {
-        val ktlintKotlinScriptFormat by existing(KtlintFormatTask::class)
-        val ktlintFormat by existing(Task::class)
-
         withType<KotlinCompile> {
             dependsOn(listOf(ktlintKotlinScriptFormat, ktlintFormat))
 
