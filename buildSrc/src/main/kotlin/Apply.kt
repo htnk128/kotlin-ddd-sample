@@ -4,7 +4,7 @@ fun ObjectConfigurationAction.allModule() {
     plugin("kotlin")
     plugin("idea")
     plugin("org.jlleitschuh.gradle.ktlint")
-    plugin("jacoco")
+    plugin("org.jetbrains.kotlinx.kover")
 }
 
 fun ObjectConfigurationAction.spring() {

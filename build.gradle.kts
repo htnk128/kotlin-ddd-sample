@@ -5,6 +5,10 @@ plugins {
     allModulePlugins()
 }
 
+tasks.getByName<Jar>("jar") {
+    enabled = false
+}
+
 allprojects {
     apply {
         allModule()
@@ -58,18 +62,6 @@ allprojects {
             }
             useJUnitPlatform()
         }
-
-        withType<JacocoReport> {
-            reports {
-                xml.isEnabled = true
-                csv.isEnabled = false
-                html.isEnabled = true
-            }
-        }
-    }
-
-    tasks.test {
-        finalizedBy(tasks.jacocoTestReport)
     }
 
     group = "htnk128"
