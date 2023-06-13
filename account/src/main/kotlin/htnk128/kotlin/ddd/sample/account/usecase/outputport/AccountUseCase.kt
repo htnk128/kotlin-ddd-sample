@@ -4,7 +4,7 @@ import htnk128.kotlin.ddd.sample.account.domain.model.account.Account
 import htnk128.kotlin.ddd.sample.account.usecase.outputport.dto.AccountDTO
 import htnk128.kotlin.ddd.sample.shared.usecase.outputport.dto.PaginationDTO
 
-interface AccountPresenter {
+interface AccountUseCase {
 
     fun toDTO(account: Account): AccountDTO
 

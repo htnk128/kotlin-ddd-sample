@@ -2,21 +2,21 @@ package htnk128.kotlin.ddd.sample.account.adapter.controller
 
 import htnk128.kotlin.ddd.sample.account.adapter.controller.resource.AccountResponse
 import htnk128.kotlin.ddd.sample.account.adapter.controller.resource.AccountResponses
-import htnk128.kotlin.ddd.sample.account.usecase.inputport.AccountUseCase
 import htnk128.kotlin.ddd.sample.account.usecase.inputport.command.CreateAccountCommand
 import htnk128.kotlin.ddd.sample.account.usecase.inputport.command.DeleteAccountCommand
 import htnk128.kotlin.ddd.sample.account.usecase.inputport.command.FindAccountCommand
 import htnk128.kotlin.ddd.sample.account.usecase.inputport.command.FindAllAccountCommand
 import htnk128.kotlin.ddd.sample.account.usecase.inputport.command.UpdateAccountCommand
-import htnk128.kotlin.ddd.sample.account.usecase.outputport.AccountPresenter
 import htnk128.kotlin.ddd.sample.account.usecase.outputport.dto.AccountDTO
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
+import htnk128.kotlin.ddd.sample.account.usecase.inputport.AccountUseCase as InAccountUseCase
+import htnk128.kotlin.ddd.sample.account.usecase.outputport.AccountUseCase as OutAccountUseCase
 
 @Component
 class AccountController(
-    private val accountUseCase: AccountUseCase,
-    private val accountPresenter: AccountPresenter
+    private val accountUseCase: InAccountUseCase,
+    private val accountPresenter: OutAccountUseCase
 ) {
 
     fun find(

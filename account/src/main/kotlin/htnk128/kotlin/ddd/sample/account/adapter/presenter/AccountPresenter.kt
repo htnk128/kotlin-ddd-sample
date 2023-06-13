@@ -1,13 +1,13 @@
 package htnk128.kotlin.ddd.sample.account.adapter.presenter
 
 import htnk128.kotlin.ddd.sample.account.domain.model.account.Account
-import htnk128.kotlin.ddd.sample.account.usecase.outputport.AccountPresenter
+import htnk128.kotlin.ddd.sample.account.usecase.outputport.AccountUseCase
 import htnk128.kotlin.ddd.sample.account.usecase.outputport.dto.AccountDTO
 import htnk128.kotlin.ddd.sample.shared.usecase.outputport.dto.PaginationDTO
 import org.springframework.stereotype.Component
 
 @Component
-class AccountPresenter : AccountPresenter {
+class AccountPresenter : AccountUseCase {
 
     override fun toDTO(account: Account): AccountDTO {
         return AccountDTO(
