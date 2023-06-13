@@ -1,12 +1,12 @@
 package htnk128.kotlin.ddd.sample.address.adapter.presenter
 
 import htnk128.kotlin.ddd.sample.address.domain.model.address.Address
-import htnk128.kotlin.ddd.sample.address.usecase.outputport.AddressPresenter
+import htnk128.kotlin.ddd.sample.address.usecase.outputport.AddressUseCase
 import htnk128.kotlin.ddd.sample.address.usecase.outputport.dto.AddressDTO
 import org.springframework.stereotype.Component
 
 @Component
-class AddressPresenter : AddressPresenter {
+class AddressPresenter : AddressUseCase {
 
     override fun toDTO(address: Address): AddressDTO {
         return AddressDTO(

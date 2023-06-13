@@ -2,22 +2,22 @@ package htnk128.kotlin.ddd.sample.address.adapter.controller
 
 import htnk128.kotlin.ddd.sample.address.adapter.controller.resource.AddressResponse
 import htnk128.kotlin.ddd.sample.address.adapter.controller.resource.AddressResponses
-import htnk128.kotlin.ddd.sample.address.usecase.inputport.AddressUseCase
 import htnk128.kotlin.ddd.sample.address.usecase.inputport.command.CreateAddressCommand
 import htnk128.kotlin.ddd.sample.address.usecase.inputport.command.DeleteAddressCommand
 import htnk128.kotlin.ddd.sample.address.usecase.inputport.command.FindAddressCommand
 import htnk128.kotlin.ddd.sample.address.usecase.inputport.command.FindAllAddressCommand
 import htnk128.kotlin.ddd.sample.address.usecase.inputport.command.UpdateAddressCommand
-import htnk128.kotlin.ddd.sample.address.usecase.outputport.AddressPresenter
 import htnk128.kotlin.ddd.sample.address.usecase.outputport.dto.AddressDTO
-import java.util.stream.Collectors
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
+import java.util.stream.Collectors
+import htnk128.kotlin.ddd.sample.address.usecase.inputport.AddressUseCase as InAddressUseCase
+import htnk128.kotlin.ddd.sample.address.usecase.outputport.AddressUseCase as OutAddressUseCase
 
 @Component
 class AddressController(
-    private val addressUseCase: AddressUseCase,
-    private val addressPresenter: AddressPresenter
+    private val inAddressUseCase: InAddressUseCase,
+    private val outAddressPresenter: OutAddressUseCase
 ) {
 
     fun find(
@@ -25,8 +25,8 @@ class AddressController(
     ): Mono<AddressResponse> {
         val command = FindAddressCommand(addressId)
 
-        return addressUseCase.find(command)
-            .map { addressPresenter.toDTO(it) }
+        return inAddressUseCase.find(command)
+            .map { outAddressPresenter.toDTO(it) }
             .map { it.toResponse() }
     }
 
@@ -35,8 +35,8 @@ class AddressController(
     ): Mono<AddressResponses> {
         val command = FindAllAddressCommand(ownerId)
 
-        return addressUseCase.findAll(command)
-            .map { addressPresenter.toDTO(it) }
+        return inAddressUseCase.findAll(command)
+            .map { outAddressPresenter.toDTO(it) }
             .map { it.toResponse() }
             .collect(Collectors.toList())
             .map { AddressResponses(it) }
@@ -61,8 +61,8 @@ class AddressController(
             phoneNumber
         )
 
-        return addressUseCase.create(command)
-            .map { addressPresenter.toDTO(it) }
+        return inAddressUseCase.create(command)
+            .map { outAddressPresenter.toDTO(it) }
             .map { it.toResponse() }
     }
 
@@ -85,8 +85,8 @@ class AddressController(
             phoneNumber
         )
 
-        return addressUseCase.update(command)
-            .map { addressPresenter.toDTO(it) }
+        return inAddressUseCase.update(command)
+            .map { outAddressPresenter.toDTO(it) }
             .map { it.toResponse() }
     }
 
@@ -95,8 +95,8 @@ class AddressController(
     ): Mono<AddressResponse> {
         val command = DeleteAddressCommand(addressId)
 
-        return addressUseCase.delete(command)
-            .map { addressPresenter.toDTO(it) }
+        return inAddressUseCase.delete(command)
+            .map { outAddressPresenter.toDTO(it) }
             .map { it.toResponse() }
     }
 
