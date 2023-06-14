@@ -1,6 +1,5 @@
 package htnk128.kotlin.ddd.sample.account.domain.model.addressbook
 
-import htnk128.kotlin.ddd.sample.account.domain.model.account.AccountInvalidRequestException
 import io.kotlintest.data.forall
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
@@ -25,7 +24,7 @@ class AccountAddressIdSpec : StringSpec({
             row("a".repeat(65)),
             row("あ")
         ) { value ->
-            shouldThrow<AccountInvalidRequestException> {
+            shouldThrow<AddressBookInvalidRequestException> {
                 AccountAddressId.valueOf(value)
             }
         }
